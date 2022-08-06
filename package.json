@@ -1,0 +1,45 @@
+{
+  "private": true,
+  "author": "bLue <tbdblue@gmail.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "build": "umi build",
+    "postinstall": "umi generate tmp",
+    "start": "npm run dev",
+    "theme:antd": "lessc --js src/styles/antd.light.less src/styles/antd.light.css && lessc --js src/styles/antd.dark.less src/styles/antd.dark.css"
+  },
+  "dependencies": {
+    "@algoux/standard-ranklist-renderer-component": "^0.2.1",
+    "@ant-design/icons": "^4.7.0",
+    "ahooks": "^3.5.2",
+    "antd": "^4.21.7",
+    "axios": "^0.27.2",
+    "moment": "^2.29.4",
+    "rc-dialog": "^8.9.0",
+    "react": "^17",
+    "react-dom": "^17",
+    "react-error-boundary": "^3.1.4",
+    "umi": "^3.5.31"
+  },
+  "devDependencies": {
+    "@algoux/standard-ranklist": "^0.2.1",
+    "@types/react": "^17",
+    "@types/react-dom": "^17",
+    "@typescript-eslint/eslint-plugin": "^5.31.0",
+    "@typescript-eslint/parser": "^5.31.0",
+    "@umijs/plugin-analytics": "^0.2.3",
+    "@umijs/plugin-antd": "^0.15.0",
+    "@umijs/plugin-helmet": "^1.1.4",
+    "@umijs/plugin-model": "^2.6.2",
+    "@umijs/plugin-request": "^2.9.0",
+    "@umijs/plugin-sass": "^1.1.1",
+    "eslint": "^8.20.0",
+    "eslint-config-alloy": "^4.6.2",
+    "eslint-plugin-react": "^7.30.1",
+    "less": "^4.1.3",
+    "prettier": "^2.7.1",
+    "typescript": "4.1.2",
+    "umi-plugin-tailwindcss": "^3.2.1",
+    "yorkie": "^2.0.0"
+  }
+}

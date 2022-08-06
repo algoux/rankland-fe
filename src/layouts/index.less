@@ -1,0 +1,72 @@
+// @import '@/styles/antd.light.css';
+
+//#region override antd light theme
+html:not(.dark) {
+  @import './common-antd-override.less';
+
+  body {
+    background: #f0f2f5;
+  }
+
+  .ant-layout-header {
+    background: #fff;
+  }
+}
+//#endregion
+
+// dark
+html.dark {
+  @import './dark.less';
+}
+
+// @media screen and (prefers-color-scheme: dark) {
+//   // @import '~antd/lib/style/themes/dark.less';
+//   // @import '~antd/dist/antd.dark.less';
+//   @import './dark.less';
+// }
+
+// html.light {
+//   @import '@/styles/antd.light.css';
+
+//   // --antd-wave-shadow-color: @primary-color;
+// }
+
+
+#root {
+  // height: 100%;
+}
+
+.layout {
+  height: 100%;
+}
+
+.logo {
+  float: left;
+  width: 64px;
+  height: 64px;
+  // padding-right: 16px;
+  img {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+.nav-menu {
+  &.ant-menu-horizontal {
+    border-bottom: none !important;
+  }
+}
+
+.normal-content {
+  padding: 32px 50px;
+}
+
+.home-intro {
+  .block {
+    @apply mt-10;
+
+    .block-title {
+      @apply mb-5;
+    }
+  }
+}

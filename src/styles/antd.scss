@@ -1,0 +1,9 @@
+@use 'sass:meta';
+
+html:not(.dark) {
+  @include meta.load-css('./antd.light.css', $with: null);
+}
+
+html.dark {
+  @include meta.load-css('./antd.dark.css', $with: null);
+}
