@@ -10,29 +10,54 @@ const request = require('request-promise');
 const winston = require('winston');
 const dayjs = require('dayjs');
 const { v4: uuidv4 } = require('uuid');
+const { createClient } = require('redis');
+const util = require('util');
 
 const isProd = process.env.NODE_ENV === 'production';
-
 const root = path.join(__dirname, 'dist');
+let render;
 let indexHtmlTemplate;
 
+// app logger
+const appLoggingFormat = winston.format.printf(({ level, message, timestamp }) => {
+  return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] ${message}`;
+});
+const appLogger = winston.createLogger({
+  level: 'info',
+  format: winston.format.combine(winston.format.splat(), winston.format.timestamp(), appLoggingFormat),
+  transports: [
+    new winston.transports.File({ filename: 'logs/app-error.log', level: 'error' }),
+    new winston.transports.File({ filename: 'logs/app-all.log' }),
+    new winston.transports.Console(),
+  ],
+});
+
+// redis client
+const redisClient = createClient({
+  password: process.env.REDIS_PASS || null,
+  host: process.env.REDIS_HOST || 'localhost',
+  port: process.env.REDIS_PORT || 6379,
+});
+redisClient.on('error', (err) => appLogger.error('Redis client error: %O', err));
+
+// koa app
 const app = new Koa();
 
-// request id
+// request id middleware
 app.use(async (ctx, next) => {
   ctx.requestId = uuidv4().substr(0, 8);
   ctx.set('X-Request-Id', ctx.requestId);
   return next();
 });
 
-// time cost
+// time cost middleware
 app.use(async (ctx, next) => {
   const _s = Date.now();
   await next();
   ctx.set('X-Response-Time', Date.now() - _s);
 });
 
-// error handler
+// error handler middleware
 app.use(async (ctx, next) => {
   try {
     await next();
@@ -55,24 +80,20 @@ app.use(
   }),
 );
 
-// ctx logger
+// ctx logger middleware
 app.use((ctx, next) => {
   if (!ctx.logger) {
     const ctxLoggingFormat = winston.format.printf(({ level, message, timestamp }) => {
-      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${ctx.requestId} ${ctx.method.toUpperCase()} ${
-        ctx.url
-      }] ${message}`;
+      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${
+        ctx.requestId
+      } ${ctx.method.toUpperCase()} ${ctx.url}] ${message}`;
     });
     ctx.logger = winston.createLogger({
       level: 'info',
       format: winston.format.combine(winston.format.splat(), winston.format.timestamp(), ctxLoggingFormat),
       transports: [
-        //
-        // - Write all logs with importance level of `error` or less to `error.log`
-        // - Write all logs with importance level of `info` or less to `combined.log`
-        //
-        new winston.transports.File({ filename: 'logs/error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'logs/combined.log' }),
+        new winston.transports.File({ filename: 'logs/ctx-error.log', level: 'error' }),
+        new winston.transports.File({ filename: 'logs/ctx-all.log' }),
         new winston.transports.Console(),
       ],
     });
@@ -93,7 +114,10 @@ if (!isProd) {
   );
 }
 
-let render;
+function getSSRCacheKey(url) {
+  return util.format('rankland_node_ssr_cache_%s', url);
+}
+
 app.use(async (ctx, next) => {
   const ext = path.extname(ctx.path);
   // 符合要求的路由才进行服务端渲染，否则走静态文件逻辑
@@ -106,25 +130,36 @@ app.use(async (ctx, next) => {
     ctx.type = 'text/html';
     ctx.status = 200;
     let html;
-    const renderRes = await render({
-      path: ctx.url,
-    });
-    if (renderRes.error) {
-      ctx.logger.error(`SSR error: %O`, renderRes.error);
-      if (isProd) {
-        if (!indexHtmlTemplate) {
-          indexHtmlTemplate = fs.readFileSync(path.join(root, 'index.html'), 'utf-8');
-        }
-        html = indexHtmlTemplate;
-      } else {
-        html = await request.get('http://localhost:8000');
-      }
-    } else {
-      html = renderRes.html;
+    const cacheKey = getSSRCacheKey(ctx.url);
+    const cached = await redisClient.get(cacheKey);
+    if (typeof cached === 'string' && cached.startsWith('<!DOCTYPE html>')) {
+      html = cached;
       const ssrCost = Date.now() - _s;
       ctx.set('X-SSR-Success', 'true');
       ctx.set('X-SSR-Time', ssrCost);
-      ctx.logger.info(`SSR in %d ms`, ssrCost);
+      ctx.logger.info(`SSR in %d ms (with cache)`, ssrCost);
+    } else {
+      const renderRes = await render({
+        path: ctx.url,
+      });
+      if (renderRes.error) {
+        ctx.logger.error(`SSR error: %O`, renderRes.error);
+        if (isProd) {
+          if (!indexHtmlTemplate) {
+            indexHtmlTemplate = fs.readFileSync(path.join(root, 'index.html'), 'utf-8');
+          }
+          html = indexHtmlTemplate;
+        } else {
+          html = await request.get('http://localhost:8000');
+        }
+      } else {
+        html = renderRes.html;
+        const ssrCost = Date.now() - _s;
+        ctx.set('X-SSR-Success', 'true');
+        ctx.set('X-SSR-Time', ssrCost);
+        ctx.logger.info(`SSR in %d ms`, ssrCost);
+      }
+      redisClient.setEx(cacheKey, 60, html);
     }
     ctx.body = html;
   } else {
@@ -138,7 +173,10 @@ app.use(async (ctx, next) => {
  */
 isProd && app.use(mount('/dist', require('koa-static')(root)));
 
-app.listen(7001);
-console.log(`SSR Server is listening on http://localhost:7001 (pid: ${process.pid})`);
+async function main() {
+  await redisClient.connect();
+  app.listen(7001);
+  console.log(`SSR Server is listening on http://localhost:7001 (pid: ${process.pid})`);
+}
 
-// module.exports = app.callback();
+main();

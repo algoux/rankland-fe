@@ -30,6 +30,7 @@
     "react": "^17",
     "react-dom": "^17",
     "react-error-boundary": "^3.1.4",
+    "redis": "^4.3.0",
     "request-promise": "^4.2.6",
     "umi": "~3.4.25",
     "umi-request": "^1.4.0",
