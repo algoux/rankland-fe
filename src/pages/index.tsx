@@ -28,7 +28,7 @@ export default function HomePage() {
                     探索
                   </h2>
                   <p className="mt-4 mb-0">
-                    在 <strong>{500}</strong> 个高质量程序设计竞赛榜单中自由浏览和搜索
+                    在 <strong>N</strong> 个高质量程序设计竞赛榜单中自由浏览和搜索
                   </p>
                 </Card>
               </Link>
@@ -76,7 +76,7 @@ export default function HomePage() {
             onCancel={() => setIsQQGroupModalVisible(false)}
           >
             <div>
-              <img src="/rankland_qqgroup.jpg" className="w-full" />
+              <img src="/dist/rankland_qqgroup.jpg" className="w-full" />
             </div>
           </Modal>
         </div>

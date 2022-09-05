@@ -1,7 +1,10 @@
-/node_modules
+.DS_Store
+.idea
+node_modules
 /.env.local
 /.umirc.local.ts
 /config/config.local.ts
 /src/.umi
 /src/.umi-production
 /dist
+/logs

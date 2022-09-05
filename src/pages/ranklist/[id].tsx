@@ -1,12 +1,10 @@
-import { Ranklist } from '@algoux/standard-ranklist-renderer-component';
-import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist'
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
-import data from '@/assets/demo.json';
 import 'rc-dialog/assets/index.css';
-import { Alert } from 'antd';
-import { useState } from 'react';
-import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { Helmet, useModel } from 'umi';
+import { Helmet, IGetInitialProps, useParams } from 'umi';
+import StyledRanklist from '@/components/StyledRanklist';
+import { api } from '@/services/api';
+import { Button, Spin } from 'antd';
+import React from 'react';
 
 // type MenuItem = Required<MenuProps>['items'][number];
 
@@ -63,16 +61,8 @@ import { Helmet, useModel } from 'umi';
 // submenu keys of first level
 const rootSubmenuKeys = ['sub1', 'sub2', 'sub4'];
 
-function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
-  return (
-    <div role="alert" style={{ maxWidth: '400px', margin: '100px auto' }}>
-      <Alert message="Error occurred when rendering srk" description={error.message} type="error" showIcon />
-    </div>
-  );
-}
-
-export default function RanklistPage() {
-  const { theme } = useModel('theme');
+export default function RanklistPage(props: IRanklistPageProps) {
+  const { data, error } = props;
 
   // const [openKeys, setOpenKeys] = useState(['sub1']);
   // const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
@@ -84,10 +74,29 @@ export default function RanklistPage() {
   //   }
   // };
 
+  const { id } = useParams<{ id: string }>();
+  // const { loading, data, error } = useReq(() => api.getRanklist({ uniqueKey: id }));
+  if (error) {
+    return (
+      <div className="mt-16 text-center">
+        <p>An error occurred while loading data</p>
+        <Button type="primary" size="small" onClick={() => location.reload()}>
+          Refresh
+        </Button>
+      </div>
+    );
+  }
+  if (!data) {
+    return (
+      <div className="mt-16 text-center">
+        <Spin />
+      </div>
+    );
+  }
   return (
     <div>
       <Helmet>
-        <title>{data.contest.title} | RankLand</title>
+        <title>{data!.info.name} | RankLand</title>
       </Helmet>
       {/* <Menu
         mode="inline"
@@ -96,10 +105,42 @@ export default function RanklistPage() {
         style={{ width: 256 }}
         items={items}
       /> */}
-      <ErrorBoundary FallbackComponent={ErrorFallback}>
-        <h1 style={{ textAlign: 'center', margin: '32px 0' }}>{data.contest.title}</h1>
-        <Ranklist data={data as any} theme={theme as EnumTheme} />
-      </ErrorBoundary>
+      <div className="mt-8 mb-8">
+        <StyledRanklist data={data!.srk} name={id} meta={data!.info} />
+      </div>
     </div>
   );
+}
+
+interface IPageParams {
+  id: string;
+}
+
+const asyncData = ({ id }: { id: string }) => {
+  return api.getRanklist({ uniqueKey: id });
+};
+
+RanklistPage.getInitialProps = (async (ctx) => {
+  console.log('run getInitialProps');
+  try {
+    const res = await asyncData({ id: ctx.match.params.id });
+    return {
+      data: res,
+    };
+  } catch (e) {
+    if (ctx.isServer) {
+      throw e;
+    }
+    console.error(e);
+    return {
+      error: e,
+    };
+  }
+}) as IGetInitialProps<any, IPageParams>;
+
+type IPageAsyncData = Awaited<ReturnType<typeof asyncData>>;
+
+export interface IRanklistPageProps {
+  data?: IPageAsyncData;
+  error?: Error;
 }
