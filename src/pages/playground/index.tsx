@@ -6,7 +6,9 @@ const Loading = () => <p>Loading...</p>;
 
 const SrkPlayground: typeof SrkPlaygroundType = dynamic({
   loader: async () => {
-    const { default: SrkPlayground } = await import(/* webpackChunkName: "components-SrkPlayground" */ '@/components/SrkPlayground');
+    const { default: SrkPlayground } = await import(
+      /* webpackChunkName: "components-SrkPlayground" */ '@/components/SrkPlayground'
+    );
     return SrkPlayground;
   },
   loading: () => Loading(),
@@ -18,11 +20,7 @@ export default function Playground() {
       <Helmet>
         <title>Playground | RankLand</title>
       </Helmet>
-      {isBrowser() ? (
-        <div>
-          <SrkPlayground />
-        </div>
-      ) : <div />}
+      <div>{isBrowser() ? <SrkPlayground /> : <Loading />}</div>
     </div>
   );
 }
