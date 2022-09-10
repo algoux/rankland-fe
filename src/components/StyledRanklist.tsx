@@ -1,3 +1,4 @@
+import React from 'react';
 import { Ranklist } from '@algoux/standard-ranklist-renderer-component';
 import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
@@ -8,6 +9,10 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
+import { createCheckers } from 'ts-interface-checker';
+import srkChecker from '@/lib/srk-checker/index.d.ti';
+
+const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -27,6 +32,21 @@ export interface IStyledRanklistProps {
 
 export default function StyledRanklist({ data, name, meta }: IStyledRanklistProps) {
   const { theme } = useModel('theme');
+  let srkCheckError: string | null = null;
+
+  try {
+    ranklistChecker.check(data);
+    srkCheckError = null;
+  } catch (e) {
+    srkCheckError = e.message;
+  }
+
+  if (srkCheckError) {
+    return <div className="ml-8">
+      <h3>Error occurred while checking srk:</h3>
+      <pre>{srkCheckError}</pre>
+    </div>;
+  }
 
   const formatTimeDuration = (
     time: srk.TimeDuration,
@@ -71,22 +91,31 @@ export default function StyledRanklist({ data, name, meta }: IStyledRanklistProp
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
-  const startAt = new Date(data.contest.startAt).getTime();
-  const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
-  const metaBlock = !meta ? null : (
-    <div className="text-center mt-1">
-      <span className="mr-2">{meta.viewCnt || '-'} views</span>
-      <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>Download srk</a>
-    </div>
-  );
+  const renderHeader = () => {
+    const startAt = new Date(data.contest.startAt).getTime();
+    const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
+    const metaBlock = !meta ? null : (
+      <div className="text-center mt-1">
+        <span className="mr-2">{meta.viewCnt || '-'} views</span>
+        <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
+          Download srk
+        </a>
+      </div>
+    );
+    return (
+      <>
+        <h1 className="text-center mb-1">{data.contest.title}</h1>
+        <p className="text-center mb-0">
+          {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
+        </p>
+        {metaBlock}
+      </>
+    );
+  };
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
-      <h1 className="text-center mb-1">{data.contest.title}</h1>
-      <p className="text-center mb-0">
-        {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
-      </p>
-      {metaBlock}
+      {renderHeader()}
       <div className="mt-6" />
       <Ranklist data={data as any} theme={theme as EnumTheme} />
     </ErrorBoundary>

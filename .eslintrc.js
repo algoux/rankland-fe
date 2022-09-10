@@ -20,5 +20,6 @@ module.exports = {
   },
   rules: {
     // Customize your rules
+    'no-undef': 'off',
   },
 };

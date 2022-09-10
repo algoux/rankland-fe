@@ -43,6 +43,7 @@ export default function RootLayout({ children }: IRouteComponentProps) {
           items={[
             { key: '/search', label: '探索' },
             { key: '/collection', label: '榜单合集' },
+            { key: '/playground', label: '游乐场' },
           ]}
           onClick={onClick}
         />

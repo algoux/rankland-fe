@@ -56,6 +56,12 @@ export default function HomePage() {
               ：标准榜单格式（srk）旨在标准化榜单数据，欢迎了解和共建生态
             </li>
             <li>
+              <Link to="/playground">
+                Playground
+              </Link>
+              ：在线调试和预览 srk 格式的榜单数据
+            </li>
+            <li>
               <a href="https://github.com/algoux/standard-ranklist-renderer-component" target="_blank">
                 Renderer Component
               </a>
@@ -82,7 +88,7 @@ export default function HomePage() {
         </div>
         <div className="block">
           <h1 className="block-title">关于我们</h1>
-          <p>algoUX: learning algorithm with better UX</p>
+          <p>algoUX: Learning algorithm with better UX</p>
           <p>
             Find us on{' '}
             <a href="https://github.com/algoux" target="_blank">

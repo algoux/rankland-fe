@@ -4,7 +4,7 @@ export interface IApiRanklistInfo {
   name: string;
   fileID: string;
   viewCnt: number;
-  content?: string;
+  content: string;
   createdAt: string;
   updatedAt: string;
 }

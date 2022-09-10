@@ -1,4 +1,5 @@
-import { defineConfig } from 'umi';
+import { BundlerConfigType, defineConfig } from 'umi';
+import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -6,6 +7,7 @@ const outputPath = 'dist/';
 const publicPath = isProd ? `/${outputPath}` : `http://127.0.0.1:8000/${outputPath}`;
 
 export default defineConfig({
+  webpack5: {},
   nodeModulesTransform: {
     type: 'none',
   },
@@ -25,4 +27,13 @@ export default defineConfig({
   },
   outputPath,
   publicPath,
+  chainWebpack(memo, { type }) {
+    if (type === BundlerConfigType.csr) {
+      memo.plugin('MonacoWebpackPlugin').use(MonacoWebpackPlugin, [
+        {
+          languages: ['json'],
+        },
+      ]);
+    }
+  },
 });

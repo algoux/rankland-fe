@@ -9,7 +9,8 @@
     "build": "umi build",
     "start": "NODE_ENV=production node server.js",
     "postinstall": "umi generate tmp",
-    "theme:antd": "lessc --js src/styles/antd.light.less src/styles/antd.light.css && lessc --js src/styles/antd.dark.less src/styles/antd.dark.css"
+    "theme:antd": "lessc --js src/styles/antd.light.less src/styles/antd.light.css && lessc --js src/styles/antd.dark.less src/styles/antd.dark.css",
+    "build:type-checker": "`npm bin`/ts-interface-builder -o src/lib/srk-checker -s .ti node_modules/@algoux/standard-ranklist/index.d.ts"
   },
   "dependencies": {
     "@algoux/standard-ranklist-renderer-component": "^0.2.1",
@@ -25,21 +26,26 @@
     "koa-mount": "^4.0.0",
     "koa-static": "^5.0.0",
     "koa2-proxy-middleware": "^0.0.4",
+    "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "rc-dialog": "^8.9.0",
     "react": "^17",
     "react-dom": "^17",
     "react-error-boundary": "^3.1.4",
+    "react-monaco-editor": "^0.50.1",
     "redis": "^4.3.0",
     "request-promise": "^4.2.6",
+    "ts-interface-checker": "^1.0.2",
     "umi": "~3.4.25",
     "umi-request": "^1.4.0",
+    "urlcat": "^2.0.4",
     "uuid": "^8.3.2",
     "winston": "^3.8.1"
   },
   "devDependencies": {
     "@algoux/standard-ranklist": "^0.2.1",
     "@types/file-saver": "^2.0.5",
+    "@types/lodash-es": "^4.17.6",
     "@types/react": "^17",
     "@types/react-dom": "^17",
     "@typescript-eslint/eslint-plugin": "^5.31.0",
@@ -56,8 +62,10 @@
     "eslint-config-alloy": "^4.6.2",
     "eslint-plugin-react": "^7.30.1",
     "less": "^4.1.3",
+    "monaco-editor-webpack-plugin": "^7.0.1",
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
+    "ts-interface-builder": "^0.3.3",
     "typescript": "4.1.2",
     "umi-plugin-tailwindcss": "^3.2.1",
     "yorkie": "^2.0.0"
