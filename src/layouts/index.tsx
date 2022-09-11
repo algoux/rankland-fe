@@ -1,17 +1,14 @@
-import { useEffect } from 'react';
-import { Link, IRouteComponentProps, history, useModel } from 'umi';
-import { Layout, Menu, BackTop } from 'antd';
+import React, { useEffect } from 'react';
+import { Link, IRouteComponentProps, useModel } from 'umi';
+import { Layout, BackTop } from 'antd';
 import '@/styles/antd.scss';
 import './index.less';
 import logo from '@/assets/logo.png';
+import NavMenu from './NavMenu';
 
 const { Header, Content } = Layout;
 
 export default function RootLayout({ children }: IRouteComponentProps) {
-  const onClick = (e: any) => {
-    history.push(e.key);
-  };
-
   const systemThemeListener = (e: MediaQueryListEvent | MediaQueryList) => {
     const theme = e.matches ? 'dark' : 'light';
     document.documentElement.className = theme;
@@ -37,16 +34,7 @@ export default function RootLayout({ children }: IRouteComponentProps) {
             <img src={logo} />
           </div>
         </Link>
-        <Menu
-          className="nav-menu"
-          mode="horizontal"
-          items={[
-            { key: '/search', label: '探索' },
-            { key: '/collection', label: '榜单合集' },
-            { key: '/playground', label: '游乐场' },
-          ]}
-          onClick={onClick}
-        />
+        <NavMenu />
       </Header>
       <Content>{children}</Content>
       <BackTop />
