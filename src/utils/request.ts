@@ -52,18 +52,19 @@ const parseResponseMiddleware = async (ctx: Context, next: () => void) => {
 
   const { res } = ctx;
   if (!options.getResponse) {
+    let data: any;
     try {
-      const data = await res.clone().json();
-      if (typeof data.code === 'number') {
-        if (data.code === 0) {
-          ctx.res = data.data;
-          return;
-        } else {
-          throw new ApiException(data.code, data.message);
-        }
-      }
+      data = await res.clone().json();
     } catch (e) {
       console.warn('Trying to parse response failed:', e);
+    }
+    if (typeof data?.code === 'number') {
+      if (data.code === 0) {
+        ctx.res = data.data;
+        return;
+      } else {
+        throw new ApiException(data.code, data.message);
+      }
     }
     throw new HttpException(res.status, res.statusText);
   } else {
@@ -79,7 +80,7 @@ const parseResponseMiddleware = async (ctx: Context, next: () => void) => {
 
 if (isBrowser()) {
   requestAdapter = extend({
-    prefix: 'http://rl.localdev.algoux.org',
+    prefix: process.env.API_BASE,
     timeout: 30000,
     parseResponse: false,
   });
@@ -92,12 +93,13 @@ if (isBrowser()) {
       } else {
         message.error(e.message);
       }
+      throw e;
     }
   });
   requestAdapter.use(parseResponseMiddleware);
 } else {
   requestAdapter = extend({
-    prefix: 'http://rl.localdev.algoux.org',
+    prefix: process.env.API_BASE,
     timeout: 5000,
     parseResponse: false,
   });

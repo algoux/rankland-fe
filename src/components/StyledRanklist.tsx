@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
+import { EyeOutlined } from '@ant-design/icons';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -96,7 +97,7 @@ export default function StyledRanklist({ data, name, meta }: IStyledRanklistProp
     const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
     const metaBlock = !meta ? null : (
       <div className="text-center mt-1">
-        <span className="mr-2">{meta.viewCnt || '-'} views</span>
+        <span className="mr-2"><EyeOutlined /> {meta.viewCnt || '-'}</span>
         <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
           Download srk
         </a>

@@ -13,7 +13,11 @@ export default defineConfig({
   },
   favicon: '/dist/favicon.ico',
   hash: true,
+  title: false,
   antd: {},
+  define: {
+    'process.env.API_BASE': isProd ? 'https://rl.algoux.org/api' : 'https://rl-dev.algoux.org',
+  },
   analytics: {
     ga: 'G-D6CVTJBDZT',
   },
