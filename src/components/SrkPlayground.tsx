@@ -1,14 +1,14 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { useModel } from 'umi';
 import { Modal, Tag } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import './SrkPlayground.less';
 import StyledRanklist from './StyledRanklist';
-import { throttle } from 'lodash-es';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import DEFAULT_DEMO_CODE from '@/assets/srk-playground-demo.srk.json.txt';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
+import { useRemainingHeight } from '@/hooks/use-remaining-height';
 
 export interface ISrkPlaygroundProps {
   code?: string;
@@ -21,7 +21,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
   const { theme } = useModel('theme');
   const [code, setCode] = useState(props.code || DEFAULT_DEMO_CODE);
   const [uncommittedCode, setUncommittedCode] = useState(props.code || DEFAULT_DEMO_CODE);
-  const [remainingHeight, setRemainingHeight] = useState(0);
+  const [remainingHeight] = useRemainingHeight();
   const [ready, setReady] = useState(false);
   const [messageRead, setMessageRead] = useLocalStorageState<string | undefined>(
     LocalStorageKey.PlaygroundWelcomeMessageRead,
@@ -40,23 +40,6 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
   } catch (e) {
     syntaxValid = false;
   }
-
-  const afterResize = () => {
-    const remainingHeight =
-      document.body.clientHeight - (document.querySelector('.ant-layout-header')?.getBoundingClientRect().height || 0);
-    setRemainingHeight(remainingHeight);
-  };
-
-  useEffect(() => {
-    afterResize();
-  });
-
-  const whenWindowResized = throttle(afterResize, 250);
-
-  useEffect(() => {
-    window.addEventListener('resize', whenWindowResized);
-    return () => window.removeEventListener('resize', whenWindowResized);
-  }, []);
 
   const options = {
     selectOnLineNumbers: true,
