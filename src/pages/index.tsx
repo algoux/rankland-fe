@@ -2,6 +2,7 @@ import { Link, Helmet } from 'umi';
 import { Card, Col, Modal, Row } from 'antd';
 import { UnorderedListOutlined, TrophyOutlined } from '@ant-design/icons';
 import { useState } from 'react';
+import { formatTitle } from '@/utils/title-format.util';
 
 export default function HomePage() {
   const [isQQGroupModalVisible, setIsQQGroupModalVisible] = useState(false);
@@ -9,7 +10,7 @@ export default function HomePage() {
   return (
     <div className="normal-content">
       <Helmet>
-        <title>RankLand</title>
+      <title>{formatTitle()}</title>
       </Helmet>
       <div className="home-intro">
         <h1 style={{ fontSize: '32px' }}>欢迎来到 RankLand</h1>

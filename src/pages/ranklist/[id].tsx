@@ -1,10 +1,12 @@
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
-import { Helmet, IGetInitialProps, useParams } from 'umi';
+import { Helmet, IGetInitialProps, Link, useParams } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
 import { Button, Spin } from 'antd';
 import React from 'react';
+import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
+import { formatTitle } from '@/utils/title-format.util';
 
 // type MenuItem = Required<MenuProps>['items'][number];
 
@@ -77,8 +79,26 @@ export default function RanklistPage(props: IRanklistPageProps) {
   const { id } = useParams<{ id: string }>();
   // const { loading, data, error } = useReq(() => api.getRanklist({ uniqueKey: id }));
   if (error) {
+    if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
+      return (
+        <div className="mt-16 text-center">
+          <Helmet>
+            <title>{formatTitle('Not Found')}</title>
+          </Helmet>
+          <h3 className="mb-4">Ranklist Not Found</h3>
+          <Link to="/">
+            <Button type="primary" size="small">
+              Back to Home
+            </Button>
+          </Link>
+        </div>
+      );
+    }
     return (
       <div className="mt-16 text-center">
+        <Helmet>
+          <title>{formatTitle()}</title>
+        </Helmet>
         <p>An error occurred while loading data</p>
         <Button type="primary" size="small" onClick={() => location.reload()}>
           Refresh
@@ -89,6 +109,9 @@ export default function RanklistPage(props: IRanklistPageProps) {
   if (!data) {
     return (
       <div className="mt-16 text-center">
+        <Helmet>
+          <title>{formatTitle()}</title>
+        </Helmet>
         <Spin />
       </div>
     );
@@ -96,7 +119,7 @@ export default function RanklistPage(props: IRanklistPageProps) {
   return (
     <div>
       <Helmet>
-        <title>{data!.info.name} | RankLand</title>
+        <title>{formatTitle(data!.info.name)}</title>
       </Helmet>
       {/* <Menu
         mode="inline"
@@ -121,7 +144,6 @@ const asyncData = ({ id }: { id: string }) => {
 };
 
 RanklistPage.getInitialProps = (async (ctx) => {
-  console.log('run getInitialProps');
   try {
     const res = await asyncData({ id: ctx.match.params.id });
     return {

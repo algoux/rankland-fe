@@ -1,6 +1,7 @@
 import React from 'react';
 import type SrkPlaygroundType from '@/components/SrkPlayground';
 import { Helmet, isBrowser, dynamic } from 'umi';
+import { formatTitle } from '@/utils/title-format.util';
 
 const Loading = () => <p>Loading...</p>;
 
@@ -18,7 +19,7 @@ export default function Playground() {
   return (
     <div>
       <Helmet>
-        <title>Playground | RankLand</title>
+        <title>{formatTitle('Playground')}</title>
       </Helmet>
       <div>{isBrowser() ? <SrkPlayground /> : <Loading />}</div>
     </div>
