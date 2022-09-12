@@ -1,12 +1,14 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { useModel } from 'umi';
-import { Tag } from 'antd';
+import { Modal, Tag } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
 import './SrkPlayground.less';
 import StyledRanklist from './StyledRanklist';
 import { throttle } from 'lodash-es';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import DEFAULT_DEMO_CODE from '@/assets/srk-playground-demo.srk.json.txt';
+import { useLocalStorageState } from 'ahooks';
+import { LocalStorageKey } from '@/configs/local-storage-key.config';
 
 export interface ISrkPlaygroundProps {
   code?: string;
@@ -21,6 +23,13 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
   const [uncommittedCode, setUncommittedCode] = useState(props.code || DEFAULT_DEMO_CODE);
   const [remainingHeight, setRemainingHeight] = useState(0);
   const [ready, setReady] = useState(false);
+  const [messageRead, setMessageRead] = useLocalStorageState<string | undefined>(
+    LocalStorageKey.PlaygroundWelcomeMessageRead,
+    {
+      defaultValue: undefined,
+    },
+  );
+
   let monacoRef = useRef<MonacoEditor>(null);
   let syntaxValid = false;
   let data: any;
@@ -61,7 +70,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
       <div className="srk-playground-preview">
         <div className="absolute right-4 top-4">
           <a href="https://github.com/algoux/standard-ranklist/blob/master/index.d.ts" target="_blank">
-            <QuestionCircleOutlined />{' '}srk specification
+            <QuestionCircleOutlined /> srk specification
           </a>
         </div>
         {!syntaxValid ? (
@@ -101,6 +110,33 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
             setCode(savedCode || '');
           });
           setReady(true);
+          if (messageRead !== 'true') {
+            Modal.info({
+              title: '欢迎来到游乐场！',
+              width: 600,
+              content: (
+                <div className="mt-6">
+                  <p>你可以调试标准榜单格式（srk）数据并实时预览效果。</p>
+                  <p>
+                    如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，游乐场可以帮助你直观地了解 srk 的字段及其作用。
+                  </p>
+                  <p>
+                    要将编辑中的数据提交至预览，请使用{' '}
+                    <Tag color="blue" className="mr-0">
+                      Ctrl/Cmd + S
+                    </Tag>{' '}
+                    组合键。
+                  </p>
+                  <p>
+                    需要参考 srk 规范？请点击右上角的 <QuestionCircleOutlined /> 图标。
+                  </p>
+                </div>
+              ),
+              onOk() {
+                setMessageRead('true');
+              },
+            });
+          }
         }}
       />
       {renderPreview()}
