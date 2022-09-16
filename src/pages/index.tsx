@@ -35,7 +35,7 @@ export default function HomePage() {
               </Link>
             </Col>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link to="/collection">
+              <Link to="/collection/official">
                 <Card hoverable>
                   <h2>
                     <TrophyOutlined className="mr-3" />

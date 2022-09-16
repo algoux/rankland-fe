@@ -1,6 +1,6 @@
 import type * as srk from '@algoux/standard-ranklist';
 import requestAdapter, { ApiException, HttpException, RequestAdapter } from '@/utils/request';
-import { IApiRanklistInfo } from './interface';
+import { IApiCollection, IApiRanklist, IApiRanklistInfo } from './interface';
 import urlcat from 'urlcat';
 import { LogicException, LogicExceptionKind } from './logic.exception';
 
@@ -22,15 +22,10 @@ export class ApiService {
     throw new Error('Unknown srk content type');
   }
 
-  public async getRanklist<T = srk.Ranklist>(opts: {
-    uniqueKey: string;
-  }): Promise<{
-    info: IApiRanklistInfo;
-    srk: T;
-  }> {
+  public async getRanklist(opts: { uniqueKey: string }): Promise<IApiRanklist> {
     try {
       const info = await this.getRanklistInfo({ uniqueKey: opts.uniqueKey });
-      const srk = await this.getSrkFile<T>({ fileID: info.fileID });
+      const srk = await this.getSrkFile({ fileID: info.fileID });
       return {
         info,
         srk,
@@ -47,6 +42,12 @@ export class ApiService {
     return this.requestAdapter.get<{
       ranks: IApiRanklistInfo[];
     }>(urlcat('/rank/search', { query: opts.kw }));
+  }
+
+  public getCollection(opts: { uniqueKey: string }) {
+    return this.requestAdapter
+      .get(urlcat('/rank/group/:key', { key: opts.uniqueKey }))
+      .then((res) => JSON.parse(res.content) as IApiCollection);
   }
 }
 

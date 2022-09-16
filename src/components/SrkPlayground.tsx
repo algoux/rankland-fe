@@ -74,7 +74,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
   };
 
   return (
-    <div className="srk-playground-container">
+    <div className="srk-playground-container" style={{ height: `${remainingHeight}px` }}>
       <MonacoEditor
         ref={monacoRef!}
         width={500}
