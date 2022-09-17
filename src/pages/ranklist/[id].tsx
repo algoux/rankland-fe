@@ -129,7 +129,7 @@ export default function RanklistPage(props: IRanklistPageProps) {
         items={items}
       /> */}
       <div className="mt-8 mb-8">
-        <StyledRanklist data={data!.srk} name={id} meta={data!.info} />
+        <StyledRanklist data={data!.srk} name={id} meta={data!.info} showFooter />
       </div>
     </div>
   );

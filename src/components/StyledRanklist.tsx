@@ -29,9 +29,10 @@ export interface IStyledRanklistProps {
   meta?: {
     viewCnt?: number;
   };
+  showFooter?: boolean;
 }
 
-export default function StyledRanklist({ data, name, meta }: IStyledRanklistProps) {
+export default function StyledRanklist({ data, name, meta, showFooter = false }: IStyledRanklistProps) {
   const { theme } = useModel('theme');
   let srkCheckError: string | null = null;
 
@@ -43,10 +44,12 @@ export default function StyledRanklist({ data, name, meta }: IStyledRanklistProp
   }
 
   if (srkCheckError) {
-    return <div className="ml-8">
-      <h3>Error occurred while checking srk:</h3>
-      <pre>{srkCheckError}</pre>
-    </div>;
+    return (
+      <div className="ml-8">
+        <h3>Error occurred while checking srk:</h3>
+        <pre>{srkCheckError}</pre>
+      </div>
+    );
   }
 
   const formatTimeDuration = (
@@ -97,7 +100,9 @@ export default function StyledRanklist({ data, name, meta }: IStyledRanklistProp
     const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
     const metaBlock = !meta ? null : (
       <div className="text-center mt-1">
-        <span className="mr-2"><EyeOutlined /> {meta.viewCnt || '-'}</span>
+        <span className="mr-2">
+          <EyeOutlined /> {meta.viewCnt || '-'}
+        </span>
         <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
           Download srk
         </a>
@@ -119,6 +124,23 @@ export default function StyledRanklist({ data, name, meta }: IStyledRanklistProp
       {renderHeader()}
       <div className="mt-6" />
       <Ranklist data={data as any} theme={theme as EnumTheme} />
+      {showFooter && (
+        <div className="text-center mt-8">
+          <p className="mb-1">© 2022 algoUX. All Rights Reserved.</p>
+          <p className="mb-1">
+            Find us on{' '}
+            <a href="https://github.com/algoux" target="_blank">
+              GitHub
+            </a>
+          </p>
+          <p className="mb-1">
+            Powered by {' '}
+            <a href="https://github.com/algoux/standard-ranklist" target="_blank">
+              Standard Ranklist
+            </a>
+          </p>
+        </div>
+      )}
     </ErrorBoundary>
   );
 }
