@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { createRef, useEffect, useState } from 'react';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useHistory, useParams } from 'umi';
@@ -61,6 +61,8 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const rankId = query.get('rankId');
   const history = useHistory();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
+
+  const ranklistContainerRef = createRef<HTMLDivElement>();
 
   useEffect(() => {
     if (data?.ranklistIdInvalid) {
@@ -167,11 +169,16 @@ export default function CollectionPage(props: ICollectionPageProps) {
           openKeys={openKeys}
           onOpenChange={onOpenChange}
           selectedKeys={rankId ? [rankId] : []}
+          onSelect={({ key }) => {
+            if (key !== rankId) {
+              ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });
+            }
+          }}
           className="overflow-y-auto"
           style={{ width: 320 }}
           items={convertCollectionToMenuItems(data.collection, (uniqueKey => urlcat('/collection/:id', { id, rankId: uniqueKey })))}
         />
-        <div className="srk-collection-ranklist">{renderRanklist()}</div>
+        <div className="srk-collection-ranklist" ref={ranklistContainerRef}>{renderRanklist()}</div>
       </div>
     </div>
   );
