@@ -1,6 +1,6 @@
 import type * as srk from '@algoux/standard-ranklist';
 import requestAdapter, { ApiException, HttpException, RequestAdapter } from '@/utils/request';
-import { IApiCollection, IApiRanklist, IApiRanklistInfo } from './interface';
+import { IApiCollection, IApiRanklist, IApiRanklistInfo, IApiStatistics } from './interface';
 import urlcat from 'urlcat';
 import { LogicException, LogicExceptionKind } from './logic.exception';
 
@@ -48,6 +48,10 @@ export class ApiService {
     return this.requestAdapter
       .get(urlcat('/rank/group/:key', { key: opts.uniqueKey }))
       .then((res) => JSON.parse(res.content) as IApiCollection);
+  }
+
+  public getStatistics() {
+    return this.requestAdapter.get<IApiStatistics>('/statistics');
   }
 }
 

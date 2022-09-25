@@ -1,10 +1,12 @@
-import { Link, Helmet } from 'umi';
+import { Link, Helmet, IGetInitialProps } from 'umi';
 import { Card, Col, Modal, Row } from 'antd';
 import { UnorderedListOutlined, TrophyOutlined } from '@ant-design/icons';
 import { useState } from 'react';
 import { formatTitle } from '@/utils/title-format.util';
+import { api } from '@/services/api';
 
-export default function HomePage() {
+export default function HomePage(props: IHomePageProps) {
+  const { data } = props;
   const [isQQGroupModalVisible, setIsQQGroupModalVisible] = useState(false);
 
   return (
@@ -29,7 +31,7 @@ export default function HomePage() {
                     探索
                   </h2>
                   <p className="mt-4 mb-0">
-                    在 <strong>N</strong> 个高质量程序设计竞赛榜单中自由浏览和搜索
+                    在 <strong>{data?.statistics.totalSrkCount ?? '-'}</strong> 个高质量程序设计竞赛榜单中自由浏览和搜索
                   </p>
                 </Card>
               </Link>
@@ -101,4 +103,35 @@ export default function HomePage() {
       </div>
     </div>
   );
+}
+
+const asyncData = async () => {
+  const statistics = await api.getStatistics();
+  return {
+    statistics,
+  };
+};
+
+HomePage.getInitialProps = (async (ctx) => {
+  try {
+    const res = await asyncData();
+    return {
+      data: res,
+    };
+  } catch (e) {
+    if (ctx.isServer) {
+      throw e;
+    }
+    console.error(e);
+    return {
+      error: e,
+    };
+  }
+}) as IGetInitialProps<any, {}>;
+
+type IPageAsyncData = Awaited<ReturnType<typeof asyncData>>;
+
+export interface IHomePageProps {
+  data?: IPageAsyncData;
+  error?: Error;
 }

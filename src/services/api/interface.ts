@@ -33,3 +33,8 @@ export interface IApiCollection {
     children: IApiCollectionItem[];
   };
 }
+
+export interface IApiStatistics {
+  totalSrkCount: number;
+  totalViewCount: number;
+}
