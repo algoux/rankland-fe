@@ -36,8 +36,10 @@ const appLogger = winston.createLogger({
 // redis client
 const redisClient = createClient({
   password: process.env.REDIS_PASS || null,
-  host: process.env.REDIS_HOST || 'localhost',
-  port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+  socket: {
+    host: process.env.REDIS_HOST || 'localhost',
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+  },
 });
 redisClient.on('error', (err) => appLogger.error('Redis client error: %O', err));
 
