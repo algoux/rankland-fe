@@ -14,7 +14,8 @@ const { createClient } = require('redis');
 const util = require('util');
 
 const isProd = process.env.NODE_ENV === 'production';
-const root = path.join(__dirname, 'dist');
+const port = parseInt(process.env.PORT, 10) || 7001;
+const root = path.join(__dirname, '../dist');
 let render;
 let indexHtmlTemplate;
 
@@ -63,6 +64,7 @@ app.use(async (ctx, next) => {
     await next();
   } catch (e) {
     ctx.logger.error('Uncaught error: %O', e);
+    ctx.throw(500, 'Internal Server Error');
   }
 });
 
@@ -123,7 +125,7 @@ app.use(async (ctx, next) => {
   // 符合要求的路由才进行服务端渲染，否则走静态文件逻辑
   if (!ext) {
     if (!render) {
-      render = require('./dist/umi.server');
+      render = require(path.join(root, 'umi.server'));
     }
     const _s = Date.now();
     // 这里默认是字符串渲染
@@ -131,35 +133,36 @@ app.use(async (ctx, next) => {
     ctx.status = 200;
     let html;
     const cacheKey = getSSRCacheKey(ctx.url);
-    const cached = await redisClient.get(cacheKey);
-    if (typeof cached === 'string' && cached.startsWith('<!DOCTYPE html>')) {
-      html = cached;
-      const ssrCost = Date.now() - _s;
-      ctx.set('X-SSR-Success', 'true');
-      ctx.set('X-SSR-Time', ssrCost);
-      ctx.logger.info(`SSR in %d ms (with cache)`, ssrCost);
-    } else {
-      const renderRes = await render({
-        path: ctx.url,
-      });
-      if (renderRes.error) {
-        ctx.logger.error(`SSR error: %O`, renderRes.error);
-        if (isProd) {
-          if (!indexHtmlTemplate) {
-            indexHtmlTemplate = fs.readFileSync(path.join(root, 'index.html'), 'utf-8');
-          }
-          html = indexHtmlTemplate;
-        } else {
-          html = await request.get('http://localhost:8000');
-        }
-      } else {
-        html = renderRes.html;
+    try {
+      const cached = await redisClient.get(cacheKey);
+      if (typeof cached === 'string' && cached.startsWith('<!DOCTYPE html>')) {
+        html = cached;
         const ssrCost = Date.now() - _s;
         ctx.set('X-SSR-Success', 'true');
         ctx.set('X-SSR-Time', ssrCost);
-        ctx.logger.info(`SSR in %d ms`, ssrCost);
+        ctx.logger.info(`SSR in %d ms (with cache)`, ssrCost);
+      } else {
+        const renderRes = await render({
+          path: ctx.url,
+        });
+        if (renderRes.error) {
+          throw renderRes.error;
+        } else {
+          html = renderRes.html;
+          const ssrCost = Date.now() - _s;
+          ctx.set('X-SSR-Success', 'true');
+          ctx.set('X-SSR-Time', ssrCost);
+          ctx.logger.info(`SSR in %d ms`, ssrCost);
+        }
+        redisClient.setEx(cacheKey, 60, html);
       }
-      redisClient.setEx(cacheKey, 60, html);
+    } catch (e) {
+      ctx.logger.error(`SSR error: %O`, e);
+      if (isProd) {
+        html = indexHtmlTemplate;
+      } else {
+        html = await request.get('http://localhost:8000');
+      }
     }
     ctx.body = html;
   } else {
@@ -174,9 +177,12 @@ app.use(async (ctx, next) => {
 isProd && app.use(mount('/dist', require('koa-static')(root)));
 
 async function main() {
+  if (isProd) {
+    indexHtmlTemplate = fs.readFileSync(path.join(root, 'index.html'), 'utf-8');
+  }
   await redisClient.connect();
-  app.listen(7001);
-  console.log(`SSR Server is listening on http://localhost:7001 (pid: ${process.pid})`);
+  app.listen(port);
+  console.log(`SSR Server is listening on http://localhost:${port} (pid: ${process.pid})`);
 }
 
 main();
