@@ -29,6 +29,7 @@
     "koa2-proxy-middleware": "^0.0.4",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
+    "monaco-editor": "^0.34.0",
     "rc-dialog": "^8.9.0",
     "react": "^17",
     "react-dom": "^17",
