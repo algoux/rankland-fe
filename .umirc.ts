@@ -16,7 +16,8 @@ export default defineConfig({
   title: false,
   antd: {},
   define: {
-    'process.env.API_BASE': isProd ? 'https://rl.algoux.org/api' : 'https://rl-dev.algoux.org',
+    'process.env.API_BASE_CLIENT': isProd ? 'https://rl.algoux.org/api' : 'https://rl-dev.algoux.org',
+    'process.env.API_BASE_SERVER': isProd ? 'https://rl.algoux.org/api' : 'https://rl-dev.algoux.org',
   },
   analytics: {
     ga: 'G-D6CVTJBDZT',

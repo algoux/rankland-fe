@@ -80,7 +80,7 @@ const parseResponseMiddleware = async (ctx: Context, next: () => void) => {
 
 if (isBrowser()) {
   requestAdapter = extend({
-    prefix: process.env.API_BASE,
+    prefix: process.env.API_BASE_CLIENT,
     timeout: 30000,
     parseResponse: false,
   });
@@ -99,7 +99,7 @@ if (isBrowser()) {
   requestAdapter.use(parseResponseMiddleware);
 } else {
   requestAdapter = extend({
-    prefix: process.env.API_BASE,
+    prefix: process.env.API_BASE_SERVER,
     timeout: 5000,
     parseResponse: false,
   });
