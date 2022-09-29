@@ -1,5 +1,6 @@
 {
   "name": "rankland-fe",
+  "version": "0.1.0",
   "private": true,
   "author": "bLue",
   "scripts": {
