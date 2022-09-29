@@ -3,6 +3,7 @@
   "private": true,
   "author": "bLue",
   "scripts": {
+    "start": "NODE_ENV=production pm2-runtime pm2.config.js"
   },
   "dependencies": {
     "dayjs": "^1.11.5",

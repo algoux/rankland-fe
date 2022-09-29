@@ -13,7 +13,7 @@
     "postinstall": "umi generate tmp",
     "theme:antd": "lessc --js src/styles/antd.light.less src/styles/antd.light.css && lessc --js src/styles/antd.dark.less src/styles/antd.dark.css",
     "build:type-checker": "`npm bin`/ts-interface-builder -o src/lib/srk-checker -s .ti node_modules/@algoux/standard-ranklist/index.d.ts",
-    "deploy": "NODE_ENV=production pm2-runtime pm2.config.js"
+    "start:docker": "cd server && npm start && cd .."
   },
   "dependencies": {
     "@algoux/standard-ranklist-renderer-component": "^0.2.1",
@@ -26,7 +26,6 @@
     "lodash-es": "^4.17.21",
     "moment": "^2.29.4",
     "monaco-editor": "^0.34.0",
-    "pm2": "^5.2.0",
     "rc-dialog": "^8.9.0",
     "react": "^17",
     "react-dom": "^17",
