@@ -30,6 +30,4 @@ jobs:
           context: ./
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rankland:latest
-      - name: Output Digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rankland-fe:latest
