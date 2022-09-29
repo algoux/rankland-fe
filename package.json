@@ -3,6 +3,7 @@
   "private": true,
   "author": "bLue",
   "scripts": {
+    "ci": "pnpm i --frozen-lockfile",
     "dev:client": "cross-env NODE_ENV=development umi dev",
     "dev:server": "cross-env NODE_ENV=development nodemon --delay 0.2 server.js",
     "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
