@@ -1,6 +1,4 @@
-FROM node:16
-
-RUN apt update && apt install -y vim
+FROM algoux/nodebase:16
 
 WORKDIR /app/
 
