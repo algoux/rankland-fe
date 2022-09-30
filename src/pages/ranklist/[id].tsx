@@ -56,7 +56,7 @@ export default function RanklistPage(props: IRanklistPageProps) {
         <title>{formatTitle(data!.info.name)}</title>
       </Helmet>
       <div className="mt-8 mb-8">
-        <StyledRanklist data={data!.srk} name={id} meta={data!.info} showFooter />
+        <StyledRanklist data={data!.srk} name={id} meta={data!.info} showFooter showFilter />
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Ranklist } from '@algoux/standard-ranklist-renderer-component';
 import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
-import { Alert } from 'antd';
+import { Alert, Select } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
@@ -12,6 +12,7 @@ import FileSaver from 'file-saver';
 import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
 import { EyeOutlined } from '@ant-design/icons';
+import { uniq } from 'lodash-es';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -30,10 +31,18 @@ export interface IStyledRanklistProps {
     viewCnt?: number;
   };
   showFooter?: boolean;
+  showFilter?: boolean;
 }
 
-export default function StyledRanklist({ data, name, meta, showFooter = false }: IStyledRanklistProps) {
+export default function StyledRanklist({
+  data,
+  name,
+  meta,
+  showFooter = false,
+  showFilter = false,
+}: IStyledRanklistProps) {
   const { theme } = useModel('theme');
+  const [filter, setFilter] = useState<{ organizations: string[] }>({ organizations: [] });
   let srkCheckError: string | null = null;
 
   try {
@@ -95,6 +104,21 @@ export default function StyledRanklist({ data, name, meta, showFooter = false }:
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
+  const organizations = uniq(data.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
+    a.localeCompare(b),
+  );
+  const filteredRows = data.rows.filter((row) =>
+    filter.organizations.length ? filter.organizations.includes(row.user?.organization as string) : true,
+  );
+  const usingData = {
+    ...data,
+    rows: filteredRows,
+  };
+
+  const handleOrgFilterChange = (value: string[]) => {
+    setFilter({ organizations: value });
+  };
+
   const renderHeader = () => {
     const startAt = new Date(data.contest.startAt).getTime();
     const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
@@ -122,8 +146,29 @@ export default function StyledRanklist({ data, name, meta, showFooter = false }:
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {renderHeader()}
+      {showFilter && (
+        <div className="mt-2 mx-4">
+          <span>Filter</span>
+          <Select
+            mode="multiple"
+            allowClear
+            placeholder="Select Organizations"
+            onChange={handleOrgFilterChange}
+            className="ml-2"
+            style={{ width: '160px' }}
+            maxTagCount={0}
+            maxTagPlaceholder={(omittedValues) => `${omittedValues.length} selected`}
+          >
+            {organizations.map((item) => (
+              <Select.Option key={item} value={item}>
+                {item}
+              </Select.Option>
+            ))}
+          </Select>
+        </div>
+      )}
       <div className="mt-6" />
-      <Ranklist data={data as any} theme={theme as EnumTheme} />
+      <Ranklist data={usingData as any} theme={theme as EnumTheme} />
       {showFooter && (
         <div className="text-center mt-8">
           <p className="mb-1">© 2022 algoUX. All Rights Reserved.</p>
@@ -134,7 +179,7 @@ export default function StyledRanklist({ data, name, meta, showFooter = false }:
             </a>
           </p>
           <p className="mb-1">
-            Powered by {' '}
+            Powered by{' '}
             <a href="https://github.com/algoux/standard-ranklist" target="_blank">
               Standard Ranklist
             </a>
