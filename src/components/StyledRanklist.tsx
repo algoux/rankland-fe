@@ -13,6 +13,8 @@ import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
 import { EyeOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
+import { formatSrkTimeDuration } from '@/utils/time-format.util';
+import CompetitionProgressBar from './CompetitionProgressBar';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -32,6 +34,7 @@ export interface IStyledRanklistProps {
   };
   showFooter?: boolean;
   showFilter?: boolean;
+  showProgress?: boolean;
 }
 
 export default function StyledRanklist({
@@ -40,6 +43,7 @@ export default function StyledRanklist({
   meta,
   showFooter = false,
   showFilter = false,
+  showProgress = true,
 }: IStyledRanklistProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[] }>({ organizations: [] });
@@ -61,43 +65,8 @@ export default function StyledRanklist({
     );
   }
 
-  const formatTimeDuration = (
-    time: srk.TimeDuration,
-    targetUnit: srk.TimeUnit = 'ms',
-    fmt: (num: number) => number = (num) => num,
-  ) => {
-    let ms = -1;
-    switch (time[1]) {
-      case 'ms':
-        ms = time[0];
-        break;
-      case 's':
-        ms = time[0] * 1000;
-        break;
-      case 'min':
-        ms = time[0] * 1000 * 60;
-        break;
-      case 'h':
-        ms = time[0] * 1000 * 60 * 60;
-        break;
-      case 'd':
-        ms = time[0] * 1000 * 60 * 60 * 24;
-        break;
-    }
-    switch (targetUnit) {
-      case 'ms':
-        return ms;
-      case 's':
-        return fmt(ms / 1000);
-      case 'min':
-        return fmt(ms / 1000 / 60);
-      case 'h':
-        return fmt(ms / 1000 / 60 / 60);
-      case 'd':
-        return fmt(ms / 1000 / 60 / 60 / 24);
-    }
-    return -1;
-  };
+  const needShowProgress = showProgress && !!data._now;
+  const td = data._now ? Date.now() - new Date(data._now).getTime() : 0;
 
   const download = () => {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
@@ -121,7 +90,7 @@ export default function StyledRanklist({
 
   const renderHeader = () => {
     const startAt = new Date(data.contest.startAt).getTime();
-    const endAt = startAt + formatTimeDuration(data.contest.duration, 'ms');
+    const endAt = startAt + formatSrkTimeDuration(data.contest.duration, 'ms');
     const metaBlock = !meta ? null : (
       <div className="text-center mt-1">
         <span className="mr-2">
@@ -139,6 +108,18 @@ export default function StyledRanklist({
           {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
         </p>
         {metaBlock}
+        {needShowProgress && (
+          <div className="mx-4">
+            <CompetitionProgressBar
+              startAt={startAt}
+              endAt={endAt}
+              frozenLength={
+                data.contest.frozenDuration ? formatSrkTimeDuration(data.contest.frozenDuration, 'ms') : undefined
+              }
+              td={td}
+            />
+          </div>
+        )}
       </>
     );
   };
@@ -147,7 +128,7 @@ export default function StyledRanklist({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {renderHeader()}
       {showFilter && (
-        <div className="mt-2 mx-4">
+        <div className="mt-4 mx-4">
           <span>Filter</span>
           <Select
             mode="multiple"
