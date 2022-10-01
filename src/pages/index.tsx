@@ -85,6 +85,8 @@ export default function HomePage(props: IHomePageProps) {
             onCancel={() => setIsQQGroupModalVisible(false)}
           >
             <div>
+              <p>联系邮箱：<a href="mailto:algoux.org@gmail.com">algoux.org@gmail.com</a></p>
+              <p>或加入讨论群：</p>
               <img src="/dist/rankland_qqgroup.jpg" className="w-full" />
             </div>
           </Modal>
