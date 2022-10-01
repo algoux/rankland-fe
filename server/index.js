@@ -156,7 +156,7 @@ app.use(async (ctx, next) => {
           ctx.set('X-SSR-Time', ssrCost);
           ctx.logger.info(`SSR in %d ms`, ssrCost);
         }
-        redisClient.setEx(cacheKey, 60, html);
+        redisClient.setEx(cacheKey, 2 * 60, html);
       }
     } catch (e) {
       ctx.logger.error(`SSR error: %O`, e);
