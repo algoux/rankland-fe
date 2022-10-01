@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@algoux/standard-ranklist': ^0.2.1
-  '@algoux/standard-ranklist-renderer-component': ^0.2.2
+  '@algoux/standard-ranklist-renderer-component': ^0.2.3
   '@ant-design/icons': ^4.7.0
   '@types/file-saver': ^2.0.5
   '@types/lodash-es': ^4.17.6
@@ -49,7 +49,7 @@ specifiers:
   yorkie: ^2.0.0
 
 dependencies:
-  '@algoux/standard-ranklist-renderer-component': 0.2.2_okaega7eon5wgya244mifau7sa
+  '@algoux/standard-ranklist-renderer-component': 0.2.3_okaega7eon5wgya244mifau7sa
   '@ant-design/icons': 4.7.0_sfoxds7t5ydpegc3knd667wn6m
   ahooks: 3.6.2_react@17.0.2
   antd: 4.22.2_sfoxds7t5ydpegc3knd667wn6m
@@ -110,8 +110,8 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-renderer-component/0.2.2_okaega7eon5wgya244mifau7sa:
-    resolution: {integrity: sha512-xphxS0faBOnKVD5Nz/WyDzyOWWI1VkiUeJyaaEjCNx8ypq9YTkdVgHgYEs0Mq7qd8S9j4dWqxdefUbR+1u0rPA==}
+  /@algoux/standard-ranklist-renderer-component/0.2.3_okaega7eon5wgya244mifau7sa:
+    resolution: {integrity: sha512-q6yUTBPXRGGnsGbHn4v9nurgfumlxYS2f2UM/0HtouaXK+DlYCv1lHH4IOD6MHDN0R2e9HMM5l4cqTTwg0sJzg==}
     peerDependencies:
       '@algoux/standard-ranklist': ^0.2.1
       rc-dialog: ^8.4.6

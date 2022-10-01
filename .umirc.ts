@@ -22,7 +22,9 @@ export default defineConfig({
   ssr: {
     devServerRender: false,
   },
-  dynamicImport: {},
+  dynamicImport: {
+    loading: '@/components/Loading',
+  },
   fastRefresh: {},
   tailwindcss: {
     tailwindCssFilePath: '@/tailwind.css',

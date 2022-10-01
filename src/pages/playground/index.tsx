@@ -2,8 +2,7 @@ import React from 'react';
 import type SrkPlaygroundType from '@/components/SrkPlayground';
 import { Helmet, isBrowser, dynamic } from 'umi';
 import { formatTitle } from '@/utils/title-format.util';
-
-const Loading = () => <p>Loading...</p>;
+import Loading from '@/components/Loading';
 
 const SrkPlayground: typeof SrkPlaygroundType = dynamic({
   loader: async () => {
@@ -12,7 +11,7 @@ const SrkPlayground: typeof SrkPlaygroundType = dynamic({
     );
     return SrkPlayground;
   },
-  loading: () => Loading(),
+  loading: Loading,
 });
 
 export default function Playground() {

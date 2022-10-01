@@ -104,7 +104,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
                     如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，游乐场可以帮助你直观地了解 srk 的字段及其作用。
                   </p>
                   <p>
-                    要将编辑中的数据提交至预览，请使用{' '}
+                    推荐使用 PC/Mac 等桌面设备进行调试。要将编辑中的数据提交至预览，请使用{' '}
                     <Tag color="blue" className="mr-0">
                       Ctrl/Cmd + S
                     </Tag>{' '}
