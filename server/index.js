@@ -45,6 +45,7 @@ redisClient.on('error', (err) => appLogger.error('Redis client error: %O', err))
 
 // koa app
 const app = new Koa();
+app.proxy = true;
 
 // request id middleware
 app.use(async (ctx, next) => {
