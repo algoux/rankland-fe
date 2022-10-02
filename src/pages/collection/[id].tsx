@@ -175,7 +175,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
             }
           }}
           className="overflow-y-auto"
-          style={{ width: 320 }}
+          style={{ width: 300 }}
           items={convertCollectionToMenuItems(data.collection, (uniqueKey => urlcat('/collection/:id', { id, rankId: uniqueKey })))}
         />
         <div className="srk-collection-ranklist" ref={ranklistContainerRef}>{renderRanklist()}</div>

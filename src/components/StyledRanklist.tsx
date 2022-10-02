@@ -15,6 +15,7 @@ import { EyeOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
 import { formatSrkTimeDuration } from '@/utils/time-format.util';
 import CompetitionProgressBar from './CompetitionProgressBar';
+import ContactUs from './ContactUs';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -173,6 +174,12 @@ export default function StyledRanklist({
             <a href="https://github.com/algoux/standard-ranklist" target="_blank">
               Standard Ranklist
             </a>
+          </p>
+          <p>
+            想贡献榜单数据？或要免费托管比赛外榜？欢迎
+            <ContactUs>
+              <a>联系我们</a>
+            </ContactUs>
           </p>
         </div>
       )}

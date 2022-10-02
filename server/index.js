@@ -56,6 +56,7 @@ app.use(async (ctx, next) => {
 // time cost middleware
 app.use(async (ctx, next) => {
   const _s = Date.now();
+  ctx.startAt = _s;
   await next();
   ctx.set('X-Response-Time', Date.now() - _s);
 });
@@ -88,9 +89,9 @@ app.use(
 app.use((ctx, next) => {
   if (!ctx.logger) {
     const ctxLoggingFormat = winston.format.printf(({ level, message, timestamp }) => {
-      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${
-        ctx.requestId
-      } ${ctx.method.toUpperCase()} ${ctx.url}] ${message}`;
+      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${ctx.requestId}] [${ctx.ip}/${
+        Date.now() - ctx.startAt
+      }ms ${ctx.method.toUpperCase()} ${ctx.url}] ${message}`;
     });
     ctx.logger = winston.createLogger({
       level: 'info',

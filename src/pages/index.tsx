@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import { Link, Helmet, IGetInitialProps } from 'umi';
 import { Card, Col, Modal, Row } from 'antd';
 import { UnorderedListOutlined, TrophyOutlined } from '@ant-design/icons';
-import { useState } from 'react';
 import { formatTitle } from '@/utils/title-format.util';
 import { api } from '@/services/api';
+import ContactUs from '@/components/ContactUs';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
@@ -12,7 +13,7 @@ export default function HomePage(props: IHomePageProps) {
   return (
     <div className="normal-content">
       <Helmet>
-      <title>{formatTitle()}</title>
+        <title>{formatTitle()}</title>
       </Helmet>
       <div className="home-intro">
         <h1 style={{ fontSize: '32px' }}>欢迎来到 RankLand</h1>
@@ -59,9 +60,7 @@ export default function HomePage(props: IHomePageProps) {
               ：标准榜单格式（srk）旨在标准化榜单数据，欢迎了解和共建生态
             </li>
             <li>
-              <Link to="/playground">
-                Playground
-              </Link>
+              <Link to="/playground">Playground</Link>
               ：在线调试和预览 srk 格式的榜单数据
             </li>
             <li>
@@ -76,20 +75,11 @@ export default function HomePage(props: IHomePageProps) {
           <h1 className="block-title">联系我们</h1>
           <p>
             如果你想要贡献榜单或为赛事寻求免费的外榜托管，欢迎
-            <a onClick={() => setIsQQGroupModalVisible(true)}>与我们联系</a>。
+            <ContactUs>
+              <a>与我们联系</a>
+            </ContactUs>
+            。
           </p>
-          <Modal
-            title="联系我们"
-            visible={isQQGroupModalVisible}
-            footer={null}
-            onCancel={() => setIsQQGroupModalVisible(false)}
-          >
-            <div>
-              <p>联系邮箱：<a href="mailto:algoux.org@gmail.com">algoux.org@gmail.com</a></p>
-              <p>或加入讨论群：</p>
-              <img src="/dist/rankland_qqgroup.jpg" className="w-full" />
-            </div>
-          </Modal>
         </div>
         <div className="block">
           <h1 className="block-title">关于我们</h1>
