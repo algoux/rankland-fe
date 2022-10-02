@@ -44,6 +44,7 @@ export interface IApiLiveConfig {
   srkUrl: string;
   scrollSolutionRefreshInterval?: number;
   scrollSolutionUrl?: string;
+  ranklistUniqueKey?: string;
 }
 
 export interface IApiLiveScrollSolutionDataItem {

@@ -10,6 +10,6 @@ export class LogicException extends Error {
     this.name = 'LogicException';
     this.kind = kind;
     // @ts-ignore
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace?.(this, this.constructor);
   }
 }

@@ -12,7 +12,7 @@ export class ApiException extends Error {
     this.code = code;
     this.message = message;
     // @ts-ignore
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace?.(this, this.constructor);
   }
 }
 
@@ -24,7 +24,7 @@ export class HttpException extends Error {
     this.name = 'HttpException';
     this.status = status;
     // @ts-ignore
-    Error.captureStackTrace(this, this.constructor);
+    Error.captureStackTrace?.(this, this.constructor);
   }
 }
 

@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from 'react';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import type * as srk from '@algoux/standard-ranklist';
-import { Helmet, Link, useParams } from 'umi';
+import { Helmet, Link, useParams, history } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
-import { Button, Spin } from 'antd';
+import { Button, Spin, Modal } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
+import urlcat from 'urlcat';
 
 export default function LiveRanklistPage() {
   const { id } = useParams<{ id: string }>();
@@ -37,8 +38,15 @@ export default function LiveRanklistPage() {
   }, [id]);
 
   useEffect(() => {
+    if (config?.ranklistUniqueKey) {
+      Modal.confirm({
+        title: '比赛已结束，跳转到终榜？',
+        onOk() {
+          history.push(urlcat(`/ranklist/:uniqueKey`, { uniqueKey: config.ranklistUniqueKey }));
+        },
+      });
+    }
     if (config?.srkUrl) {
-      // console.log('fetching ranklist');
       fetchRanklist().then((res) => setRanklist(res));
       if (config.srkRefreshInterval > 0) {
         if (pollRanklistTimer.current) {
