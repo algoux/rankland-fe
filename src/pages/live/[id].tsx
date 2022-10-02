@@ -22,7 +22,7 @@ export default function LiveRanklistPage() {
   });
 
   const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(
-    () => api.getLiveRanklist({ url: config?.srkUrl || '' }),
+    () => api.getLiveRanklist({ url: config?.srkUrl || '', alignBaseSec: (config?.srkRefreshInterval || 0) / 1000 }),
     {
       manual: true,
     },

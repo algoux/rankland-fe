@@ -71,8 +71,8 @@ export class ApiService {
     return await res.response.json();
   }
 
-  public async getLiveRanklist(opts: { url: string }): Promise<srk.Ranklist> {
-    const res = await this.getLiveFile(opts.url);
+  public async getLiveRanklist(opts: { url: string, alignBaseSec?: number }): Promise<srk.Ranklist> {
+    const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
     switch (res.response.headers.get('content-type')) {
       case 'application/json':
         return await res.response.json();
@@ -80,13 +80,17 @@ export class ApiService {
     throw new Error('Unknown srk content type');
   }
 
-  public async getLiveScrollSolution(opts: { url: string }): Promise<IApiLiveScrollSolutionData> {
-    const res = await this.getLiveFile(opts.url);
+  public async getLiveScrollSolution(opts: { url: string, alignBaseSec?: number }): Promise<IApiLiveScrollSolutionData> {
+    const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
     return await res.response.json();
   }
 
-  private getLiveFile<T>(url: string) {
-    return this.requestAdapter.get<T>(urlcat(url, { _t: Math.floor(Date.now() / 1000) }), {
+  private getLiveFile<T>(url: string, alignBaseSec?: number) {
+    let sec = Math.floor(Date.now() / 1000);
+    if (alignBaseSec && alignBaseSec > 0) {
+      sec -= sec % alignBaseSec;
+    }
+    return this.requestAdapter.get<T>(urlcat(url, { _t: sec }), {
       getResponse: true,
     });
   }
