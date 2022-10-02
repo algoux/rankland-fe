@@ -4,7 +4,7 @@ import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dis
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
-import { Alert, Select } from 'antd';
+import { Alert, Badge, Select } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
@@ -35,6 +35,7 @@ export interface IStyledRanklistProps {
   showFooter?: boolean;
   showFilter?: boolean;
   showProgress?: boolean;
+  isLive?: boolean;
 }
 
 export default function StyledRanklist({
@@ -44,6 +45,7 @@ export default function StyledRanklist({
   showFooter = false,
   showFilter = false,
   showProgress = true,
+  isLive = false,
 }: IStyledRanklistProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[] }>({ organizations: [] });
@@ -103,7 +105,14 @@ export default function StyledRanklist({
     );
     return (
       <>
-        <h1 className="text-center mb-1">{data.contest.title}</h1>
+        <h1 className="text-center mb-1">
+          {isLive ? (
+            <span className="inline-block mr-1">
+              Live <Badge status="processing" style={{ fontSize: 'inherit' }} />
+            </span>
+          ) : null}
+          {data.contest.title}
+        </h1>
         <p className="text-center mb-0">
           {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
         </p>

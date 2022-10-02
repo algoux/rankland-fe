@@ -38,3 +38,24 @@ export interface IApiStatistics {
   totalSrkCount: number;
   totalViewCount: number;
 }
+
+export interface IApiLiveConfig {
+  srkRefreshInterval: number;
+  srkUrl: string;
+  scrollSolutionRefreshInterval?: number;
+  scrollSolutionUrl?: string;
+}
+
+export interface IApiLiveScrollSolutionDataItem {
+  problem: srk.Problem;
+  score: {
+    value: srk.RankScore['value'];
+  };
+  result: Exclude<srk.SolutionResultFull, null>;
+  user: srk.User;
+}
+
+export interface IApiLiveScrollSolutionData {
+  rows: IApiLiveScrollSolutionDataItem[];
+  updatedAt: number; // timestamp (s)
+}
