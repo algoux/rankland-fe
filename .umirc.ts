@@ -36,6 +36,7 @@ export default defineConfig({
       memo.plugin('MonacoWebpackPlugin').use(MonacoWebpackPlugin, [
         {
           languages: ['json'],
+          publicPath: '/',
         },
       ]);
     }
