@@ -143,10 +143,6 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
   }, [clientReady, clientWidth, usingMobileLayout, data, rankId]);
 
-  // const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-  //   setOpenKeys(keys);
-  // };
-
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
       return (
