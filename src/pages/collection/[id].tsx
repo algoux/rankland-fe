@@ -1,7 +1,7 @@
 import React, { createRef, useEffect, useState } from 'react';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
-import { Helmet, IGetInitialProps, Link, useHistory, useParams } from 'umi';
+import { Helmet, IGetInitialProps, Link, useHistory, useModel, useParams } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
 import { Button, Menu, MenuProps, Spin } from 'antd';
@@ -12,26 +12,59 @@ import { CollectionItemType, IApiCollection, IApiCollectionItem, IApiRanklist } 
 import { MiniCache } from '@/utils/mini-cache.util';
 import './collection-page.less';
 import urlcat from 'urlcat';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import cateIcpcLogoLight from '@/assets/icpc_logo_black.png';
+import cateIcpcLogoDark from '@/assets/icpc_logo_white.png';
+import cateCcpcLogoLight from '@/assets/ccpc_logo_black.png';
+import cateCcpcLogoDark from '@/assets/ccpc_logo_white.png';
+import { useClientWidthHeight } from '@/hooks/use-client-wh';
+import { useLocalStorageState } from 'ahooks';
+import { LocalStorageKey } from '@/configs/local-storage-key.config';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const apiCache = new MiniCache();
 
-function getItem(label: React.ReactNode, key: React.Key, children?: MenuItem[], type?: 'group'): MenuItem {
+function getItem(
+  label: React.ReactNode,
+  key: React.Key,
+  icon?: React.ReactNode,
+  children?: MenuItem[],
+  type?: 'group',
+): MenuItem {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
     key,
+    icon,
     children,
     label,
     type,
   } as MenuItem;
 }
 
-function convertCollectionToMenuItems(collection: IApiCollection, childUrlFormatter: (uniqueKey: string) => string): MenuItem[] {
+function convertCollectionToMenuItems(
+  collection: IApiCollection,
+  childUrlFormatter: (uniqueKey: string) => string,
+  theme: 'light' | 'dark',
+): MenuItem[] {
   const convert = (item: IApiCollectionItem): MenuItem => {
     if (item.type === CollectionItemType.Directory) {
+      let icon = null;
+      if (item.uniqueKey === 'dir-icpc') {
+        icon = (
+          <span className="srk-collection-menu-icon">
+            <img src={theme === 'dark' ? cateIcpcLogoDark : cateIcpcLogoLight} alt="ICPC" />
+          </span>
+        );
+      } else if (item.uniqueKey === 'dir-ccpc') {
+        icon = (
+          <span className="srk-collection-menu-icon">
+            <img src={theme === 'dark' ? cateCcpcLogoDark : cateCcpcLogoLight} alt="CCPC" />
+          </span>
+        );
+      }
       const children = (item.children || []).map(convert);
-      return getItem(item.name, item.uniqueKey, children);
+      return getItem(item.name, item.uniqueKey, icon, children);
     } else {
       return getItem(<Link to={childUrlFormatter(item.uniqueKey)}>{item.name}</Link>, item.uniqueKey);
     }
@@ -55,12 +88,23 @@ export default function CollectionPage(props: ICollectionPageProps) {
     error,
     location: { search },
   } = props;
+  const { theme } = useModel('theme');
   const [remainingHeight] = useRemainingHeight();
+  const [{ width: clientWidth }] = useClientWidthHeight();
   const { id } = useParams<{ id: string }>();
   const query = new URLSearchParams(search);
   const rankId = query.get('rankId');
   const history = useHistory();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [collapsed, setCollapsed] = useState(false);
+  const [navCollapsed, setNavCollapsed] = useLocalStorageState<string | undefined>(
+    LocalStorageKey.CollectionNavCollapsed,
+    {
+      defaultValue: undefined,
+    },
+  );
+  const [clientReady, setClientReady] = useState(false);
+  const usingMobileLayout = clientWidth < 640;
 
   const ranklistContainerRef = createRef<HTMLDivElement>();
 
@@ -88,9 +132,20 @@ export default function CollectionPage(props: ICollectionPageProps) {
     setOpenKeys(nextOpenKeys);
   }
 
-  const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
-    setOpenKeys(keys);
-  };
+  useEffect(() => {
+    if (clientWidth > 0 && data?.collection && !clientReady) {
+      setClientReady(true);
+      if (navCollapsed === 'true') {
+        setCollapsed(true);
+      } else if (navCollapsed !== 'false' && rankId && !data.ranklistIdInvalid && usingMobileLayout) {
+        setCollapsed(true);
+      }
+    }
+  }, [clientReady, clientWidth, usingMobileLayout, data, rankId]);
+
+  // const onOpenChange: MenuProps['onOpenChange'] = (keys) => {
+  //   setOpenKeys(keys);
+  // };
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -153,10 +208,14 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
     return (
       <div>
-        <h3 className="text-center mt-16">Select a ranklist from left navigation bar to view</h3>
+        <h3 className="text-center mt-16">请展开左侧边栏并选择一个榜单</h3>
       </div>
     );
   };
+
+  const expandedNavWidth = usingMobileLayout ? clientWidth : 300;
+  const collapsedNavWidth = 80;
+  const navWidth = collapsed ? collapsedNavWidth : expandedNavWidth;
 
   return (
     <div>
@@ -164,21 +223,50 @@ export default function CollectionPage(props: ICollectionPageProps) {
         <title>{formatTitle('榜单合集')}</title>
       </Helmet>
       <div className="srk-collection-container" style={{ height: `${remainingHeight}px` }}>
-        <Menu
-          mode="inline"
-          openKeys={openKeys}
-          onOpenChange={onOpenChange}
-          selectedKeys={rankId ? [rankId] : []}
-          onSelect={({ key }) => {
-            if (key !== rankId) {
-              ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });
-            }
-          }}
-          className="overflow-y-auto"
-          style={{ width: 300 }}
-          items={convertCollectionToMenuItems(data.collection, (uniqueKey => urlcat('/collection/:id', { id, rankId: uniqueKey })))}
-        />
-        <div className="srk-collection-ranklist" ref={ranklistContainerRef}>{renderRanklist()}</div>
+        <div className="srk-collection-nav" style={{ width: navWidth }}>
+          <div>
+            <Button
+              size="large"
+              onClick={() => {
+                setCollapsed(!collapsed);
+                setNavCollapsed(!collapsed ? 'true' : 'false');
+              }}
+              style={{ width: navWidth, transition: 'width 0.3s cubic-bezier(0.2, 0, 0, 1)' }}
+            >
+              {collapsed ? (
+                <MenuUnfoldOutlined />
+              ) : (
+                <span>
+                  <MenuFoldOutlined /> Collapse
+                </span>
+              )}
+            </Button>
+          </div>
+          <Menu
+            mode="inline"
+            defaultOpenKeys={openKeys}
+            selectedKeys={rankId ? [rankId] : []}
+            onSelect={({ key }) => {
+              if (key !== rankId) {
+                ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });
+              }
+              if (usingMobileLayout) {
+                setCollapsed(true);
+                setNavCollapsed('true');
+              }
+            }}
+            items={convertCollectionToMenuItems(
+              data.collection,
+              (uniqueKey) => urlcat('/collection/:id', { id, rankId: uniqueKey }),
+              theme,
+            )}
+            inlineCollapsed={collapsed}
+            style={{ overflowY: 'auto', overflowX: 'clip' }}
+          />
+        </div>
+        <div className="srk-collection-ranklist" ref={ranklistContainerRef}>
+          {renderRanklist()}
+        </div>
       </div>
     </div>
   );

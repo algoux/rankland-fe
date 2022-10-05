@@ -1,13 +1,17 @@
 import { useEffect, useState } from 'react';
 import { throttle } from 'lodash-es';
 
-export function useRemainingHeight() {
-  const [remainingHeight, setRemainingHeight] = useState(0);
+export function useClientWidthHeight() {
+  const [wh, setWh] = useState({
+    width: 0,
+    height: 0,
+  });
 
   const afterResize = () => {
-    const remainingHeight =
-      document.body.clientHeight - (document.querySelector('.ant-layout-header')?.getBoundingClientRect().height || 0);
-    setRemainingHeight(remainingHeight);
+    setWh({
+      width: document.body.clientWidth,
+      height: document.body.clientHeight,
+    });
   };
   const whenWindowResized = throttle(afterResize, 250);
 
@@ -20,5 +24,5 @@ export function useRemainingHeight() {
     return () => window.removeEventListener('resize', whenWindowResized);
   }, []);
 
-  return [remainingHeight] as const;
+  return [wh] as const;
 }

@@ -1,8 +1,36 @@
 .srk-collection-container {
   display: flex;
+  .srk-collection-nav {
+    background: #f4f4f4;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: rgba(217, 217, 217);
+
+    .srk-collection-menu-icon {
+      @apply text-center;
+      img {
+        @apply w-8 h-8;
+      }
+    }
+    .ant-menu.ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
+      padding: 0;
+      .srk-collection-menu-icon {
+        @apply w-full;
+      }
+    }
+  }
   .srk-collection-ranklist {
     flex: 1;
     overflow-x: auto;
     position: relative;
+  }
+}
+
+html.dark {
+  .srk-collection-container {
+    .srk-collection-nav {
+      background: #111111;
+      border-right-color: rgba(67, 67, 67);
+    }
   }
 }
