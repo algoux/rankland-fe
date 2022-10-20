@@ -17,7 +17,7 @@
     "start:docker": "cd server && npm start && cd .."
   },
   "dependencies": {
-    "@algoux/standard-ranklist-renderer-component": "^0.2.3",
+    "@algoux/standard-ranklist-renderer-component": "^0.2.4",
     "@ant-design/icons": "^4.7.0",
     "ahooks": "^3.5.2",
     "antd": "^4.21.7",
@@ -39,7 +39,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@algoux/standard-ranklist": "^0.2.1",
+    "@algoux/standard-ranklist": "^0.2.3",
     "@types/file-saver": "^2.0.5",
     "@types/lodash-es": "^4.17.6",
     "@types/react": "^17",

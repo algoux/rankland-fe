@@ -175,8 +175,11 @@ export default function StyledRanklist({
               Standard Ranklist
             </a>
           </p>
+          <p className="mb-1">
+            我们同为算法竞赛爱好者，不妨<a href="https://github.com/algoux/srk-collection" target="_blank">一起维护 👏</a>
+          </p>
           <p>
-            想贡献榜单数据？或要免费托管比赛外榜？欢迎
+            需要免费托管比赛外榜？欢迎
             <ContactUs>
               <a>联系我们</a>
             </ContactUs>

@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.2.1');
+export const Version = t.lit('0.2.3');
 
 export const DatetimeISOString = t.name("string");
 
@@ -48,18 +48,27 @@ export const Style = t.iface([], {
   "backgroundColor": t.opt("ThemeColor"),
 });
 
+export const I18NStringSet = t.iface([], {
+  "fallback": "string",
+  [t.indexKey]: "string",
+});
+
+export const Text = t.union("string", "I18NStringSet");
+
+export const Contributor = t.name("string");
+
 export const ExternalUser = t.iface([], {
-  "name": "string",
+  "name": "Text",
   "avatar": t.opt("Image"),
   "link": t.opt("string"),
 });
 
 export const User = t.iface([], {
   "id": t.opt(t.union("number", "string")),
-  "name": "string",
+  "name": "Text",
   "official": t.opt("boolean"),
   "avatar": t.opt("Image"),
-  "organization": t.opt("string"),
+  "organization": t.opt("Text"),
   "teamMembers": t.opt(t.array("ExternalUser")),
   "marker": t.opt("string"),
 });
@@ -70,7 +79,7 @@ export const ProblemStatistics = t.iface([], {
 });
 
 export const Problem = t.iface([], {
-  "title": t.opt("string"),
+  "title": t.opt("Text"),
   "alias": t.opt("string"),
   "link": t.opt("Link"),
   "statistics": t.opt("ProblemStatistics"),
@@ -91,7 +100,7 @@ export const Solution = t.iface([], {
 });
 
 export const Contest = t.iface([], {
-  "title": "string",
+  "title": "Text",
   "startAt": "DatetimeISOString",
   "duration": "TimeDuration",
   "frozenDuration": t.opt("TimeDuration"),
@@ -142,7 +151,7 @@ export const MarkerStylePreset = t.union(t.lit('red'), t.lit('orange'), t.lit('y
 
 export const Marker = t.iface([], {
   "id": "string",
-  "label": "string",
+  "label": "Text",
   "style": t.union("Style", "MarkerStylePreset"),
 });
 
@@ -168,6 +177,7 @@ export const Ranklist = t.iface([], {
   "rows": t.array("RanklistRow"),
   "markers": t.opt(t.array("Marker")),
   "sorter": t.opt("Sorter"),
+  "contributors": t.opt(t.array("Contributor")),
   "_now": t.opt("DatetimeISOString"),
 });
 
@@ -188,6 +198,9 @@ const exportedTypeSuite: t.ITypeSuite = {
   Color,
   ThemeColor,
   Style,
+  I18NStringSet,
+  Text,
+  Contributor,
   ExternalUser,
   User,
   ProblemStatistics,
