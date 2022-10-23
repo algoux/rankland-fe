@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { useModel } from 'umi';
 import { Modal, Tag } from 'antd';
 import MonacoEditor from 'react-monaco-editor';
@@ -9,18 +9,16 @@ import DEFAULT_DEMO_CODE from '@/assets/srk-playground-demo.srk.json.txt';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
+import { throttle } from 'lodash-es';
 
-export interface ISrkPlaygroundProps {
-  code?: string;
-}
+export interface ISrkPlaygroundProps {}
 
 /**
  * Warning: 这个组件必须使用 dynamic 引入，否则会导致 SSR 报错
  */
 export default function SrkPlayground(props: ISrkPlaygroundProps) {
   const { theme } = useModel('theme');
-  const [code, setCode] = useState(props.code || DEFAULT_DEMO_CODE);
-  const [uncommittedCode, setUncommittedCode] = useState(props.code || DEFAULT_DEMO_CODE);
+  const [code, setCode] = useState(DEFAULT_DEMO_CODE);
   const [remainingHeight] = useRemainingHeight();
   const [ready, setReady] = useState(false);
   const [messageRead, setMessageRead] = useLocalStorageState<string | undefined>(
@@ -29,6 +27,11 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
       defaultValue: undefined,
     },
   );
+
+  const _codeChange = (code: string) => {
+    setCode(code || '');
+  };
+  const onCodeChange = useCallback(throttle(_codeChange, 250), []);
 
   let monacoRef = useRef<MonacoEditor>(null);
   let syntaxValid = false;
@@ -81,17 +84,13 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
         height={remainingHeight}
         language="json"
         theme={theme === 'dark' ? 'vs-dark' : 'vs-light'}
-        value={uncommittedCode}
+        value={code}
         options={options}
         onChange={(newValue) => {
-          setUncommittedCode(newValue);
+          onCodeChange(newValue);
         }}
         editorDidMount={(editor, monaco) => {
           editor.focus();
-          const binding = editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
-            const savedCode = editor.getModel()?.getValue();
-            setCode(savedCode || '');
-          });
           setReady(true);
           if (messageRead !== 'true') {
             Modal.info({
@@ -99,16 +98,9 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
               width: 600,
               content: (
                 <div className="mt-6">
-                  <p>你可以调试标准榜单格式（srk）数据并实时预览效果。</p>
+                  <p>你可以调试标准榜单格式（srk）数据并实时预览效果，推荐使用桌面端设备。</p>
                   <p>
                     如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，游乐场可以帮助你直观地了解 srk 的字段及其作用。
-                  </p>
-                  <p>
-                    推荐使用 PC/Mac 等桌面设备进行调试。要将编辑中的数据提交至预览，请使用{' '}
-                    <Tag color="blue" className="mr-0">
-                      Ctrl/Cmd + S
-                    </Tag>{' '}
-                    组合键。
                   </p>
                   <p>
                     需要参考 srk 规范？请点击右上角的 <QuestionCircleOutlined /> 图标。

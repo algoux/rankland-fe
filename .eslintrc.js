@@ -22,5 +22,6 @@ module.exports = {
     // Customize your rules
     'no-undef': 'off',
     'max-params': 'off',
+    '@typescript-eslint/no-empty-interface': 'off',
   },
 };
