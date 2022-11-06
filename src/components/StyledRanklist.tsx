@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ranklist } from '@algoux/standard-ranklist-renderer-component';
+import { Ranklist, resolveText } from '@algoux/standard-ranklist-renderer-component';
 import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
@@ -112,7 +112,7 @@ export default function StyledRanklist({
               Live <Badge status="processing" style={{ fontSize: 'inherit' }} />
             </span>
           ) : null}
-          {data.contest.title}
+          {resolveText(data.contest.title)}
         </h1>
         <p className="text-center mb-0">
           {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
