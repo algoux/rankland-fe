@@ -4,7 +4,8 @@ import MonacoWebpackPlugin from 'monaco-editor-webpack-plugin';
 const isProd = process.env.NODE_ENV === 'production';
 
 const outputPath = 'dist/';
-const publicPath = isProd ? `https://rl.algoux.org.dist.online/${outputPath}` : `http://127.0.0.1:8000/${outputPath}`;
+// const publicPath = isProd ? `https://rl.algoux.org.dist.online/${outputPath}` : `http://127.0.0.1:8000/${outputPath}`;
+const publicPath = isProd ? `/${outputPath}` : `http://127.0.0.1:8000/${outputPath}`;
 
 export default defineConfig({
   webpack5: {},
