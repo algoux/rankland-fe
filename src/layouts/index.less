@@ -35,7 +35,12 @@ body {
   opacity: 1;
   &.optimize-decrease-effects {
     .srk-main {
-      --srk-table-head-backdrop-filter: saturate(180%) blur(2px);
+      --srk-table-head-backdrop-filter: none;
+      --srk-table-head-bg: rgba(255, 255, 255, 1);
+
+      @media screen and (prefers-color-scheme: dark) {
+        --srk-table-head-bg: rgba(25, 25, 25, 1);
+      }
     }
   }
 }
