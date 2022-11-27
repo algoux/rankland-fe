@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Ranklist, resolveText } from '@algoux/standard-ranklist-renderer-component';
+import { Ranklist, resolveText, resolveContributor } from '@algoux/standard-ranklist-renderer-component';
 import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
@@ -91,6 +91,31 @@ export default function StyledRanklist({
     setFilter({ organizations: value });
   };
 
+  const renderContributor = (contributor: srk.Contributor) => {
+    const contributorObj = resolveContributor(contributor);
+    if (!contributorObj) {
+      return null;
+    }
+    const { name, url } = contributorObj;
+    if (url) {
+      return (
+        <a href={url} target="_blank">
+          {name}
+        </a>
+      );
+    }
+    return <span>{name}</span>;
+  };
+
+  const renderContributors = (contributors: srk.Contributor[]) => {
+    return contributors.map((contributor, i) => (
+      <span key={contributor}>
+        {i > 0 && ', '}
+        {renderContributor(contributor)}
+      </span>
+    ));
+  };
+
   const renderHeader = () => {
     const startAt = new Date(data.contest.startAt).getTime();
     const endAt = startAt + formatSrkTimeDuration(data.contest.duration, 'ms');
@@ -102,6 +127,9 @@ export default function StyledRanklist({
         <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
           Download srk
         </a>
+        {Array.isArray(data.contributors) && data.contributors.length > 0 && (
+          <p>Contributors: {renderContributors(data.contributors)}</p>
+        )}
       </div>
     );
     return (
@@ -176,7 +204,10 @@ export default function StyledRanklist({
             </a>
           </p>
           <p className="mb-1">
-            我们同为算法竞赛爱好者，不妨<a href="https://github.com/algoux/srk-collection" target="_blank">一起维护 👏</a>
+            我们同为算法竞赛爱好者，不妨
+            <a href="https://github.com/algoux/srk-collection" target="_blank">
+              一起维护 👏
+            </a>
           </p>
           <p>
             需要免费托管比赛外榜？欢迎

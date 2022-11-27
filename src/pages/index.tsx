@@ -60,7 +60,9 @@ export default function HomePage(props: IHomePageProps) {
               ：标准榜单格式（srk）旨在标准化榜单数据，欢迎了解和共建生态
             </li>
             <li>
-              <a href="https://github.com/algoux/srk-collection" target="_blank">Srk Collection</a>
+              <a href="https://github.com/algoux/srk-collection" target="_blank">
+                Srk Collection
+              </a>
               ：精心维护的榜单合集，欢迎一起贡献
             </li>
             <li>
@@ -95,6 +97,16 @@ export default function HomePage(props: IHomePageProps) {
             </a>
           </p>
           <p>© 2022 algoUX. All Rights Reserved.</p>
+          <p>
+            其他链接：
+            <a href="https://algoux.org" target="_blank">
+              首页
+            </a>
+            <span className="mx-2">|</span>
+            <a href="https://service-status.algoux.org/status/rankland" target="_blank">
+              服务状态
+            </a>
+          </p>
         </div>
       </div>
     </div>

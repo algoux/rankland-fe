@@ -31,9 +31,13 @@ html.dark {
 //   // --antd-wave-shadow-color: @primary-color;
 // }
 
-
 body {
   opacity: 1;
+  &.optimize-decrease-effects {
+    .srk-main {
+      --srk-table-head-backdrop-filter: saturate(180%) blur(2px);
+    }
+  }
 }
 
 #root {

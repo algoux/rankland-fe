@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, IRouteComponentProps, useModel } from 'umi';
 import { Layout, BackTop } from 'antd';
+import Bowser from "bowser";
 import '@/styles/antd.scss';
 import './index.less';
 import logo from '@/assets/logo.png';
@@ -16,6 +17,10 @@ export default function RootLayout({ children }: IRouteComponentProps) {
   };
 
   useEffect(() => {
+    const uaInfo = Bowser.parse(window.navigator.userAgent);
+    if (uaInfo.os.name === 'macOS' && uaInfo.engine.name === 'Blink') {
+      document.body.classList.add('optimize-decrease-effects');
+    }
     const systemThemeMediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setTheme(systemThemeMediaQuery.matches ? 'dark' : 'light');
     systemThemeMediaQuery.addListener(systemThemeListener);
