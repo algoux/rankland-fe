@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.2.3');
+export const Version = t.lit('0.3.0');
 
 export const DatetimeISOString = t.name("string");
 
@@ -64,7 +64,7 @@ export const ExternalUser = t.iface([], {
 });
 
 export const User = t.iface([], {
-  "id": t.opt(t.union("number", "string")),
+  "id": "string",
   "name": "Text",
   "official": t.opt("boolean"),
   "avatar": t.opt("Image"),
@@ -93,7 +93,7 @@ export const SolutionResultFull = t.union("SolutionResultLite", t.lit('WA'), t.l
 export const SolutionResultCustom = t.name("string");
 
 export const Solution = t.iface([], {
-  "result": t.union("SolutionResultFull", "SolutionResultCustom"),
+  "result": "string",
   "score": t.opt("number"),
   "time": "TimeDuration",
   "link": t.opt("Link"),
@@ -113,18 +113,44 @@ export const RankSeriesSegmentStylePreset = t.union(t.lit('gold'), t.lit('silver
 
 export const RankSeriesSegment = t.iface([], {
   "title": t.opt("string"),
-  "count": t.opt("number"),
   "style": t.opt(t.union("Style", "RankSeriesSegmentStylePreset")),
 });
+
+export const RankSeriesRulePresetNormal = t.iface([], {
+  "preset": t.lit('Normal'),
+  "options": t.opt(t.iface([], {
+    "includeOfficialOnly": t.opt("boolean"),
+  })),
+});
+
+export const RankSeriesRulePresetUniqByUserField = t.iface([], {
+  "preset": t.lit('UniqByUserField'),
+  "options": t.iface([], {
+    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
+    "includeOfficialOnly": t.opt("boolean"),
+  }),
+});
+
+export const RankSeriesRulePresetICPC = t.iface([], {
+  "preset": t.lit('ICPC'),
+  "options": t.iface([], {
+    "ratio": t.opt(t.iface([], {
+      "value": t.array("number"),
+      "rounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
+      "denominator": t.opt(t.union(t.lit('all'), t.lit('submitted'))),
+    })),
+    "count": t.opt(t.iface([], {
+      "value": t.array("number"),
+    })),
+  }),
+});
+
+export const RankSeriesRulePreset = t.union("RankSeriesRulePresetNormal", "RankSeriesRulePresetUniqByUserField", "RankSeriesRulePresetICPC");
 
 export const RankSeries = t.iface([], {
   "title": t.opt("string"),
   "segments": t.opt(t.array("RankSeriesSegment")),
-});
-
-export const RankValue = t.iface([], {
-  "rank": t.union("number", "null"),
-  "segmentIndex": t.opt(t.union("number", "null")),
+  "rule": t.opt("RankSeriesRulePreset"),
 });
 
 export const RankScore = t.iface([], {
@@ -141,7 +167,6 @@ export const RankProblemStatus = t.iface([], {
 });
 
 export const RanklistRow = t.iface([], {
-  "ranks": t.array("RankValue"),
   "user": "User",
   "score": "RankScore",
   "statuses": t.array("RankProblemStatus"),
@@ -212,8 +237,11 @@ const exportedTypeSuite: t.ITypeSuite = {
   Contest,
   RankSeriesSegmentStylePreset,
   RankSeriesSegment,
+  RankSeriesRulePresetNormal,
+  RankSeriesRulePresetUniqByUserField,
+  RankSeriesRulePresetICPC,
+  RankSeriesRulePreset,
   RankSeries,
-  RankValue,
   RankScore,
   RankProblemStatus,
   RanklistRow,

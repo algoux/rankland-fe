@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Ranklist, resolveText, resolveContributor } from '@algoux/standard-ranklist-renderer-component';
-import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component/dist/lib/Ranklist';
+import React, { useMemo, useState } from 'react';
+import { Ranklist, convertToStaticRanklist, resolveText, resolveContributor } from '@algoux/standard-ranklist-renderer-component';
+import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
@@ -76,14 +76,16 @@ export default function StyledRanklist({
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
-  const organizations = uniq(data.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
+  const staticData = useMemo(() => convertToStaticRanklist(data), [data])
+
+  const organizations = uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
     a.localeCompare(b),
   );
-  const filteredRows = data.rows.filter((row) =>
+  const filteredRows = staticData.rows.filter((row) =>
     filter.organizations.length ? filter.organizations.includes(row.user?.organization as string) : true,
   );
   const usingData = {
-    ...data,
+    ...staticData,
     rows: filteredRows,
   };
 
@@ -117,8 +119,8 @@ export default function StyledRanklist({
   };
 
   const renderHeader = () => {
-    const startAt = new Date(data.contest.startAt).getTime();
-    const endAt = startAt + formatSrkTimeDuration(data.contest.duration, 'ms');
+    const startAt = new Date(staticData.contest.startAt).getTime();
+    const endAt = startAt + formatSrkTimeDuration(staticData.contest.duration, 'ms');
     const metaBlock = !meta ? null : (
       <div className="text-center mt-1">
         <span className="mr-2">
@@ -127,8 +129,8 @@ export default function StyledRanklist({
         <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
           Download srk
         </a>
-        {Array.isArray(data.contributors) && data.contributors.length > 0 && (
-          <p>Contributors: {renderContributors(data.contributors)}</p>
+        {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
+          <p>Contributors: {renderContributors(staticData.contributors)}</p>
         )}
       </div>
     );
@@ -140,7 +142,7 @@ export default function StyledRanklist({
               Live <Badge status="processing" style={{ fontSize: 'inherit' }} />
             </span>
           ) : null}
-          {resolveText(data.contest.title)}
+          {resolveText(staticData.contest.title)}
         </h1>
         <p className="text-center mb-0">
           {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
@@ -152,7 +154,7 @@ export default function StyledRanklist({
               startAt={startAt}
               endAt={endAt}
               frozenLength={
-                data.contest.frozenDuration ? formatSrkTimeDuration(data.contest.frozenDuration, 'ms') : undefined
+                staticData.contest.frozenDuration ? formatSrkTimeDuration(staticData.contest.frozenDuration, 'ms') : undefined
               }
               td={td}
             />

@@ -1,6 +1,6 @@
 {
   "type": "general",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "contest": {
     "title": "ACM-ICPC World Finals 2018 (Excerpt Demo)",
     "startAt": "2018-04-19T17:00:00+08:00",
@@ -40,31 +40,31 @@
       "segments": [
         {
           "title": "Gold Medalist",
-          "count": 4,
           "style": "gold"
         },
         {
           "title": "Silver Medalist",
-          "count": 4,
           "style": "silver"
         },
         {
           "title": "Bronze Medalist",
-          "count": 4,
           "style": "bronze"
         }
-      ]
+      ],
+      "rule": {
+        "preset": "ICPC",
+        "options": {
+          "count": {
+            "value": [4, 4, 4]
+          }
+        }
+      }
     }
   ],
   "rows": [
     {
-      "ranks": [
-        {
-          "rank": 1,
-          "segmentIndex": 0
-        }
-      ],
       "user": {
+        "id": "Moscow State University",
         "name": "Moscow State University"
       },
       "score": {
@@ -85,13 +85,8 @@
       ]
     },
     {
-      "ranks": [
-        {
-          "rank": 5,
-          "segmentIndex": 1
-        }
-      ],
       "user": {
+        "id": "Seoul National University",
         "name": "Seoul National University"
       },
       "score": {
@@ -112,12 +107,8 @@
       ]
     },
     {
-      "ranks": [
-        {
-          "rank": 81
-        }
-      ],
       "user": {
+        "id": "Zhejiang University",
         "name": "Zhejiang University"
       },
       "score": {

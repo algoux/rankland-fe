@@ -1,8 +1,8 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@algoux/standard-ranklist': ^0.2.3
-  '@algoux/standard-ranklist-renderer-component': ^0.2.6
+  '@algoux/standard-ranklist': ^0.3.0
+  '@algoux/standard-ranklist-renderer-component': ^0.3.2
   '@ant-design/icons': ^4.7.0
   '@types/file-saver': ^2.0.5
   '@types/lodash-es': ^4.17.6
@@ -50,7 +50,7 @@ specifiers:
   yorkie: ^2.0.0
 
 dependencies:
-  '@algoux/standard-ranklist-renderer-component': 0.2.6_t6nc4gdlndgoppxpzlyvrmkmlu
+  '@algoux/standard-ranklist-renderer-component': 0.3.2_mm4vbe7xeztxf4hsww2myipegy
   '@ant-design/icons': 4.7.0_sfoxds7t5ydpegc3knd667wn6m
   ahooks: 3.6.2_react@17.0.2
   antd: 4.22.2_sfoxds7t5ydpegc3knd667wn6m
@@ -73,7 +73,7 @@ dependencies:
   uuid: 8.3.2
 
 devDependencies:
-  '@algoux/standard-ranklist': 0.2.3
+  '@algoux/standard-ranklist': 0.3.0
   '@types/file-saver': 2.0.5
   '@types/lodash-es': 4.17.6
   '@types/react': 17.0.48
@@ -112,16 +112,17 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-renderer-component/0.2.6_t6nc4gdlndgoppxpzlyvrmkmlu:
-    resolution: {integrity: sha512-Dkmb3Owrbns/VZnlRtPNg3jx4j6A2W4LlKkl+Q0uKBiBTmwes7E/iGljV6sXhwDFaZKXFHpJ6oPraXkDcku3Jg==}
+  /@algoux/standard-ranklist-renderer-component/0.3.2_mm4vbe7xeztxf4hsww2myipegy:
+    resolution: {integrity: sha512-lKJ4uGZzCYsfyzeFEL/8iBUUP9pO3DTGSROtxUUalGrpHyx2aNmGNVnSIiaqFa8A49ulor0UXjbJTRnrDG/xqg==}
     peerDependencies:
-      '@algoux/standard-ranklist': '>=0.0.1 && <=0.2.3'
+      '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@algoux/standard-ranklist': 0.2.3
+      '@algoux/standard-ranklist': 0.3.0
       bcp-47-match: 2.0.2
+      bignumber.js: 9.1.1
       classnames: 2.3.1
       color: 4.2.3
       rc-dialog: 8.9.0_sfoxds7t5ydpegc3knd667wn6m
@@ -131,8 +132,8 @@ packages:
       textcolor: 1.0.2
     dev: false
 
-  /@algoux/standard-ranklist/0.2.3:
-    resolution: {integrity: sha512-EVA7rcrW0cZvQxjkrCjJ4zkZIPbjewX9QCW65xSC2VcRWshhmPyixB/yqOR8vRMyVpCyBvyd50z7ZHVafdz3RQ==}
+  /@algoux/standard-ranklist/0.3.0:
+    resolution: {integrity: sha512-7o2NS5MZfN3I0AB+HUCBo6k64XyoSLJDJWOpa63VRHH16TbOvZTZp4CMu6ik15vtWpKlN1GA9MTojALoXDh1cw==}
 
   /@ant-design/colors/6.0.0:
     resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}
@@ -991,12 +992,12 @@ packages:
     resolution: {integrity: sha512-QOxyigPVrpZ2GXT+PFyZTl6TtOFc5egxHIP9IlQ+RbupQuX4RkT/Bee4/kQuC02Xkzg84JcT7oLYtDIQxp+v7w==}
     engines: {node: '>=0.4.0'}
     hasBin: true
+    dev: true
 
   /acorn/8.8.1:
     resolution: {integrity: sha512-7zFpHzhnqYKrkYdUjF1HI1bzd0VygEGX8lFk4k5zVMqHEoES+P+7TKI+EvLO9WVMJ8eekdO0aDEK044xTXwPPA==}
     engines: {node: '>=0.4.0'}
     hasBin: true
-    dev: true
 
   /ahooks-v3-count/1.0.0:
     resolution: {integrity: sha512-V7uUvAwnimu6eh/PED4mCDjE7tokeZQLKlxg9lCTMPhN+NjsSbtdacByVlR1oluXQzD3MOw55wylDmQo4+S9ZQ==}
@@ -1218,6 +1219,10 @@ packages:
 
   /big.js/5.2.2:
     resolution: {integrity: sha512-vyL2OymJxmarO8gxMr0mhChsO9QGwhynfuu4+MHTAW6czfq9humCB7rKpUjDd9YUiDPU4mzpyupFSvOClAwbmQ==}
+
+  /bignumber.js/9.1.1:
+    resolution: {integrity: sha512-pHm4LsMJ6lzgNGVfZHjMoO8sdoRhOzOH4MLmY65Jg70bpxCKu5iOHNJyfF6OyvYw7t8Fpf35RuzUyqnQsj8Vig==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}
@@ -5069,7 +5074,7 @@ packages:
     engines: {node: '>=10'}
     hasBin: true
     dependencies:
-      acorn: 8.8.0
+      acorn: 8.8.1
       commander: 2.20.3
       source-map: 0.7.4
       source-map-support: 0.5.21
