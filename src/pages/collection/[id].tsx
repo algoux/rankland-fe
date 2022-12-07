@@ -11,7 +11,6 @@ import { useRemainingHeight } from '@/hooks/use-remaining-height';
 import { CollectionItemType, IApiCollection, IApiCollectionItem, IApiRanklist } from '@/services/api/interface';
 import { MiniCache } from '@/utils/mini-cache.util';
 import './collection-page.less';
-import urlcat from 'urlcat';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import cateIcpcLogoLight from '@/assets/icpc_logo_black.png';
 import cateIcpcLogoDark from '@/assets/icpc_logo_white.png';
@@ -20,10 +19,16 @@ import cateCcpcLogoDark from '@/assets/ccpc_logo_white.png';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
+import { extractQueryParams, formatUrl } from '@/configs/route.config';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const apiCache = new MiniCache();
+
+const idTranslations: Record< string, string> = {
+  'official': 'official',
+  '由官方整理和维护的': 'official',
+};
 
 function getItem(
   label: React.ReactNode,
@@ -86,14 +91,14 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const {
     data,
     error,
-    location: { search },
+    location: { query: originalQuery },
   } = props;
   const { theme } = useModel('theme');
   const [remainingHeight] = useRemainingHeight();
   const [{ width: clientWidth }] = useClientWidthHeight();
   const { id } = useParams<{ id: string }>();
-  const query = new URLSearchParams(search);
-  const rankId = query.get('rankId');
+  const query = extractQueryParams('Collection', originalQuery);
+  const rankId = query.rankId;
   const history = useHistory();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
   const [collapsed, setCollapsed] = useState(false);
@@ -187,7 +192,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const renderRanklist = () => {
     if (data.ranklistHasError) {
       return (
-        <div className="text-center mt-16">
+        <div className="mt-16 text-center">
           <p>An error occurred while loading data</p>
           <Button type="primary" size="small" onClick={() => location.reload()}>
             Refresh
@@ -204,7 +209,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
     return (
       <div>
-        <h3 className="text-center mt-16">请展开左侧边栏并选择一个榜单</h3>
+        <h3 className="mt-16 text-center">请展开左侧边栏并选择一个榜单</h3>
       </div>
     );
   };
@@ -233,7 +238,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
                 <MenuUnfoldOutlined />
               ) : (
                 <span>
-                  <MenuFoldOutlined /> Collapse
+                  <MenuFoldOutlined /> 折叠
                 </span>
               )}
             </Button>
@@ -253,7 +258,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
             }}
             items={convertCollectionToMenuItems(
               data.collection,
-              (uniqueKey) => urlcat('/collection/:id', { id, rankId: uniqueKey }),
+              (uniqueKey) => formatUrl('Collection', { id, rankId: uniqueKey }),
               theme,
             )}
             inlineCollapsed={collapsed}
@@ -274,9 +279,9 @@ interface IPageParams {
 }
 
 const asyncData = async ({ id, rankId }: { id: string; rankId?: string }) => {
-  // console.log('asyncData:', { id, rankId });
-  const getCollection = apiCache.getWrappedCacheFuncAsync(`collection_${id}`, 60 * 1000, () =>
-    api.getCollection({ uniqueKey: id }),
+  const realId = idTranslations[id] || id;
+  const getCollection = apiCache.getWrappedCacheFuncAsync(`collection_${realId}`, 60 * 1000, () =>
+    api.getCollection({ uniqueKey: realId }),
   );
   const getRanklist = apiCache.getWrappedCacheFuncAsync(`ranklist_${rankId}`, 60 * 1000, () =>
     api.getRanklist({ uniqueKey: rankId! }),
@@ -316,8 +321,9 @@ const asyncData = async ({ id, rankId }: { id: string; rankId?: string }) => {
 
 CollectionPage.getInitialProps = (async (ctx) => {
   try {
-    const query = new URLSearchParams(ctx.history.location.search);
-    const res = await asyncData({ id: ctx.match.params.id, rankId: query.get('rankId') ?? undefined });
+    const searchParams = new URLSearchParams(ctx.history.location.search);
+    const query = extractQueryParams('Collection', searchParams);
+    const res = await asyncData({ id: ctx.match.params.id, rankId: query.rankId ?? undefined });
     return {
       data: res,
     };
@@ -337,5 +343,5 @@ type IPageAsyncData = Awaited<ReturnType<typeof asyncData>>;
 export interface ICollectionPageProps {
   data?: IPageAsyncData;
   error?: Error;
-  location: { search: string };
+  location: { search: string; query: Record<string, any> };
 }

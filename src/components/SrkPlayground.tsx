@@ -60,7 +60,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
           </a>
         </div>
         {!syntaxValid ? (
-          <h3 className="text-center mt-16">
+          <h3 className="mt-16 text-center">
             Input valid srk JSON and press{' '}
             <Tag color="blue" className="mr-0">
               Ctrl/Cmd + S

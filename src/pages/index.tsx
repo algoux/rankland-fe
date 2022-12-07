@@ -5,6 +5,7 @@ import { UnorderedListOutlined, TrophyOutlined } from '@ant-design/icons';
 import { formatTitle } from '@/utils/title-format.util';
 import { api } from '@/services/api';
 import ContactUs from '@/components/ContactUs';
+import { formatUrl } from '@/configs/route.config';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
@@ -25,7 +26,7 @@ export default function HomePage(props: IHomePageProps) {
           <h1 className="block-title">为你推荐</h1>
           <Row gutter={16}>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link to="/search">
+              <Link to={formatUrl('Search')}>
                 <Card hoverable>
                   <h2>
                     <UnorderedListOutlined className="mr-3" />
@@ -38,7 +39,7 @@ export default function HomePage(props: IHomePageProps) {
               </Link>
             </Col>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link to="/collection/official">
+              <Link to={formatUrl('Collection', { id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official' })}>
                 <Card hoverable>
                   <h2>
                     <TrophyOutlined className="mr-3" />
@@ -66,7 +67,7 @@ export default function HomePage(props: IHomePageProps) {
               ：精心维护的榜单合集，欢迎一起贡献
             </li>
             <li>
-              <Link to="/playground">Playground</Link>
+              <Link to={formatUrl('Playground')}>Playground</Link>
               ：在线调试和预览 srk 格式的榜单数据
             </li>
             <li>

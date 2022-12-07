@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu } from 'antd';
 import { history, useLocation } from 'umi';
+import { formatUrl } from '@/configs/route.config';
 
 export default function NavMenu() {
   const onClick = (e: any) => {
@@ -14,11 +15,18 @@ export default function NavMenu() {
       className="nav-menu"
       mode="horizontal"
       items={[
-        { key: '/search', label: '探索' },
-        { key: '/collection/official', label: '榜单合集' },
-        { key: '/playground', label: '游乐场' },
+        { key: decodeURIComponent(formatUrl('Search')), label: '探索' },
+        {
+          key: decodeURIComponent(
+            formatUrl('Collection', {
+              id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
+            }),
+          ),
+          label: '榜单合集',
+        },
+        { key: decodeURIComponent(formatUrl('Playground')), label: '游乐场' },
       ]}
-      selectedKeys={[pathname]}
+      selectedKeys={[decodeURIComponent(pathname)]}
       onClick={onClick}
     />
   );

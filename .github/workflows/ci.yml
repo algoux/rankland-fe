@@ -17,6 +17,7 @@ jobs:
           version: 6.0.2
       - run: pnpm run ci
       - run: pnpm run build
+      - run: SITE_ALIAS=cn pnpm run build
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
       - name: Login to DockerHub
@@ -31,3 +32,10 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rankland-fe:latest
+      - name: Build and Push Image for CN Site
+        uses: docker/build-push-action@v3
+        with:
+          context: ./
+          file: ./Dockerfile-CN
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rankland-fe:cn

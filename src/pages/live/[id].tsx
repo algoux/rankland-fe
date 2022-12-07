@@ -9,7 +9,7 @@ import { Button, Spin, Modal } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
-import urlcat from 'urlcat';
+import { formatUrl } from '@/configs/route.config';
 
 export default function LiveRanklistPage() {
   const { id } = useParams<{ id: string }>();
@@ -42,7 +42,7 @@ export default function LiveRanklistPage() {
       Modal.confirm({
         title: '比赛已结束，跳转到终榜？',
         onOk() {
-          history.push(urlcat(`/ranklist/:uniqueKey`, { uniqueKey: config.ranklistUniqueKey }));
+          history.push(formatUrl('Ranklist', { id: config.ranklistUniqueKey }));
         },
       });
     }

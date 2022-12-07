@@ -3,18 +3,18 @@ import { Helmet, Link, useHistory } from 'umi';
 import { Input, List, Spin } from 'antd';
 import { useReq } from '@/utils/request';
 import { api } from '@/services/api';
-import urlcat from 'urlcat';
 import dayjs from 'dayjs';
 import { EyeOutlined } from '@ant-design/icons';
 import { formatTitle } from '@/utils/title-format.util';
+import { extractQueryParams, formatUrl } from '@/configs/route.config';
 
 export default function SearchPage({ location }: any) {
-  const kw = location.query.kw;
+  const { kw } = extractQueryParams('Search', location.query);
   const history = useHistory();
   const [isInit, setIsInit] = React.useState(false);
 
   const onSearch = (value: string) => {
-    history.push({ search: `kw=${encodeURIComponent(value)}` });
+    history.push(formatUrl('Search', { kw: value }));
   };
 
   const {
@@ -51,7 +51,7 @@ export default function SearchPage({ location }: any) {
               renderItem={(item) => (
                 <List.Item>
                   <p className="mb-0">
-                    <Link to={urlcat('/ranklist/:uniqueKey', { uniqueKey: item.uniqueKey })}>{item.name}</Link>
+                    <Link to={formatUrl('Ranklist', { id: item.uniqueKey })}>{item.name}</Link>
                     <span className="ml-2 opacity-70"><EyeOutlined /> {item.viewCnt}</span>
                   </p>
                   <p className="mb-0 opacity-50 text-sm">

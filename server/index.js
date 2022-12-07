@@ -13,9 +13,11 @@ const { v4: uuidv4 } = require('uuid');
 const { createClient } = require('redis');
 const util = require('util');
 
+const siteAlias = process.env.SITE_ALIAS;
 const isProd = process.env.NODE_ENV === 'production';
 const port = parseInt(process.env.PORT, 10) || 7001;
-const root = path.join(__dirname, '../dist');
+const distDir = isProd && siteAlias === 'cn' ? '分发' : 'dist';
+const root = path.join(__dirname, `../${distDir}`);
 let render;
 let indexHtmlTemplate;
 
@@ -136,7 +138,9 @@ app.use(async (ctx, next) => {
     ctx.type = 'text/html';
     ctx.status = 200;
     let html;
-    const cacheKey = getSSRCacheKey(ctx.url);
+    const [urlPath, search] = ctx.url.split('?');
+    const url = `${decodeURIComponent(urlPath)}${search ? `?${search}` : ''}`;
+    const cacheKey = getSSRCacheKey(url);
     try {
       const cached = await redisClient.get(cacheKey);
       if (typeof cached === 'string' && cached.startsWith('<!DOCTYPE html>')) {
@@ -147,7 +151,7 @@ app.use(async (ctx, next) => {
         ctx.logger.info(`SSR in %d ms (with cache)`, ssrCost);
       } else {
         const renderRes = await render({
-          path: ctx.url,
+          path: url,
         });
         if (renderRes.error) {
           throw renderRes.error;
@@ -178,7 +182,7 @@ app.use(async (ctx, next) => {
  * 注意这里的静态目录设置，需要和umi打包出来的目录是同一个
  * 这里最好是用nginx配置静态目录，如果是用cdn方式部署，这里可以忽略
  */
-isProd && app.use(mount('/dist', require('koa-static')(root)));
+isProd && app.use(mount(`/${encodeURIComponent(distDir)}`, require('koa-static')(root)));
 
 async function main() {
   if (isProd) {
