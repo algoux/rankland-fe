@@ -8,6 +8,15 @@ const siteAlias = process.env.SITE_ALIAS;
 const outputPath = isProd && siteAlias === 'cn' ? '分发' : 'dist';
 const publicProdPrefix = siteAlias === 'cn' ? 'https://内容分发网络.算法与用户体验.中国/榜单大陆/' : '/';
 const publicPath = isProd ? `${publicProdPrefix}${outputPath}/` : `http://127.0.0.1:8000/${outputPath}/`;
+console.log(
+  'Build options:',
+  JSON.stringify({
+    isProd,
+    siteAlias,
+    outputPath,
+    publicPath,
+  }),
+);
 
 export default defineConfig({
   webpack5: {},
