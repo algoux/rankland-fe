@@ -6,6 +6,7 @@ import { formatTitle } from '@/utils/title-format.util';
 import { api } from '@/services/api';
 import ContactUs from '@/components/ContactUs';
 import { formatUrl } from '@/configs/route.config';
+import BeianLink from '@/components/BeianLink';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
@@ -108,6 +109,11 @@ export default function HomePage(props: IHomePageProps) {
               服务状态
             </a>
           </p>
+          {process.env.SITE_ALIAS === 'cn' && (
+            <p>
+              备案号：<BeianLink />
+            </p>
+          )}
         </div>
       </div>
     </div>

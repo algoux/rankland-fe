@@ -11,11 +11,12 @@ import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
-import { EyeOutlined } from '@ant-design/icons';
+import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
 import { formatSrkTimeDuration } from '@/utils/time-format.util';
 import CompetitionProgressBar from './CompetitionProgressBar';
 import ContactUs from './ContactUs';
+import BeianLink from './BeianLink';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -127,10 +128,10 @@ export default function StyledRanklist({
           <EyeOutlined /> {meta.viewCnt || '-'}
         </span>
         <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
-          Download srk
+          <DownloadOutlined /> srk
         </a>
         {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
-          <p>Contributors: {renderContributors(staticData.contributors)}</p>
+          <p>贡献者：{renderContributors(staticData.contributors)}</p>
         )}
       </div>
     );
@@ -169,7 +170,7 @@ export default function StyledRanklist({
       {renderHeader()}
       {showFilter && (
         <div className="mt-4 mx-4">
-          <span>Filter</span>
+          <span>筛选</span>
           <Select
             mode="multiple"
             allowClear
@@ -192,31 +193,36 @@ export default function StyledRanklist({
       <Ranklist data={usingData as any} theme={theme as EnumTheme} />
       {showFooter && (
         <div className="text-center mt-8">
-          <p className="mb-1">© 2022 algoUX. All Rights Reserved.</p>
-          <p className="mb-1">
+          <p className="mb-0">© 2022 algoUX. All Rights Reserved.</p>
+          <p className="mt-1 mb-0">
             Find us on{' '}
             <a href="https://github.com/algoux" target="_blank">
               GitHub
             </a>
           </p>
-          <p className="mb-1">
+          <p className="mt-1 mb-0">
             Powered by{' '}
             <a href="https://github.com/algoux/standard-ranklist" target="_blank">
               Standard Ranklist
             </a>
           </p>
-          <p className="mb-1">
+          <p className="mt-1 mb-0">
             我们同为算法竞赛爱好者，不妨
             <a href="https://github.com/algoux/srk-collection" target="_blank">
               一起维护 👏
             </a>
           </p>
-          <p>
+          <p className="mt-1 mb-0">
             需要免费托管比赛外榜？欢迎
             <ContactUs>
               <a>联系我们</a>
             </ContactUs>
           </p>
+          {process.env.SITE_ALIAS === 'cn' && (
+            <p className="mt-1 mb-0">
+              备案号：<BeianLink />
+            </p>
+          )}
         </div>
       )}
     </ErrorBoundary>

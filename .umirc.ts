@@ -38,6 +38,7 @@ export default defineConfig({
     'process.env.API_BASE_CLIENT': isProd ? 'https://rl.mushan.top' : 'https://rl-dev.algoux.org',
     'process.env.API_BASE_SERVER': isProd ? 'https://rl.mushan.top' : 'https://rl-dev.algoux.org',
     'process.env.SITE_ALIAS': process.env.SITE_ALIAS,
+    'process.env.BEIAN': '粤ICP备2022146651号',
   },
   ssr: {
     devServerRender: false,
