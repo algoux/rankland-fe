@@ -6,7 +6,9 @@ specifiers:
   '@ant-design/icons': ^4.7.0
   '@types/file-saver': ^2.0.5
   '@types/lodash-es': ^4.17.6
+  '@types/punycode': ^2.1.0
   '@types/react': ^17
+  '@types/react-copy-to-clipboard': ^5.0.4
   '@types/react-dom': ^17
   '@typescript-eslint/eslint-plugin': ^5.31.0
   '@typescript-eslint/parser': ^5.31.0
@@ -34,8 +36,10 @@ specifiers:
   monaco-editor-webpack-plugin: ^7.0.1
   nodemon: ^2.0.19
   prettier: ^2.7.1
+  punycode: ^2.1.1
   rc-dialog: ^8.9.0
   react: ^17
+  react-copy-to-clipboard: ^5.1.0
   react-dom: ^17
   react-error-boundary: ^3.1.4
   react-monaco-editor: ^0.50.1
@@ -61,8 +65,10 @@ dependencies:
   lodash-es: 4.17.21
   moment: 2.29.4
   monaco-editor: 0.34.0
+  punycode: 2.1.1
   rc-dialog: 8.9.0_sfoxds7t5ydpegc3knd667wn6m
   react: 17.0.2
+  react-copy-to-clipboard: 5.1.0_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-error-boundary: 3.1.4_react@17.0.2
   react-monaco-editor: 0.50.1_uwv57u6imcicwzzpzl3akhabwu
@@ -76,7 +82,9 @@ devDependencies:
   '@algoux/standard-ranklist': 0.3.0
   '@types/file-saver': 2.0.5
   '@types/lodash-es': 4.17.6
+  '@types/punycode': 2.1.0
   '@types/react': 17.0.48
+  '@types/react-copy-to-clipboard': 5.0.4
   '@types/react-dom': 17.0.17
   '@typescript-eslint/eslint-plugin': 5.31.0_xqcyxi66qlk7fbyicp2yuo7fcu
   '@typescript-eslint/parser': 5.31.0_ap3xopzmspyej5c6pk6nv6hukq
@@ -409,6 +417,16 @@ packages:
 
   /@types/prop-types/15.7.5:
     resolution: {integrity: sha512-JCB8C6SnDoQf0cNycqd/35A7MjcnK+ZTqE7judS6o7utxUCg6imJg3QK2qzHKszlTjcj2cn+NwMB2i96ubpj7w==}
+
+  /@types/punycode/2.1.0:
+    resolution: {integrity: sha512-PG5aLpW6PJOeV2fHRslP4IOMWn+G+Uq8CfnyJ+PDS8ndCbU+soO+fB3NKCKo0p/Jh2Y4aPaiQZsrOXFdzpcA6g==}
+    dev: true
+
+  /@types/react-copy-to-clipboard/5.0.4:
+    resolution: {integrity: sha512-otTJsJpofYAeaIeOwV5xBUGpo6exXG2HX7X4nseToCB2VgPEBxGBHCm/FecZ676doNR7HCSTVtmohxfG2b3/yQ==}
+    dependencies:
+      '@types/react': 17.0.48
+    dev: true
 
   /@types/react-dom/16.9.16:
     resolution: {integrity: sha512-Oqc0RY4fggGA3ltEgyPLc3IV9T73IGoWjkONbsyJ3ZBn+UPPCYpU2ec0i3cEbJuEdZtkqcCF2l1zf2pBdgUGSg==}
@@ -4404,6 +4422,16 @@ packages:
       rc-util: 5.23.0_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
+
+  /react-copy-to-clipboard/5.1.0_react@17.0.2:
+    resolution: {integrity: sha512-k61RsNgAayIJNoy9yDsYzDe/yAZAzEbEgcz3DZMhF686LEyukcE1hzurxe85JandPUG+yTfGVFzuEw3xt8WP/A==}
+    peerDependencies:
+      react: ^15.3.0 || 16 || 17 || 18
+    dependencies:
+      copy-to-clipboard: 3.3.1
+      prop-types: 15.8.1
+      react: 17.0.2
+    dev: false
 
   /react-dom/16.14.0_react@16.14.0:
     resolution: {integrity: sha512-1gCeQXDLoIqMgqD3IO2Ah9bnf0w9kzhwN5q4FGnHZ67hBm9yePzB5JJAIQCc8x3pFnNlwFq4RidZggNAAkzWWw==}

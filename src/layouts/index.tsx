@@ -6,6 +6,7 @@ import '@/styles/antd.scss';
 import './index.less';
 import logo from '@/assets/logo.png';
 import NavMenu from './NavMenu';
+import RightMenu from './RightMenu';
 
 const { Header, Content } = Layout;
 
@@ -39,7 +40,10 @@ export default function RootLayout({ children }: IRouteComponentProps) {
             <img src={logo} />
           </div>
         </Link>
-        <NavMenu />
+        <div className="flex justify-between">
+          <NavMenu />
+          <RightMenu />
+        </div>
       </Header>
       <Content>{children}</Content>
       <BackTop />

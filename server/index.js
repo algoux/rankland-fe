@@ -99,7 +99,7 @@ app.use(
 app.use((ctx, next) => {
   if (!ctx.logger) {
     const ctxLoggingFormat = winston.format.printf(({ level, message, timestamp }) => {
-      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${ctx.requestId}] [${ctx.ip}/${
+      return `${dayjs(timestamp).format('YYYY-MM-DDTHH:mm:ssZ')} [${level}] [${process.pid}] [${ctx.requestId}] [${ctx.ip}/${
         Date.now() - ctx.startAt
       }ms ${ctx.method.toUpperCase()} ${ctx.url}] ${message}`;
     });
