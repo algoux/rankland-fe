@@ -10,23 +10,68 @@ import {
 } from './interface';
 import urlcat from 'urlcat';
 import { LogicException, LogicExceptionKind } from './logic.exception';
+import { isBrowser } from 'umi';
+
+function getCacheManager() {
+  if (isBrowser() || typeof global === 'undefined') {
+    return null;
+  } else {
+    // @ts-ignore
+    return global.cacheManager as {
+      get: (...args: any[]) => Promise<any>;
+      set: (...args: any[]) => Promise<void>;
+      setEx: (...args: any[]) => Promise<void>;
+      del: (...args: any[]) => Promise<void>;
+    };
+  }
+}
 
 export class ApiService {
   public constructor(private readonly requestAdapter: RequestAdapter) {}
 
-  public getRanklistInfo(opts: { uniqueKey: string }) {
-    return this.requestAdapter.get<IApiRanklistInfo>(urlcat('/rank/:key', { key: opts.uniqueKey }));
+  public async getRanklistInfo(opts: { uniqueKey: string }) {
+    const cacheKey = `rankland_ssr_api_cache:getRanklistInfo:${opts.uniqueKey}`;
+    const cached = await getCacheManager()?.get(cacheKey);
+    if (cached) {
+      console.log('[ssr_api_cache] cache hit:', cacheKey);
+      return JSON.parse(cached) as IApiRanklistInfo;
+    }
+    const res = await this.requestAdapter.get<IApiRanklistInfo>(urlcat('/rank/:key', { key: opts.uniqueKey }));
+    getCacheManager()?.setEx(cacheKey, 60, JSON.stringify(res));
+    return res;
   }
 
   public async getSrkFile<T = srk.Ranklist>(opts: { fileID: string }): Promise<T> {
-    const res = await this.requestAdapter.get(urlcat('/file/download', { id: opts.fileID }), {
+    const cacheKey = `rankland_ssr_api_cache:getSrkFile:${opts.fileID}`;
+    const cached = await getCacheManager()?.get(cacheKey);
+    if (cached) {
+      console.log('[ssr_api_cache] cache hit:', cacheKey);
+      if (typeof cached === 'string') {
+        try {
+          return JSON.parse(cached) as T;
+        } catch (e) {
+          console.error('JSON.parse the ssr api cache string failed, the cache may be broken:', cacheKey, cached);
+          getCacheManager()?.del(cacheKey);
+        }
+      } else {
+        return cached;
+      }
+    }
+    let res;
+    const apiRes = await this.requestAdapter.get(urlcat('/file/download', { id: opts.fileID }), {
       getResponse: true,
     });
-    switch (res.response.headers.get('content-type')) {
-      case 'application/json':
-        return await res.response.json();
+    switch ((apiRes.response.headers.get('content-type') || '').split(';')[0]) {
+      case 'application/json': {
+        const plain = await apiRes.response.text();
+        res = JSON.parse(plain) as T;
+        getCacheManager()?.setEx(cacheKey, 24 * 60 * 60, plain);
+        break;
+      }
+      default:
+        throw new Error('Unknown srk content type');
     }
-    throw new Error('Unknown srk content type');
+    return res;
   }
 
   public async getRanklist(opts: { uniqueKey: string }): Promise<IApiRanklist> {
@@ -51,10 +96,18 @@ export class ApiService {
     }>(urlcat('/rank/search', { query: opts.kw }));
   }
 
-  public getCollection(opts: { uniqueKey: string }) {
-    return this.requestAdapter
+  public async getCollection(opts: { uniqueKey: string }) {
+    const cacheKey = `rankland_ssr_api_cache:getCollection:${opts.uniqueKey}`;
+    const cached = await getCacheManager()?.get(cacheKey);
+    if (cached) {
+      console.log('[ssr_api_cache] cache hit:', cacheKey);
+      return JSON.parse(cached) as IApiCollection;
+    }
+    const plain = await this.requestAdapter
       .get(urlcat('/rank/group/:key', { key: opts.uniqueKey }))
-      .then((res) => JSON.parse(res.content) as IApiCollection);
+      .then((res) => res.content as string);
+    getCacheManager()?.setEx(cacheKey, 2 * 60, plain);
+    return JSON.parse(plain) as IApiCollection;
   }
 
   public getStatistics() {
@@ -71,16 +124,19 @@ export class ApiService {
     return await res.response.json();
   }
 
-  public async getLiveRanklist(opts: { url: string, alignBaseSec?: number }): Promise<srk.Ranklist> {
+  public async getLiveRanklist(opts: { url: string; alignBaseSec?: number }): Promise<srk.Ranklist> {
     const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
-    switch (res.response.headers.get('content-type')) {
+    switch ((res.response.headers.get('content-type') || '').split(';')[0]) {
       case 'application/json':
         return await res.response.json();
     }
     throw new Error('Unknown srk content type');
   }
 
-  public async getLiveScrollSolution(opts: { url: string, alignBaseSec?: number }): Promise<IApiLiveScrollSolutionData> {
+  public async getLiveScrollSolution(opts: {
+    url: string;
+    alignBaseSec?: number;
+  }): Promise<IApiLiveScrollSolutionData> {
     const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
     return await res.response.json();
   }

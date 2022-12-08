@@ -45,6 +45,13 @@ const redisClient = createClient({
 });
 redisClient.on('error', (err) => appLogger.error('Redis client error: %O', err));
 
+global.cacheManager = {
+  get: (...args) => redisClient.get(...args).catch(e => console.warn(e)),
+  set: (...args) => redisClient.set(...args).catch(e => console.warn(e)),
+  setEx: (...args) => redisClient.setEx(...args).catch(e => console.warn(e)),
+  del: (...args) => redisClient.del(...args).catch(e => console.warn(e)),
+};
+
 // koa app
 const app = new Koa();
 app.proxy = true;
@@ -123,7 +130,7 @@ if (!isProd) {
 }
 
 function getSSRCacheKey(url) {
-  return util.format('rankland_node_ssr_cache_%s', url);
+  return util.format('rankland_ssr_cache:%s', url);
 }
 
 app.use(async (ctx, next) => {
