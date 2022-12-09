@@ -3,11 +3,12 @@ import { useLocation } from 'umi';
 import { toUnicode } from 'punycode/';
 
 export function useCurrentUrl() {
+  const [currentUrl, setCurrentUrl] = useState('');
   const [currentFullUrl, setCurrentFullUrl] = useState('');
   const location = useLocation();
   useEffect(() => {
     const host = toUnicode(window.location.host);
-    let url = `${window.location.protocol}//${host}${location.pathname}`;
+    let url = location.pathname;
     let search = '';
     // @ts-ignore
     Object.keys(location.query).forEach((key, index) => {
@@ -15,7 +16,8 @@ export function useCurrentUrl() {
       search += `${index ? '&' : ''}${key}=${location.query[key]}`;
     });
     url += search ? `?${search}` : '';
-    setCurrentFullUrl(url);
+    setCurrentUrl(url);
+    setCurrentFullUrl(`${window.location.protocol}//${host}${url}`);
   }, [location]);
-  return currentFullUrl;
+  return { url: currentUrl, fullUrl: currentFullUrl };
 }
