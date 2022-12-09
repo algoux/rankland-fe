@@ -41,6 +41,7 @@ export default defineConfig({
     'process.env.HOST_GLOBAL': 'rl.algoux.org',
     'process.env.HOST_CN': '榜单大陆.算法与用户体验.中国',
     'process.env.BEIAN': '粤ICP备2022146651号',
+    'GTAG': siteAlias === 'cn' ? 'G-D4PSNCRQJC' : 'G-D6CVTJBDZT',
   },
   ssr: {
     devServerRender: false,
