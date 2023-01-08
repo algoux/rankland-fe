@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Ranklist,
   ProgressBar,
@@ -86,6 +86,10 @@ export default function StyledRanklist({
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
+
+  useEffect(() => {
+    setTimeTravelTime(null);
+  }, [name]);
 
   const solutions = useMemo(() => {
     return getSortedCalculatedRawSolutions(data.rows);
