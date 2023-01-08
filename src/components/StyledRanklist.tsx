@@ -87,10 +87,6 @@ export default function StyledRanklist({
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
-  useEffect(() => {
-    setTimeTravelTime(null);
-  }, [name]);
-
   const solutions = useMemo(() => {
     return getSortedCalculatedRawSolutions(data.rows);
   }, [data]);
