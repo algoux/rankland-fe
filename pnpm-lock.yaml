@@ -2,7 +2,7 @@ lockfileVersion: 5.4
 
 specifiers:
   '@algoux/standard-ranklist': ^0.3.0
-  '@algoux/standard-ranklist-renderer-component': ^0.3.2
+  '@algoux/standard-ranklist-renderer-component': ^0.3.5
   '@ant-design/icons': ^4.7.0
   '@types/file-saver': ^2.0.5
   '@types/lodash-es': ^4.17.6
@@ -55,7 +55,7 @@ specifiers:
   yorkie: ^2.0.0
 
 dependencies:
-  '@algoux/standard-ranklist-renderer-component': 0.3.2_mm4vbe7xeztxf4hsww2myipegy
+  '@algoux/standard-ranklist-renderer-component': 0.3.5_mm4vbe7xeztxf4hsww2myipegy
   '@ant-design/icons': 4.7.0_sfoxds7t5ydpegc3knd667wn6m
   ahooks: 3.6.2_react@17.0.2
   antd: 4.22.2_sfoxds7t5ydpegc3knd667wn6m
@@ -122,8 +122,8 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-renderer-component/0.3.2_mm4vbe7xeztxf4hsww2myipegy:
-    resolution: {integrity: sha512-lKJ4uGZzCYsfyzeFEL/8iBUUP9pO3DTGSROtxUUalGrpHyx2aNmGNVnSIiaqFa8A49ulor0UXjbJTRnrDG/xqg==}
+  /@algoux/standard-ranklist-renderer-component/0.3.5_mm4vbe7xeztxf4hsww2myipegy:
+    resolution: {integrity: sha512-AFe50rkVmRBzt/oHPqMUnibSGZrrms4Qg+Gex/12hBXn9O6CdeXcyuc8VKLnsW1GHUHr7Ep9uDGtekzXNx0zow==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
@@ -136,6 +136,7 @@ packages:
       classnames: 2.3.1
       color: 4.2.3
       rc-dialog: 8.9.0_sfoxds7t5ydpegc3knd667wn6m
+      rc-slider: 9.7.5_sfoxds7t5ydpegc3knd667wn6m
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       semver: 7.3.7
@@ -4261,6 +4262,22 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
       shallowequal: 1.1.0
+
+  /rc-slider/9.7.5_sfoxds7t5ydpegc3knd667wn6m:
+    resolution: {integrity: sha512-LV/MWcXFjco1epPbdw1JlLXlTgmWpB9/Y/P2yinf8Pg3wElHxA9uajN21lJiWtZjf5SCUekfSP6QMJfDo4t1hg==}
+    engines: {node: '>=8.x'}
+    peerDependencies:
+      react: '>=16.9.0'
+      react-dom: '>=16.9.0'
+    dependencies:
+      '@babel/runtime': 7.18.9
+      classnames: 2.3.1
+      rc-tooltip: 5.2.2_sfoxds7t5ydpegc3knd667wn6m
+      rc-util: 5.23.0_sfoxds7t5ydpegc3knd667wn6m
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      shallowequal: 1.1.0
+    dev: false
 
   /rc-steps/4.1.4_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-qoCqKZWSpkh/b03ASGx1WhpKnuZcRWmvuW+ZUu4mvMdfvFzVxblTwUM+9aBd0mlEUFmt6GW8FXhMpHkK3Uzp3w==}

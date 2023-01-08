@@ -1,5 +1,14 @@
 import React, { useMemo, useState } from 'react';
-import { Ranklist, convertToStaticRanklist, resolveText, resolveContributor } from '@algoux/standard-ranklist-renderer-component';
+import {
+  Ranklist,
+  ProgressBar,
+  convertToStaticRanklist,
+  resolveText,
+  resolveContributor,
+  filterSolutionsUntil,
+  regenerateRanklistBySolutions,
+  getSortedCalculatedRawSolutions,
+} from '@algoux/standard-ranklist-renderer-component';
 import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
@@ -51,6 +60,7 @@ export default function StyledRanklist({
 }: IStyledRanklistProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[] }>({ organizations: [] });
+  const [timeTravelTime, setTimeTravelTime] = useState<number | null>(null);
   let srkCheckError: string | null = null;
 
   try {
@@ -77,10 +87,23 @@ export default function StyledRanklist({
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
-  const staticData = useMemo(() => convertToStaticRanklist(data), [data])
+  const solutions = useMemo(() => {
+    return getSortedCalculatedRawSolutions(data.rows);
+  }, [data]);
 
-  const organizations = uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
-    a.localeCompare(b),
+  const genData = useMemo(() => {
+    if (timeTravelTime === null) {
+      return data;
+    }
+    const filteredSolutions = filterSolutionsUntil(solutions, [timeTravelTime, 'ms']);
+    const newData = regenerateRanklistBySolutions(data, filteredSolutions);
+    return newData;
+  }, [data, solutions, timeTravelTime]);
+
+  const staticData = useMemo(() => convertToStaticRanklist(genData), [genData]);
+
+  const organizations = uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort(
+    (a, b) => a.localeCompare(b),
   );
   const filteredRows = staticData.rows.filter((row) =>
     filter.organizations.length ? filter.organizations.includes(row.user?.organization as string) : true,
@@ -92,6 +115,10 @@ export default function StyledRanklist({
 
   const handleOrgFilterChange = (value: string[]) => {
     setFilter({ organizations: value });
+  };
+
+  const handleTimeTravel = (time: number | null) => {
+    setTimeTravelTime(time);
   };
 
   const renderContributor = (contributor: srk.Contributor) => {
@@ -131,36 +158,17 @@ export default function StyledRanklist({
           <DownloadOutlined /> srk
         </a>
         {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
-          <p>贡献者：{renderContributors(staticData.contributors)}</p>
+          <p className="mb-0">贡献者：{renderContributors(staticData.contributors)}</p>
         )}
       </div>
     );
     return (
       <>
-        <h1 className="text-center mb-1">
-          {isLive ? (
-            <span className="inline-block mr-1">
-              Live <Badge status="processing" style={{ fontSize: 'inherit' }} />
-            </span>
-          ) : null}
-          {resolveText(staticData.contest.title)}
-        </h1>
+        <h1 className="text-center mb-1">{resolveText(staticData.contest.title)}</h1>
+        {metaBlock}
         <p className="text-center mb-0">
           {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
         </p>
-        {metaBlock}
-        {needShowProgress && (
-          <div className="mx-4">
-            <CompetitionProgressBar
-              startAt={startAt}
-              endAt={endAt}
-              frozenLength={
-                staticData.contest.frozenDuration ? formatSrkTimeDuration(staticData.contest.frozenDuration, 'ms') : undefined
-              }
-              td={td}
-            />
-          </div>
-        )}
       </>
     );
   };
@@ -168,8 +176,11 @@ export default function StyledRanklist({
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {renderHeader()}
+      <div className="mx-4">
+        <ProgressBar data={data} enableTimeTravel onTimeTravel={handleTimeTravel} />
+      </div>
       {showFilter && (
-        <div className="mt-4 mx-4">
+        <div className="mt-3 mx-4">
           <span>筛选</span>
           <Select
             mode="multiple"
@@ -220,7 +231,8 @@ export default function StyledRanklist({
           </p>
           {process.env.SITE_ALIAS === 'cn' && (
             <p className="mt-1 mb-0">
-              备案号：<BeianLink />
+              备案号：
+              <BeianLink />
             </p>
           )}
         </div>
