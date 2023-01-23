@@ -204,7 +204,7 @@ export default function StyledRanklist({
       <Ranklist data={usingData as any} theme={theme as EnumTheme} />
       {showFooter && (
         <div className="text-center mt-8">
-          <p className="mb-0">© 2022 algoUX. All Rights Reserved.</p>
+          <p className="mb-0">© 2022-2023 algoUX. All Rights Reserved.</p>
           <p className="mt-1 mb-0">
             Find us on{' '}
             <a href="https://github.com/algoux" target="_blank">

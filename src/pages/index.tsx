@@ -98,7 +98,7 @@ export default function HomePage(props: IHomePageProps) {
               GitHub
             </a>
           </p>
-          <p>© 2022 algoUX. All Rights Reserved.</p>
+          <p>© 2022-2023 algoUX. All Rights Reserved.</p>
           <p>
             其他链接：
             <a href="https://algoux.org" target="_blank">
