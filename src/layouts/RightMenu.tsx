@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button, Dropdown, Menu, notification, Tooltip } from 'antd';
+import { Button, Dropdown, Menu } from 'antd';
 import { useCurrentUrl } from '@/hooks/use-current-url';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { knownUrlKeywordToGeneralReplacementMap, knownUrlKeywordToAliasReplacementMap } from '@/configs/route.config';
 
 export default function RightMenu() {
-  const { url, fullUrl } = useCurrentUrl();
+  const { url } = useCurrentUrl();
 
   const convertUrl = (url: string, usingReplacementMap: Record<string, string>) => {
     let newUrl = url;
@@ -40,38 +39,23 @@ export default function RightMenu() {
                   <a
                     href={`//${process.env.HOST_CN}${convertUrl(url, knownUrlKeywordToAliasReplacementMap.cn)}`}
                     target="_blank"
+                    style={{ wordBreak: 'keep-all' }}
                   >
-                    中国站点 <ArrowRightOutlined rotate={-45} />
+                    <p className="mb-0">中国站点</p>
+                    <p className="mb-0"><span className="opacity-60 text-xs">特别速度优化</span> <ArrowRightOutlined rotate={-45} /></p>
                   </a>
                 ),
               },
             ]
       }
+      // style={{ minWidth: '120px' }}
     />
   );
 
   return (
     <div>
-      <Tooltip placement="bottom" title="复制本页链接">
-        <CopyToClipboard
-          text={fullUrl}
-          onCopy={(text: string, result: boolean) => {
-            if (result) {
-              notification.success({
-                message: '链接已复制',
-                duration: 2,
-                style: {
-                  width: 280,
-                },
-              });
-            }
-          }}
-        >
-          <Button type="text">分享</Button>
-        </CopyToClipboard>
-      </Tooltip>
       <Dropdown overlay={switchSiteMenu}>
-        <Button type="text">切换站点</Button>
+        <Button type="text" className="px-2">切换站点</Button>
       </Dropdown>
     </div>
   );

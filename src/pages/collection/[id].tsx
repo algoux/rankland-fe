@@ -247,6 +247,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
             mode="inline"
             defaultOpenKeys={openKeys}
             selectedKeys={rankId ? [rankId] : []}
+            className="srk-collection-nav-menu"
             onSelect={({ key }) => {
               if (key !== rankId) {
                 ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });

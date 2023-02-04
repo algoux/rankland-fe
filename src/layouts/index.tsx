@@ -46,13 +46,15 @@ export default function RootLayout({ children }: IRouteComponentProps) {
   return (
     <Layout className="layout">
       <Header>
-        <Link to="/">
-          <div className="logo">
-            <img src={logo} />
+        <div className="flex justify-between" style={{ flex: 1, minWidth: 0 }}>
+          <Link to="/">
+            <div className="logo">
+              <img src={logo} />
+            </div>
+          </Link>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <NavMenu />
           </div>
-        </Link>
-        <div className="flex justify-between">
-          <NavMenu />
           <RightMenu />
         </div>
       </Header>

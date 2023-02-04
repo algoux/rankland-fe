@@ -65,7 +65,7 @@ export default function HomePage(props: IHomePageProps) {
               <a href="https://github.com/algoux/srk-collection" target="_blank">
                 Srk Collection
               </a>
-              ：精心维护的榜单合集，欢迎一起贡献
+              ：精心维护的榜单合集，欢迎参与
             </li>
             <li>
               <Link to={formatUrl('Playground')}>Playground</Link>
@@ -75,14 +75,14 @@ export default function HomePage(props: IHomePageProps) {
               <a href="https://github.com/algoux/standard-ranklist-renderer-component" target="_blank">
                 Renderer Component
               </a>
-              ：在你的前端项目中使用渲染组件展示 srk 格式的榜单
+              ：在你的前端项目中使用渲染组件展示标准榜单
             </li>
           </ul>
         </div>
         <div className="block">
           <h1 className="block-title">联系我们</h1>
           <p>
-            如果你是赛事主办方且需要免费的外榜托管，欢迎
+            如要为赛事寻求免费的实时外榜托管或希望补全/纠正本站数据，欢迎
             <ContactUs>
               <a>与我们联系</a>
             </ContactUs>

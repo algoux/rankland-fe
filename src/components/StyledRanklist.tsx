@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Ranklist,
   ProgressBar,
@@ -13,19 +13,20 @@ import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
-import { Alert, Badge, Select } from 'antd';
+import { Alert, Dropdown, Menu, notification, Select } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
-import { DownloadOutlined, EyeOutlined } from '@ant-design/icons';
+import { DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
 import { formatSrkTimeDuration } from '@/utils/time-format.util';
-import CompetitionProgressBar from './CompetitionProgressBar';
 import ContactUs from './ContactUs';
 import BeianLink from './BeianLink';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useCurrentUrl } from '@/hooks/use-current-url';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -113,6 +114,8 @@ export default function StyledRanklist({
     rows: filteredRows,
   };
 
+  const { fullUrl } = useCurrentUrl();
+
   const handleOrgFilterChange = (value: string[]) => {
     setFilter({ organizations: value });
   };
@@ -154,8 +157,41 @@ export default function StyledRanklist({
         <span className="mr-2">
           <EyeOutlined /> {meta.viewCnt || '-'}
         </span>
-        <a className="pl-2 border-0 border-l border-solid border-gray-400" onClick={download}>
+        <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2" onClick={download}>
           <DownloadOutlined /> srk
+        </a>
+        <a className="pl-2 border-0 border-l border-solid border-gray-400">
+          <Dropdown
+            overlay={
+              <Menu
+                items={[
+                  {
+                    key: 'copy-url',
+                    label: (
+                      <CopyToClipboard
+                        text={fullUrl}
+                        onCopy={(text: string, result: boolean) => {
+                          if (result) {
+                            notification.success({
+                              message: '链接已复制',
+                              duration: 2,
+                              style: {
+                                width: 280,
+                              },
+                            });
+                          }
+                        }}
+                      >
+                        <span>复制本页链接</span>
+                      </CopyToClipboard>
+                    ),
+                  },
+                ]}
+              />
+            }
+          >
+            <ShareAltOutlined />
+          </Dropdown>
         </a>
         {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
           <p className="mb-0">贡献者：{renderContributors(staticData.contributors)}</p>

@@ -5,6 +5,8 @@
     border-right-width: 1px;
     border-right-style: solid;
     border-right-color: rgba(217, 217, 217);
+    display: flex;
+    flex-direction: column;
 
     .srk-collection-menu-icon {
       @apply text-center;
@@ -12,10 +14,14 @@
         @apply w-8 h-8;
       }
     }
-    .ant-menu.ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
-      padding: 0;
-      .srk-collection-menu-icon {
-        @apply w-full;
+
+    .srk-collection-nav-menu {
+      overflow-y: auto;
+      .ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
+        padding: 0;
+        .srk-collection-menu-icon {
+          @apply w-full;
+        }
       }
     }
   }
