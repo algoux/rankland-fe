@@ -106,7 +106,7 @@ export default function LiveRanklistPage() {
         <title>{formatTitle(`Live: ${ranklist.contest.title}`)}</title>
       </Helmet>
       <div className="mt-8 mb-8">
-        <StyledRanklist data={ranklist} name={id} showFooter showFilter showProgress isLive />
+        <StyledRanklist data={ranklist} name={id} id={id} showFooter showFilter showProgress isLive />
       </div>
     </div>
   );

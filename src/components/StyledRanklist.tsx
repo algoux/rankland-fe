@@ -27,6 +27,8 @@ import ContactUs from './ContactUs';
 import BeianLink from './BeianLink';
 import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCurrentUrl } from '@/hooks/use-current-url';
+import { formatUrl } from '@/configs/route.config';
+import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 
 const { Ranklist: ranklistChecker } = createCheckers(srkChecker);
 
@@ -41,6 +43,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 export interface IStyledRanklistProps {
   data: srk.Ranklist;
   name: string;
+  id?: string;
   meta?: {
     viewCnt?: number;
   };
@@ -53,6 +56,7 @@ export interface IStyledRanklistProps {
 export default function StyledRanklist({
   data,
   name,
+  id,
   meta,
   showFooter = false,
   showFilter = false,
@@ -186,7 +190,28 @@ export default function StyledRanklist({
                       </CopyToClipboard>
                     ),
                   },
-                ]}
+                  id ? {
+                    key: 'copy-embedded',
+                    label: (
+                      <CopyToClipboard
+                        text={`<iframe src="${formatUrl('Ranklist', { id, focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes' })}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
+                        onCopy={(text: string, result: boolean) => {
+                          if (result) {
+                            notification.success({
+                              message: '嵌入代码已复制',
+                              duration: 2,
+                              style: {
+                                width: 280,
+                              },
+                            });
+                          }
+                        }}
+                      >
+                        <span>复制嵌入代码</span>
+                      </CopyToClipboard>
+                    ),
+                  } : undefined,
+                ].filter(Boolean) as ItemType[]}
               />
             }
           >

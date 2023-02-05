@@ -13,6 +13,9 @@ const { Header, Content } = Layout;
 
 export default function RootLayout({ children }: IRouteComponentProps) {
   const location = useLocation();
+  // @ts-ignore
+  const useFocus = location.query.focus === 'yes' || location.query.聚焦 === '是';
+
   const systemThemeListener = (e: MediaQueryListEvent | MediaQueryList) => {
     const theme = e.matches ? 'dark' : 'light';
     document.documentElement.className = theme;
@@ -42,6 +45,10 @@ export default function RootLayout({ children }: IRouteComponentProps) {
   }, [location]);
 
   const { setTheme } = useModel('theme', (model) => ({ setTheme: model.setTheme }));
+
+  if (useFocus) {
+    return children;
+  }
 
   return (
     <Layout className="layout">

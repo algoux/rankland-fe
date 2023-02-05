@@ -34,9 +34,15 @@ const _routes = [
   {
     name: 'Ranklist',
     path: '/ranklist/:id',
+    query: {
+      focus: String,
+    },
     alias: {
       cn: {
         path: '/榜单/:id',
+        queryMapping: {
+          focus: '聚焦',
+        },
       },
     },
     component: '@/pages/ranklist/[id]',
@@ -73,9 +79,15 @@ const _routes = [
   {
     name: 'Live',
     path: '/live/:id',
+    query: {
+      focus: String,
+    },
     alias: {
       cn: {
         path: '/直播/:id',
+        queryMapping: {
+          focus: '聚焦',
+        },
       },
     },
     component: '@/pages/live/[id]',
@@ -92,6 +104,8 @@ export const knownUrlKeywordToGeneralReplacementMap = {
   游乐场: 'playground',
   直播: 'live',
   关键词: 'kw',
+  聚焦: 'focus',
+  是: 'yes',
 };
 
 export const knownUrlKeywordToAliasReplacementMap = {
@@ -104,6 +118,8 @@ export const knownUrlKeywordToAliasReplacementMap = {
     rankId: '当前选中榜单的标识符',
     kw: '关键词',
     official: '由官方整理和维护的',
+    focus: '聚焦',
+    yes: '是',
   },
 };
 

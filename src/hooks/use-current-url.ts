@@ -12,6 +12,9 @@ export function useCurrentUrl() {
     let search = '';
     // @ts-ignore
     Object.keys(location.query).forEach((key, index) => {
+      if (['focus', '聚焦'].indexOf(key) > -1) {
+        return;
+      }
       // @ts-ignore
       search += `${index ? '&' : ''}${key}=${location.query[key]}`;
     });

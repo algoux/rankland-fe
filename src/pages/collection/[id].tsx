@@ -203,7 +203,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
     if (data.ranklist) {
       return (
         <div className="mt-8 mb-8">
-          <StyledRanklist data={data.ranklist.srk} name={rankId!} meta={data.ranklist.info} showFooter showFilter />
+          <StyledRanklist data={data.ranklist.srk} name={rankId!} id={rankId!} meta={data.ranklist.info} showFooter showFilter />
         </div>
       );
     }
