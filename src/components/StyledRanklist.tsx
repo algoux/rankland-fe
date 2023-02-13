@@ -1,5 +1,4 @@
 import React from 'react';
-import type * as srk from '@algoux/standard-ranklist';
 import { createCheckers } from 'ts-interface-checker';
 import srkChecker from '@/lib/srk-checker/index.d.ti';
 import StyledRanklistRenderer from './StyledRanklistRenderer';

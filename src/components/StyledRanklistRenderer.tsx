@@ -13,7 +13,7 @@ import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
-import { Alert, Dropdown, Menu, notification, Select } from 'antd';
+import { Alert, Dropdown, Menu, notification, Select, Switch } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
@@ -60,7 +60,10 @@ export default function StyledRanklistRenderer({
   isLive = false,
 }: IStyledRanklistRendererProps) {
   const { theme } = useModel('theme');
-  const [filter, setFilter] = useState<{ organizations: string[] }>({ organizations: [] });
+  const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
+    organizations: [],
+    officialOnly: false,
+  });
   const [timeTravelTime, setTimeTravelTime] = useState<number | null>(null);
 
   const download = () => {
@@ -83,12 +86,21 @@ export default function StyledRanklistRenderer({
 
   const staticData = useMemo(() => convertToStaticRanklist(genData), [genData]);
 
-  const organizations = uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort(
-    (a, b) => a.localeCompare(b),
+  const organizations = useMemo(
+    () =>
+      uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
+        a.localeCompare(b),
+      ),
+    [staticData.rows],
   );
-  const filteredRows = staticData.rows.filter((row) =>
-    filter.organizations.length ? filter.organizations.includes(row.user?.organization as string) : true,
-  );
+  const filteredRows = useMemo(() => {
+    return staticData.rows.filter((row) => {
+      let ok = true;
+      ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(row.user?.organization as string));
+      ok && filter.officialOnly && (ok = row.user?.official === true);
+      return ok;
+    });
+  }, [filter, staticData.rows]);
   const usingData = {
     ...staticData,
     rows: filteredRows,
@@ -97,7 +109,11 @@ export default function StyledRanklistRenderer({
   const { fullUrl } = useCurrentUrl();
 
   const handleOrgFilterChange = (value: string[]) => {
-    setFilter({ organizations: value });
+    setFilter((prev) => ({ ...prev, organizations: value }));
+  };
+
+  const handleIncludeOfficiaFlilterChange = (checked: boolean) => {
+    setFilter((prev) => ({ ...prev, officialOnly: checked }));
   };
 
   const handleTimeTravel = (time: number | null) => {
@@ -144,50 +160,57 @@ export default function StyledRanklistRenderer({
           <Dropdown
             overlay={
               <Menu
-                items={[
-                  {
-                    key: 'copy-url',
-                    label: (
-                      <CopyToClipboard
-                        text={fullUrl}
-                        onCopy={(text: string, result: boolean) => {
-                          if (result) {
-                            notification.success({
-                              message: '链接已复制',
-                              duration: 2,
-                              style: {
-                                width: 280,
-                              },
-                            });
-                          }
-                        }}
-                      >
-                        <span>复制本页链接</span>
-                      </CopyToClipboard>
-                    ),
-                  },
-                  id ? {
-                    key: 'copy-embedded',
-                    label: (
-                      <CopyToClipboard
-                        text={`<iframe src="${formatUrl(isLive ? 'Live' : 'Ranklist', { id, focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes' })}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
-                        onCopy={(text: string, result: boolean) => {
-                          if (result) {
-                            notification.success({
-                              message: '嵌入代码已复制',
-                              duration: 2,
-                              style: {
-                                width: 280,
-                              },
-                            });
-                          }
-                        }}
-                      >
-                        <span>复制嵌入代码</span>
-                      </CopyToClipboard>
-                    ),
-                  } : undefined,
-                ].filter(Boolean) as ItemType[]}
+                items={
+                  [
+                    {
+                      key: 'copy-url',
+                      label: (
+                        <CopyToClipboard
+                          text={fullUrl}
+                          onCopy={(text: string, result: boolean) => {
+                            if (result) {
+                              notification.success({
+                                message: '链接已复制',
+                                duration: 2,
+                                style: {
+                                  width: 280,
+                                },
+                              });
+                            }
+                          }}
+                        >
+                          <span>复制本页链接</span>
+                        </CopyToClipboard>
+                      ),
+                    },
+                    id
+                      ? {
+                          key: 'copy-embedded',
+                          label: (
+                            <CopyToClipboard
+                              text={`<iframe src="${formatUrl(isLive ? 'Live' : 'Ranklist', {
+                                id,
+                                focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
+                              })}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
+                              onCopy={(text: string, result: boolean) => {
+                                if (result) {
+                                  notification.success({
+                                    message: '嵌入代码已复制',
+                                    duration: 2,
+                                    style: {
+                                      width: 280,
+                                    },
+                                  });
+                                }
+                              }}
+                            >
+                              <span>复制嵌入代码</span>
+                            </CopyToClipboard>
+                          ),
+                        }
+                      : undefined,
+                  ].filter(Boolean) as ItemType[]
+                }
               />
             }
           >
@@ -222,12 +245,12 @@ export default function StyledRanklistRenderer({
           <Select
             mode="multiple"
             allowClear
-            placeholder="Select Organizations"
+            placeholder="选择组织/单位"
             onChange={handleOrgFilterChange}
             className="ml-2"
             style={{ width: '160px' }}
             maxTagCount={0}
-            maxTagPlaceholder={(omittedValues) => `${omittedValues.length} selected`}
+            maxTagPlaceholder={(omittedValues) => `已选择 ${omittedValues.length} 个`}
           >
             {organizations.map((item) => (
               <Select.Option key={item} value={item}>
@@ -235,6 +258,10 @@ export default function StyledRanklistRenderer({
               </Select.Option>
             ))}
           </Select>
+          <span className="ml-4 inline-flex items-center">
+            <span className="mr-1">仅包含正式参加者</span>
+            <Switch checked={filter.officialOnly} size="small" onChange={handleIncludeOfficiaFlilterChange} />
+          </span>
         </div>
       )}
       <div className="mt-6" />
@@ -255,13 +282,13 @@ export default function StyledRanklistRenderer({
             </a>
           </p>
           <p className="mt-1 mb-0">
-            我们同为算法竞赛爱好者，不妨
+            欢迎提交 PR 至
             <a href="https://github.com/algoux/srk-collection" target="_blank">
-              一起维护 👏
+              榜单合集
             </a>
           </p>
           <p className="mt-1 mb-0">
-            需要免费托管比赛外榜？欢迎
+            需要免费托管赛事外榜？
             <ContactUs>
               <a>联系我们</a>
             </ContactUs>
