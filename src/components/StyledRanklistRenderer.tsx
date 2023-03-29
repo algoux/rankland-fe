@@ -27,6 +27,7 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { formatUrl } from '@/configs/route.config';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
+import ClientOnly from './ClientOnly';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -153,70 +154,79 @@ export default function StyledRanklistRenderer({
         <span className="mr-2">
           <EyeOutlined /> {meta.viewCnt || '-'}
         </span>
-        <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2" onClick={download}>
-          <DownloadOutlined /> srk
-        </a>
-        <a className="pl-2 border-0 border-l border-solid border-gray-400">
-          <Dropdown
-            overlay={
-              <Menu
-                items={
-                  [
-                    {
-                      key: 'copy-url',
-                      label: (
-                        <CopyToClipboard
-                          text={fullUrl}
-                          onCopy={(text: string, result: boolean) => {
-                            if (result) {
-                              notification.success({
-                                message: '链接已复制',
-                                duration: 2,
-                                style: {
-                                  width: 280,
-                                },
-                              });
-                            }
-                          }}
-                        >
-                          <span>复制本页链接</span>
-                        </CopyToClipboard>
-                      ),
-                    },
-                    id
-                      ? {
-                          key: 'copy-embedded',
-                          label: (
-                            <CopyToClipboard
-                              text={`<iframe src="${formatUrl(isLive ? 'Live' : 'Ranklist', {
-                                id,
-                                focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
-                              })}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
-                              onCopy={(text: string, result: boolean) => {
-                                if (result) {
-                                  notification.success({
-                                    message: '嵌入代码已复制',
-                                    duration: 2,
-                                    style: {
-                                      width: 280,
-                                    },
-                                  });
-                                }
-                              }}
-                            >
-                              <span>复制嵌入代码</span>
-                            </CopyToClipboard>
-                          ),
-                        }
-                      : undefined,
-                  ].filter(Boolean) as ItemType[]
-                }
-              />
-            }
-          >
-            <ShareAltOutlined />
-          </Dropdown>
-        </a>
+        <ClientOnly>
+          {() => (
+            <>
+              <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2" onClick={download}>
+                <DownloadOutlined /> srk
+              </a>
+              <a className="pl-2 border-0 border-l border-solid border-gray-400">
+                <Dropdown
+                  overlay={
+                    <Menu
+                      items={
+                        [
+                          {
+                            key: 'copy-url',
+                            label: (
+                              <CopyToClipboard
+                                text={fullUrl}
+                                onCopy={(text: string, result: boolean) => {
+                                  if (result) {
+                                    notification.success({
+                                      message: '链接已复制',
+                                      duration: 2,
+                                      style: {
+                                        width: 280,
+                                      },
+                                    });
+                                  }
+                                }}
+                              >
+                                <span>复制本页链接</span>
+                              </CopyToClipboard>
+                            ),
+                          },
+                          id
+                            ? {
+                                key: 'copy-embedded',
+                                label: (
+                                  <CopyToClipboard
+                                    text={`<iframe src="${window.location.origin}${formatUrl(
+                                      isLive ? 'Live' : 'Ranklist',
+                                      {
+                                        id,
+                                        focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
+                                      },
+                                    )}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
+                                    onCopy={(text: string, result: boolean) => {
+                                      if (result) {
+                                        notification.success({
+                                          message: '嵌入代码已复制',
+                                          duration: 2,
+                                          style: {
+                                            width: 280,
+                                          },
+                                        });
+                                      }
+                                    }}
+                                  >
+                                    <span>复制嵌入代码</span>
+                                  </CopyToClipboard>
+                                ),
+                              }
+                            : undefined,
+                        ].filter(Boolean) as ItemType[]
+                      }
+                    />
+                  }
+                >
+                  <ShareAltOutlined />
+                </Dropdown>
+              </a>
+            </>
+          )}
+        </ClientOnly>
         {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
           <p className="mb-0">贡献者：{renderContributors(staticData.contributors)}</p>
         )}
