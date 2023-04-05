@@ -28,9 +28,10 @@ export class HttpException extends Error {
   }
 }
 
-let requestAdapter: ReturnType<typeof extend>;
+export let apiRequestAdapter: ReturnType<typeof extend>;
+export let cdnApiRequestAdapter: ReturnType<typeof extend>;
 
-export type RequestAdapter = typeof requestAdapter;
+export type RequestAdapter = ReturnType<typeof extend>;
 
 // const parseDataInterceptor = async (response: Response) => {
 //   const data = await response.clone().json();
@@ -78,13 +79,12 @@ const parseResponseMiddleware = async (ctx: Context, next: () => void) => {
   }
 };
 
+const middlewares: Array<(ctx: Context, next: () => void) => Promise<void>> = [
+  parseResponseMiddleware,
+];
+
 if (isBrowser()) {
-  requestAdapter = extend({
-    prefix: process.env.API_BASE_CLIENT,
-    timeout: 30000,
-    parseResponse: false,
-  });
-  requestAdapter.use(async (ctx, next) => {
+  const clientExceptionMiddleware = async (ctx: Context, next: () => void) => {
     try {
       await next();
     } catch (e) {
@@ -95,17 +95,36 @@ if (isBrowser()) {
       }
       throw e;
     }
+  };
+  middlewares.unshift(clientExceptionMiddleware);
+  apiRequestAdapter = extend({
+    prefix: process.env.API_BASE_CLIENT,
+    timeout: 30000,
+    parseResponse: false,
   });
-  requestAdapter.use(parseResponseMiddleware);
+  cdnApiRequestAdapter = extend({
+    prefix: process.env.CDN_API_BASE_CLIENT,
+    timeout: 30000,
+    parseResponse: false,
+  });
 } else {
-  requestAdapter = extend({
+  apiRequestAdapter = extend({
     prefix: process.env.API_BASE_SERVER,
     timeout: 5000,
     parseResponse: false,
   });
-  requestAdapter.use(parseResponseMiddleware);
+  cdnApiRequestAdapter = extend({
+    prefix: process.env.CDN_API_BASE_SERVER,
+    timeout: 5000,
+    parseResponse: false,
+  });
 }
 
-export default requestAdapter;
+middlewares.forEach((middleware) => {
+  apiRequestAdapter.use(middleware);
+});
+middlewares.forEach((middleware) => {
+  cdnApiRequestAdapter.use(middleware);
+});
 
 export { useRequest as useReq } from 'ahooks';

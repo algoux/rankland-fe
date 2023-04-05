@@ -1,5 +1,5 @@
 import type * as srk from '@algoux/standard-ranklist';
-import requestAdapter, { ApiException, HttpException, RequestAdapter } from '@/utils/request';
+import { apiRequestAdapter, cdnApiRequestAdapter, ApiException, HttpException, RequestAdapter } from '@/utils/request';
 import {
   IApiCollection,
   IApiLiveConfig,
@@ -27,7 +27,7 @@ function getCacheManager() {
 }
 
 export class ApiService {
-  public constructor(private readonly requestAdapter: RequestAdapter) {}
+  public constructor(private readonly requestAdapters: { api: RequestAdapter; cdnApi: RequestAdapter }) {}
 
   public async getRanklistInfo(opts: { uniqueKey: string }) {
     const cacheKey = `rankland_ssr_api_cache:getRanklistInfo:${opts.uniqueKey}`;
@@ -36,7 +36,7 @@ export class ApiService {
       console.log('[ssr_api_cache] cache hit:', cacheKey);
       return JSON.parse(cached) as IApiRanklistInfo;
     }
-    const res = await this.requestAdapter.get<IApiRanklistInfo>(urlcat('/rank/:key', { key: opts.uniqueKey }));
+    const res = await this.requestAdapters.cdnApi.get<IApiRanklistInfo>(urlcat('/rank/:key', { key: opts.uniqueKey }));
     getCacheManager()?.setEx(cacheKey, 60, JSON.stringify(res));
     return res;
   }
@@ -58,7 +58,7 @@ export class ApiService {
       }
     }
     let res;
-    const apiRes = await this.requestAdapter.get(urlcat('/file/download', { id: opts.fileID }), {
+    const apiRes = await this.requestAdapters.cdnApi.get(urlcat('/file/download', { id: opts.fileID }), {
       getResponse: true,
     });
     switch ((apiRes.response.headers.get('content-type') || '').split(';')[0]) {
@@ -91,7 +91,7 @@ export class ApiService {
   }
 
   public async searchRanklist(opts: { kw?: string }) {
-    return this.requestAdapter.get<{
+    return this.requestAdapters.api.get<{
       ranks: IApiRanklistInfo[];
     }>(urlcat('/rank/search', { query: opts.kw }));
   }
@@ -103,7 +103,7 @@ export class ApiService {
       console.log('[ssr_api_cache] cache hit:', cacheKey);
       return JSON.parse(cached) as IApiCollection;
     }
-    const plain = await this.requestAdapter
+    const plain = await this.requestAdapters.cdnApi
       .get(urlcat('/rank/group/:key', { key: opts.uniqueKey }))
       .then((res) => res.content as string);
     getCacheManager()?.setEx(cacheKey, 2 * 60, plain);
@@ -111,11 +111,11 @@ export class ApiService {
   }
 
   public getStatistics() {
-    return this.requestAdapter.get<IApiStatistics>('/statistics');
+    return this.requestAdapters.api.get<IApiStatistics>('/statistics');
   }
 
   public async getLiveConfig(opts: { id: string }): Promise<IApiLiveConfig> {
-    const res = await this.requestAdapter.get(
+    const res = await this.requestAdapters.cdnApi.get(
       urlcat('/live/:id.json', { id: opts.id, _t: Math.floor(Date.now() / 1000) }),
       {
         getResponse: true,
@@ -146,10 +146,13 @@ export class ApiService {
     if (alignBaseSec && alignBaseSec > 0) {
       sec -= sec % alignBaseSec;
     }
-    return this.requestAdapter.get<T>(urlcat(url, { _t: sec }), {
+    return this.requestAdapters.api.get<T>(urlcat(url, { _t: sec }), {
       getResponse: true,
     });
   }
 }
 
-export const api = new ApiService(requestAdapter);
+export const api = new ApiService({
+  api: apiRequestAdapter,
+  cdnApi: cdnApiRequestAdapter,
+});

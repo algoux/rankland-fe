@@ -37,6 +37,8 @@ export default defineConfig({
   define: {
     'process.env.API_BASE_CLIENT': isProd ? 'https://rl.mushan.top' : 'https://rl-dev.algoux.org',
     'process.env.API_BASE_SERVER': isProd ? 'https://rl.mushan.top' : 'https://rl-dev.algoux.org',
+    'process.env.CDN_API_BASE_CLIENT': isProd ? 'https://algoux-rl.cdn.blueverse.cc' : 'https://rl-dev.algoux.org',
+    'process.env.CDN_API_BASE_SERVER': isProd ? 'https://algoux-rl.cdn.blueverse.cc' : 'https://rl-dev.algoux.org',
     'process.env.SITE_ALIAS': process.env.SITE_ALIAS,
     'process.env.HOST_GLOBAL': 'rl.algoux.org',
     'process.env.HOST_CN': '榜单大陆.算法与用户体验.中国',
