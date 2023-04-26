@@ -80,21 +80,6 @@ export default function HomePage(props: IHomePageProps) {
           </ul>
         </div>
         <div className="block">
-          <Alert
-            message="Attention! Attention! To all users:"
-            description={<div>
-              <p className="mb-0">我们非常喜欢电影《流浪地球2》并想将它分享给更多的人，让大家去了解这部极高质量、里程碑式的科幻电影。付出努力的人们值得被更多人看到和铭记。 </p>
-              <p className="mb-4">因此，我们决定免费请大家看电影！由于能力有限，我们只能送出至多 20 张电影票。</p>
-              <p className="mb-0">参与方式：</p>
-              <p className="mb-0">首次观看或 N 刷不限，通过下方的联系方式（如邮件或加群私聊群主等）提供你 2022/02/10 或之后日期的支付凭证和票根（如有），我们将会以转账或红包形式报销你的电影票花费。</p>
-              <p className="mb-4">每人至多报销两张电影票（是的，欢迎拉上亲朋好友），每人的报销上限为 100 元人民币（即使一人需要报销两张，我们在总报销计数上也只视为一张，因此不用担心会占用其他人的名额）。</p>
-              <p className="mb-0">当然，如果你觉得我们的产品有价值，欢迎分享 RankLand 或关注我们在 GitHub 上的项目！</p>
-            </div>}
-            type="info"
-            showIcon
-          />
-        </div>
-        <div className="block">
           <h1 className="block-title">联系我们</h1>
           <p>
             如要为赛事寻求免费的实时外榜托管或希望补全/纠正本站数据，欢迎
