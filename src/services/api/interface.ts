@@ -1,4 +1,5 @@
 import type * as srk from '@algoux/standard-ranklist';
+import Long from 'long';
 
 export interface IApiRanklistInfo {
   id: string;
@@ -76,4 +77,12 @@ export interface IApiLiveRanklistInfo {
   sorter: srk.SorterICPC;
   contributors: srk.Contributor[];
   type: srk.Type;
+}
+
+export interface IApiLiveScrollSolution {
+  id: Long;
+  problemAlias: string; // -> match from IApiLiveRanklistInfo['problems']
+  userId: string; // -> match from IApiLiveRanklistInfo['members']
+  result: 'AC' | 'FB' | 'RJ' | '?';
+  solved: number;
 }

@@ -1,22 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { resolveText } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import type * as srk from '@algoux/standard-ranklist';
-import { Helmet, Link, useParams, history } from 'umi';
+import { Helmet, Link, useParams, history, useLocation } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
 import { Button, Spin, Modal } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
-import { formatUrl } from '@/configs/route.config';
+import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
+import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 
 const POLL_RANKLIST_INTERVAL = 10000;
 
 export default function LiveRanklistPage() {
   const { id: key } = useParams<{ id: string }>();
   const [ranklist, setRanklist] = useState<srk.Ranklist | null>(null);
+  const [wsError, setWsError] = useState(false);
   const {
     loading: infoLoading,
     data: info,
@@ -24,17 +26,21 @@ export default function LiveRanklistPage() {
   } = useReq(() => api.getLiveRanklistInfo({ uniqueKey: key }), {
     refreshDeps: [key],
   });
+  const wsRef = useRef<WebSocket | null>(null);
+  const id = useMemo(() => info?.id, [info]);
+  // @ts-ignore
+  const { query } = useLocation();
+  const enabledScrollSolution = useMemo(() => query.scrollSolution === '1', [query.scrollSolution]);
 
-  const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(
-    () => api.getLiveRanklist({ id: info?.id || '' }),
-    {
-      manual: true,
-    },
-  );
+  const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(() => api.getLiveRanklist({ id: id || '' }), {
+    manual: true,
+  });
 
   const loading = infoLoading || ranklistLoading;
 
   let pollRanklistTimer = useRef<any>(0);
+
+  const scrollSolutionRef = useRef<ScrollSolutionImpl>(null);
 
   useEffect(() => {
     setRanklist(null);
@@ -62,6 +68,72 @@ export default function LiveRanklistPage() {
       clearInterval(pollRanklistTimer.current);
     };
   }, [info]);
+
+  useEffect(() => {
+    setWsError(false);
+    wsRef.current?.close();
+    if (!id || !enabledScrollSolution) {
+      return;
+    }
+    let ws: WebSocket;
+    try {
+      console.log('[ScrollSolution] connecting ws');
+      ws = new WebSocket(`${process.env.WS_BASE}/ranking/record/${id}`);
+      ws.binaryType = 'arraybuffer';
+
+      ws.addEventListener('open', (event) => {
+        console.log('[ScrollSolution] connection opened');
+      });
+
+      ws.addEventListener('message', (event) => {
+        let receivedArrayBuffer = event.data;
+        if (event.data instanceof ArrayBuffer) {
+          const solution = parseRealtimeSolutionBuffer(receivedArrayBuffer);
+          console.log('[ScrollSolution] received solution:', { ...solution, id: solution.id.toString() });
+          const user = (info?.members || []).find((u) => u.id === solution.userId);
+          if (user) {
+            scrollSolutionRef.current?.pushSolutions([
+              {
+                problem: {
+                  alias: solution.problemAlias,
+                },
+                score: {
+                  value: solution.solved,
+                },
+                result: solution.result,
+                user: {
+                  name: user.name,
+                  organization: user.organization,
+                },
+              },
+            ]);
+          } else {
+            console.warn('[ScrollSolution] skipped scroll solution cuz user not found', solution);
+          }
+        }
+      });
+
+      ws.addEventListener('close', (event) => {
+        console.log('[ScrollSolution] connection closed');
+        setWsError(true);
+      });
+
+      ws.addEventListener('error', (event) => {
+        console.error('[ScrollSolution] ws error:', event);
+        setWsError(true);
+      });
+
+      wsRef.current = ws;
+    } catch (exception) {
+      console.error('[ScrollSolution] ws exception:', exception);
+      setWsError(true);
+    }
+
+    return () => {
+      console.log('[ScrollSolution] live scroll solutions ws closed', id);
+      ws?.close();
+    };
+  }, [id, enabledScrollSolution]);
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -108,6 +180,7 @@ export default function LiveRanklistPage() {
       </Helmet>
       <div className="mt-8 mb-8">
         <StyledRanklist data={ranklist} name={key} id={key} showFilter showProgress isLive />
+        <ScrollSolution ref={scrollSolutionRef} />
       </div>
     </div>
   );
