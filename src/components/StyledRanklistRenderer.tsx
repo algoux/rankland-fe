@@ -247,7 +247,13 @@ export default function StyledRanklistRenderer({
     <ErrorBoundary FallbackComponent={ErrorFallback}>
       {renderHeader()}
       <div className="mx-4">
-        <ProgressBar data={data} enableTimeTravel onTimeTravel={handleTimeTravel} />
+        <ProgressBar
+          data={data}
+          enableTimeTravel
+          onTimeTravel={handleTimeTravel}
+          live={isLive}
+          // td={data._now ? Date.now() - new Date(data._now).getTime() : 0}
+        />
       </div>
       {showFilter && (
         <div className="mt-3 mx-4">
