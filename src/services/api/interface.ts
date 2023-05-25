@@ -60,3 +60,20 @@ export interface IApiLiveScrollSolutionData {
   rows: IApiLiveScrollSolutionDataItem[];
   updatedAt: number; // timestamp (s)
 }
+
+export interface IApiLiveRanklistInfo {
+  id: string;
+  uniqueKey: string;
+  title: srk.Contest['title'];
+  startAt: srk.Contest['title'];
+  duration: srk.Contest['duration'];
+  frozenDuration: srk.Contest['frozenDuration'];
+  unfrozenAt: srk.DatetimeISOString;
+  problems: srk.Problem[];
+  members: srk.User[];
+  markers: srk.Marker[];
+  series: srk.RankSeries[];
+  sorter: srk.SorterICPC;
+  contributors: srk.Contributor[];
+  type: srk.Type;
+}

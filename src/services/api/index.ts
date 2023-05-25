@@ -3,6 +3,8 @@ import { apiRequestAdapter, cdnApiRequestAdapter, ApiException, HttpException, R
 import {
   IApiCollection,
   IApiLiveConfig,
+  IApiLiveRanklistInfo,
+  IApiLiveScrollSolution,
   IApiLiveScrollSolutionData,
   IApiRanklist,
   IApiRanklistInfo,
@@ -114,41 +116,16 @@ export class ApiService {
     return this.requestAdapters.api.get<IApiStatistics>('/statistics');
   }
 
-  public async getLiveConfig(opts: { id: string }): Promise<IApiLiveConfig> {
-    const res = await this.requestAdapters.cdnApi.get(
-      urlcat('/live/:id.json', { id: opts.id, _t: Math.floor(Date.now() / 1000) }),
-      {
-        getResponse: true,
-      },
+  public async getLiveRanklistInfo(opts: { uniqueKey: string }): Promise<IApiLiveRanklistInfo> {
+    const res = await this.requestAdapters.api.get<IApiLiveRanklistInfo>(
+      urlcat('/ranking/config/:uniqueKey', { uniqueKey: opts.uniqueKey, _t: Date.now() }),
     );
-    return await res.response.json();
+    return res;
   }
 
-  public async getLiveRanklist(opts: { url: string; alignBaseSec?: number }): Promise<srk.Ranklist> {
-    const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
-    switch ((res.response.headers.get('content-type') || '').split(';')[0]) {
-      case 'application/json':
-        return await res.response.json();
-    }
-    throw new Error('Unknown srk content type');
-  }
-
-  public async getLiveScrollSolution(opts: {
-    url: string;
-    alignBaseSec?: number;
-  }): Promise<IApiLiveScrollSolutionData> {
-    const res = await this.getLiveFile(opts.url, opts.alignBaseSec);
-    return await res.response.json();
-  }
-
-  private getLiveFile<T>(url: string, alignBaseSec?: number) {
-    let sec = Math.floor(Date.now() / 1000);
-    if (alignBaseSec && alignBaseSec > 0) {
-      sec -= sec % alignBaseSec;
-    }
-    return this.requestAdapters.api.get<T>(urlcat(url, { _t: sec }), {
-      getResponse: true,
-    });
+  public async getLiveRanklist(opts: { id: string }): Promise<srk.Ranklist> {
+    const res = await this.requestAdapters.api.get<srk.Ranklist>(urlcat('/ranking/:id', { id: opts.id, _t: Date.now() }));
+    return res;
   }
 }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { resolveText } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import type * as srk from '@algoux/standard-ranklist';
@@ -11,56 +12,56 @@ import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
 import { formatUrl } from '@/configs/route.config';
 
+const POLL_RANKLIST_INTERVAL = 10000;
+
 export default function LiveRanklistPage() {
-  const { id } = useParams<{ id: string }>();
+  const { id: key } = useParams<{ id: string }>();
   const [ranklist, setRanklist] = useState<srk.Ranklist | null>(null);
   const {
-    loading: configLoading,
-    data: config,
+    loading: infoLoading,
+    data: info,
     error,
-  } = useReq(() => api.getLiveConfig({ id }), {
-    refreshDeps: [id],
+  } = useReq(() => api.getLiveRanklistInfo({ uniqueKey: key }), {
+    refreshDeps: [key],
   });
 
   const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(
-    () => api.getLiveRanklist({ url: config?.srkUrl || '', alignBaseSec: (config?.srkRefreshInterval || 0) / 1000 }),
+    () => api.getLiveRanklist({ id: info?.id || '' }),
     {
       manual: true,
     },
   );
 
-  const loading = configLoading || ranklistLoading;
+  const loading = infoLoading || ranklistLoading;
 
   let pollRanklistTimer = useRef<any>(0);
 
   useEffect(() => {
     setRanklist(null);
-  }, [id]);
+  }, [key]);
 
   useEffect(() => {
-    if (config?.ranklistUniqueKey) {
-      Modal.confirm({
-        title: '比赛已结束，跳转到终榜？',
-        onOk() {
-          history.push(formatUrl('Ranklist', { id: config.ranklistUniqueKey }));
-        },
-      });
-    }
-    if (config?.srkUrl) {
+    // if (info?.ranklistUniqueKey) {
+    //   Modal.confirm({
+    //     title: '比赛已结束，跳转到终榜？',
+    //     onOk() {
+    //       history.push(formatUrl('Ranklist', { id: info.ranklistUniqueKey }));
+    //     },
+    //   });
+    // }
+    if (info) {
       fetchRanklist().then((res) => setRanklist(res));
-      if (config.srkRefreshInterval > 0) {
-        if (pollRanklistTimer.current) {
-          clearInterval(pollRanklistTimer.current);
-        }
-        pollRanklistTimer.current = setInterval(() => {
-          fetchRanklist().then((res) => setRanklist(res));
-        }, config.srkRefreshInterval);
+      if (pollRanklistTimer.current) {
+        clearInterval(pollRanklistTimer.current);
       }
+      pollRanklistTimer.current = setInterval(() => {
+        fetchRanklist().then((res) => setRanklist(res));
+      }, POLL_RANKLIST_INTERVAL);
     }
     return () => {
       clearInterval(pollRanklistTimer.current);
     };
-  }, [config]);
+  }, [info]);
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -103,10 +104,10 @@ export default function LiveRanklistPage() {
   return (
     <div>
       <Helmet>
-        <title>{formatTitle(`Live: ${ranklist.contest.title}`)}</title>
+        <title>{formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)}</title>
       </Helmet>
       <div className="mt-8 mb-8">
-        <StyledRanklist data={ranklist} name={id} id={id} showFooter showFilter showProgress isLive />
+        <StyledRanklist data={ranklist} name={key} id={key} showFilter showProgress isLive />
       </div>
     </div>
   );
