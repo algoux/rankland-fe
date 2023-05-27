@@ -3,7 +3,7 @@ import { resolveText } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import type * as srk from '@algoux/standard-ranklist';
-import { Helmet, Link, useParams, history, useLocation } from 'umi';
+import { Helmet, Link, useParams, useLocation } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
 import { Button, Spin, Modal } from 'antd';
@@ -14,7 +14,7 @@ import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
 
-const POLL_RANKLIST_INTERVAL = 10000;
+const POLL_RANKLIST_INTERVAL = Number(process.env.LIVE_POLLING_INTERVAL);
 
 export default function LiveRanklistPage() {
   const { id: key } = useParams<{ id: string }>();
@@ -32,17 +32,21 @@ export default function LiveRanklistPage() {
   const id = useMemo(() => info?.id, [info]);
   // @ts-ignore
   const { query } = useLocation();
+  const token = useMemo(() => query.token, [query.token]);
   const enabledScrollSolution = useMemo(() => query.scrollSolution === '1', [query.scrollSolution]);
 
-  const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(() => api.getLiveRanklist({ id: id || '' }), {
-    manual: true,
-  });
+  const { loading: ranklistLoading, runAsync: fetchRanklist } = useReq(
+    () => api.getLiveRanklist({ id: id || '', token }),
+    {
+      manual: true,
+    },
+  );
 
   const loading = infoLoading || ranklistLoading;
 
   let pollRanklistTimer = useRef<any>(0);
 
-  const scrollSolutionRef = useRef<ScrollSolutionImpl>(null);
+  const scrollSolutionRef = useRef<ScrollSolution>(null);
 
   useEffect(() => {
     setRanklist(null);
@@ -80,7 +84,7 @@ export default function LiveRanklistPage() {
     let ws: WebSocket;
     try {
       console.log('[ScrollSolution] connecting ws');
-      ws = new WebSocket(`${process.env.WS_BASE}/ranking/record/${id}`);
+      ws = new WebSocket(`${process.env.WS_BASE}/ranking/record/${id}${token ? `?token=${token}` : ''}`);
       ws.binaryType = 'arraybuffer';
 
       ws.addEventListener('open', (event) => {
@@ -135,7 +139,7 @@ export default function LiveRanklistPage() {
       console.log('[ScrollSolution] live scroll solutions ws closed', id);
       ws?.close();
     };
-  }, [id, enabledScrollSolution]);
+  }, [id, token, enabledScrollSolution]);
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -181,15 +185,7 @@ export default function LiveRanklistPage() {
         <title>{formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)}</title>
       </Helmet>
       <div className="mt-8 mb-8" style={{ marginLeft: enabledScrollSolution ? '250px' : undefined }}>
-        <StyledRanklist
-          data={ranklist}
-          name={key}
-          id={key}
-          showFilter
-          showProgress
-          isLive
-          tableClass="ml-4"
-        />
+        <StyledRanklist data={ranklist} name={key} id={key} showFilter showProgress isLive tableClass="ml-4" />
         <ScrollSolution ref={scrollSolutionRef} containerMaxHeight={remainingHeight} />
       </div>
     </div>

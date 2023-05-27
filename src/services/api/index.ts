@@ -2,10 +2,7 @@ import type * as srk from '@algoux/standard-ranklist';
 import { apiRequestAdapter, cdnApiRequestAdapter, ApiException, HttpException, RequestAdapter } from '@/utils/request';
 import {
   IApiCollection,
-  IApiLiveConfig,
   IApiLiveRanklistInfo,
-  IApiLiveScrollSolution,
-  IApiLiveScrollSolutionData,
   IApiRanklist,
   IApiRanklistInfo,
   IApiStatistics,
@@ -123,8 +120,10 @@ export class ApiService {
     return res;
   }
 
-  public async getLiveRanklist(opts: { id: string }): Promise<srk.Ranklist> {
-    const res = await this.requestAdapters.api.get<srk.Ranklist>(urlcat('/ranking/:id', { id: opts.id, _t: Date.now() }));
+  public async getLiveRanklist(opts: { id: string; token?: string }): Promise<srk.Ranklist> {
+    const res = await this.requestAdapters.api.get<srk.Ranklist>(
+      urlcat('/ranking/:id', { id: opts.id, token: opts.token || undefined, _t: Date.now() }),
+    );
     return res;
   }
 }
