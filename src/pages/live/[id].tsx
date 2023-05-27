@@ -12,6 +12,7 @@ import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
 import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
+import { useRemainingHeight } from '@/hooks/use-remaining-height';
 
 const POLL_RANKLIST_INTERVAL = 10000;
 
@@ -19,6 +20,7 @@ export default function LiveRanklistPage() {
   const { id: key } = useParams<{ id: string }>();
   const [ranklist, setRanklist] = useState<srk.Ranklist | null>(null);
   const [wsError, setWsError] = useState(false);
+  const [remainingHeight] = useRemainingHeight();
   const {
     loading: infoLoading,
     data: info,
@@ -178,9 +180,17 @@ export default function LiveRanklistPage() {
       <Helmet>
         <title>{formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)}</title>
       </Helmet>
-      <div className="mt-8 mb-8">
-        <StyledRanklist data={ranklist} name={key} id={key} showFilter showProgress isLive />
-        <ScrollSolution ref={scrollSolutionRef} />
+      <div className="mt-8 mb-8" style={{ marginLeft: enabledScrollSolution ? '250px' : undefined }}>
+        <StyledRanklist
+          data={ranklist}
+          name={key}
+          id={key}
+          showFilter
+          showProgress
+          isLive
+          tableClass="ml-4"
+        />
+        <ScrollSolution ref={scrollSolutionRef} containerMaxHeight={remainingHeight} />
       </div>
     </div>
   );

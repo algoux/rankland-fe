@@ -48,6 +48,8 @@ export interface IStyledRanklistRendererProps {
   showFilter?: boolean;
   showProgress?: boolean;
   isLive?: boolean;
+  tableClass?: string;
+  tableStyle?: React.CSSProperties;
 }
 
 export default function StyledRanklistRenderer({
@@ -59,6 +61,8 @@ export default function StyledRanklistRenderer({
   showFilter = false,
   showProgress = true,
   isLive = false,
+  tableClass,
+  tableStyle,
 }: IStyledRanklistRendererProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
@@ -281,7 +285,7 @@ export default function StyledRanklistRenderer({
         </div>
       )}
       <div className="mt-6" />
-      <Ranklist data={usingData as any} theme={theme as EnumTheme} />
+      <div className={tableClass} style={tableStyle}><Ranklist data={usingData as any} theme={theme as EnumTheme} /></div>
       {showFooter && (
         <div className="text-center mt-8">
           <p className="mb-0">© 2022-2023 algoUX. All Rights Reserved.</p>

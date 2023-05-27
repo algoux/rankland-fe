@@ -19,10 +19,15 @@ export interface ScrollSolutionDataItem {
   };
 }
 
-export interface ScrollSolutionProps {}
+export interface ScrollSolutionProps {
+  containerMaxHeight?: number;
+}
 
-interface State {}
+interface State {
+  popLimit: number;
+}
 
+const ITEM_HEIGHT = 45;
 const RJ_DELAY = 10 * 1000;
 const DELAY_MAP = {
   FB: 180 * 1000,
@@ -43,11 +48,33 @@ const POP_INTERVAL = 200; // ms
 const MIN_DELAY = 1000; // ms
 
 export default class ScrollSolution extends React.Component<ScrollSolutionProps, State> {
+  public static defaultProps: Partial<ScrollSolutionProps> = {
+    containerMaxHeight: 0,
+  };
+
   private _queue: ScrollSolutionDataItem[] = [];
   private _popInterval: number = POP_INTERVAL;
 
+  public constructor(props: ScrollSolutionProps) {
+    super(props);
+    this.state = {
+      popLimit: props.containerMaxHeight ? Math.floor(props.containerMaxHeight / ITEM_HEIGHT) : POP_LIMIT,
+    };
+  }
+
   public componentDidMount() {
     this.popFromQueue();
+  }
+
+  // eslint-disable-next-line @typescript-eslint/member-ordering
+  public static getDerivedStateFromProps(props: ScrollSolutionProps, state: State) {
+    const popLimit = props.containerMaxHeight ? Math.floor(props.containerMaxHeight / ITEM_HEIGHT) : POP_LIMIT;
+    if (popLimit !== state.popLimit) {
+      return {
+        popLimit,
+      };
+    }
+    return null;
   }
 
   public pop(data: ScrollSolutionDataItem, delay: number) {
@@ -85,13 +112,13 @@ export default class ScrollSolution extends React.Component<ScrollSolutionProps,
   public popFromQueue() {
     if (this._queue.length > 0) {
       // console.warn('popFromQueue', this._queue.length, this._popInterval);
-      // const maxPopInterval = this.props.interval / POP_LIMIT;
+      // const maxPopInterval = this.props.interval / this.state.popLimit;
       const maxPopInterval = 100;
       let delay: number = DELAY_MAP[this._queue[0].result];
-      if (this._queue.length <= POP_LIMIT) {
+      if (this._queue.length <= this.state.popLimit) {
         this._popInterval = maxPopInterval;
       } else {
-        const scale = Math.max(1 / (this._queue.length / POP_LIMIT) - 0.5, 0.01);
+        const scale = Math.max(1 / (this._queue.length / this.state.popLimit) - 0.5, 0.01);
         // console.log('scale', scale);
         delay = MIN_DELAY + DELAY_MAP[this._queue[0].result] * scale;
         this._popInterval = maxPopInterval * scale;
@@ -145,7 +172,7 @@ export default class ScrollSolution extends React.Component<ScrollSolutionProps,
         pauseOnHover={false}
         closeButton={false}
         transition={Zoom}
-        limit={POP_LIMIT}
+        limit={this.state.popLimit}
       />
     );
   }
