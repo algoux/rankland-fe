@@ -13,6 +13,8 @@ import { useReq } from '@/utils/request';
 import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
+import './[id].less';
+import { useClientWidthHeight } from '@/hooks/use-client-wh';
 
 const POLL_RANKLIST_INTERVAL = Number(process.env.LIVE_POLLING_INTERVAL);
 
@@ -21,6 +23,7 @@ export default function LiveRanklistPage() {
   const [ranklist, setRanklist] = useState<srk.Ranklist | null>(null);
   const [wsError, setWsError] = useState(false);
   const [remainingHeight] = useRemainingHeight();
+  const [{ width: clientWidth }] = useClientWidthHeight()
   const {
     loading: infoLoading,
     data: info,
@@ -179,13 +182,69 @@ export default function LiveRanklistPage() {
       </div>
     );
   }
+
+  const renderUserModal = (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+    // @ts-ignore
+    const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
+    const matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex] || { style: 'iron', title: '优胜奖' };
+    console.log('renderUserModal matchedSeries', matchedSeries);
+    const id = `um-img-${user.id}`;
+    const handleImgError = () => {
+      const img = document.getElementById(id);
+      img?.style.setProperty('display', 'none');
+    };
+    // @ts-ignore
+    const photo = user.x_photo as string | undefined;
+    // @ts-ignore
+    const slogan = user.x_slogan as string | undefined;
+    return {
+      title: user.name,
+      width: clientWidth >= 980 ? 960 : clientWidth - 20,
+      content: (
+        <div>
+          <p>{user.organization}</p>
+          {matchedSeries && (
+            <p>
+              当前所在奖区：
+              <span className={`user-modal-segment-label bg-segment-${matchedSeries.style}`}>
+                {matchedSeries.title}
+              </span>
+            </p>
+          )}
+          <div>
+            {photo && (
+              <img
+                id={id}
+                key={id}
+                src={`${process.env.X_PHOTO_BASE}${photo}`}
+                alt="选手照片"
+                style={{ width: '100%' }}
+                onError={handleImgError}
+              />
+            )}
+            {slogan && <p className="slogan mt-4 mb-2">{slogan}</p>}
+          </div>
+        </div>
+      ),
+    };
+  };
+
   return (
     <div>
       <Helmet>
         <title>{formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)}</title>
       </Helmet>
       <div className="mt-8 mb-8" style={{ marginLeft: enabledScrollSolution ? '250px' : undefined }}>
-        <StyledRanklist data={ranklist} name={key} id={key} showFilter showProgress isLive tableClass="ml-4" />
+        <StyledRanklist
+          data={ranklist}
+          name={key}
+          id={key}
+          showFilter
+          showProgress
+          isLive
+          tableClass="ml-4"
+          renderUserModal={renderUserModal}
+        />
         <ScrollSolution ref={scrollSolutionRef} containerMaxHeight={remainingHeight} />
       </div>
     </div>

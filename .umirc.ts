@@ -45,6 +45,7 @@ export default defineConfig({
     'process.env.HOST_CN': '榜单大陆.算法与用户体验.中国',
     'process.env.BEIAN': '粤ICP备2022146651号',
     'process.env.LIVE_POLLING_INTERVAL': '10000',
+    'process.env.X_PHOTO_BASE': 'https://share-bj-1252277595.cos.ap-beijing.myqcloud.com/',
     'GTAG': siteAlias === 'cn' ? 'G-D4PSNCRQJC' : 'G-D6CVTJBDZT',
   },
   ssr: {

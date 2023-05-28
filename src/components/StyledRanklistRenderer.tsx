@@ -9,7 +9,7 @@ import {
   regenerateRanklistBySolutions,
   getSortedCalculatedRawSolutions,
 } from '@algoux/standard-ranklist-renderer-component';
-import type { EnumTheme } from '@algoux/standard-ranklist-renderer-component';
+import type { EnumTheme, RanklistProps } from '@algoux/standard-ranklist-renderer-component';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
@@ -50,6 +50,7 @@ export interface IStyledRanklistRendererProps {
   isLive?: boolean;
   tableClass?: string;
   tableStyle?: React.CSSProperties;
+  renderUserModal?: RanklistProps['renderUserModal'];
 }
 
 export default function StyledRanklistRenderer({
@@ -63,6 +64,7 @@ export default function StyledRanklistRenderer({
   isLive = false,
   tableClass,
   tableStyle,
+  renderUserModal,
 }: IStyledRanklistRendererProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
@@ -285,7 +287,7 @@ export default function StyledRanklistRenderer({
         </div>
       )}
       <div className="mt-6" />
-      <div className={tableClass} style={tableStyle}><Ranklist data={usingData as any} theme={theme as EnumTheme} /></div>
+      <div className={tableClass} style={tableStyle}><Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} /></div>
       {showFooter && (
         <div className="text-center mt-8">
           <p className="mb-0">© 2022-2023 algoUX. All Rights Reserved.</p>
