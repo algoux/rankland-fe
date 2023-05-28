@@ -186,7 +186,10 @@ export default function LiveRanklistPage() {
   const renderUserModal = (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
     // @ts-ignore
     const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
-    const matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex] || { style: 'iron', title: '优胜奖' };
+    let matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex];
+    if (user.official === undefined || user.official === true) {
+      matchedSeries = { style: 'iron', title: '优胜奖' };
+    }
     console.log('renderUserModal matchedSeries', matchedSeries);
     const id = `um-img-${user.id}`;
     const handleImgError = () => {
