@@ -6,7 +6,7 @@ import type * as srk from '@algoux/standard-ranklist';
 import { Helmet, Link, useParams, useLocation } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
-import { Button, Spin, Modal } from 'antd';
+import { Button, Spin, Modal, Switch } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
@@ -23,7 +23,7 @@ export default function LiveRanklistPage() {
   const [ranklist, setRanklist] = useState<srk.Ranklist | null>(null);
   const [wsError, setWsError] = useState(false);
   const [remainingHeight] = useRemainingHeight();
-  const [{ width: clientWidth }] = useClientWidthHeight()
+  const [{ width: clientWidth }] = useClientWidthHeight();
   const {
     loading: infoLoading,
     data: info,
@@ -183,6 +183,19 @@ export default function LiveRanklistPage() {
     );
   }
 
+  const handleSwitchScrollSolution = (checked: boolean) => {
+    setTimeout(() => {
+      const searchParams = new URLSearchParams(window.location.search);
+      if (checked) {
+        searchParams.append('scrollSolution', '1');
+        window.location.search = searchParams.toString();
+      } else {
+        searchParams.delete('scrollSolution');
+        window.location.search = searchParams.toString();
+      }
+    }, 250);
+  };
+
   const renderUserModal = (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
     // @ts-ignore
     const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
@@ -247,6 +260,12 @@ export default function LiveRanklistPage() {
           isLive
           tableClass="ml-4"
           renderUserModal={renderUserModal}
+          renderExtraActionArea={() => (
+            <span className="inline-flex items-center">
+              <span className="mr-1">实时滚动提交状态</span>
+              <Switch defaultChecked={enabledScrollSolution} size="small" onChange={handleSwitchScrollSolution} />
+            </span>
+          )}
         />
         <ScrollSolution ref={scrollSolutionRef} containerMaxHeight={remainingHeight} />
       </div>

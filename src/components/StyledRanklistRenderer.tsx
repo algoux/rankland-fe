@@ -51,6 +51,7 @@ export interface IStyledRanklistRendererProps {
   tableClass?: string;
   tableStyle?: React.CSSProperties;
   renderUserModal?: RanklistProps['renderUserModal'];
+  renderExtraActionArea?: (ranklist: srk.Ranklist) => React.ReactNode;
 }
 
 export default function StyledRanklistRenderer({
@@ -65,6 +66,7 @@ export default function StyledRanklistRenderer({
   tableClass,
   tableStyle,
   renderUserModal,
+  renderExtraActionArea,
 }: IStyledRanklistRendererProps) {
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
@@ -261,33 +263,39 @@ export default function StyledRanklistRenderer({
           // td={data._now ? Date.now() - new Date(data._now).getTime() : 0}
         />
       </div>
-      {showFilter && (
-        <div className="mt-3 mx-4">
-          <span>筛选</span>
-          <Select
-            mode="multiple"
-            allowClear
-            placeholder="选择组织/单位"
-            onChange={handleOrgFilterChange}
-            className="ml-2"
-            style={{ width: '160px' }}
-            maxTagCount={0}
-            maxTagPlaceholder={(omittedValues) => `已选择 ${omittedValues.length} 个`}
-          >
-            {organizations.map((item) => (
-              <Select.Option key={item} value={item}>
-                {item}
-              </Select.Option>
-            ))}
-          </Select>
-          <span className="ml-4 inline-flex items-center">
-            <span className="mr-1">仅包含正式参加者</span>
-            <Switch checked={filter.officialOnly} size="small" onChange={handleIncludeOfficiaFlilterChange} />
-          </span>
-        </div>
-      )}
+      <div className="mt-3 mx-4 flex justify-between items-center">
+        {showFilter && (
+          <div>
+            <span>筛选</span>
+            <Select
+              mode="multiple"
+              allowClear
+              placeholder="选择组织/单位"
+              onChange={handleOrgFilterChange}
+              className="ml-2"
+              style={{ width: '160px' }}
+              maxTagCount={0}
+              maxTagPlaceholder={(omittedValues) => `已选择 ${omittedValues.length} 个`}
+            >
+              {organizations.map((item) => (
+                <Select.Option key={item} value={item}>
+                  {item}
+                </Select.Option>
+              ))}
+            </Select>
+            <span className="ml-4 inline-flex items-center">
+              <span className="mr-1">仅包含正式参加者</span>
+              <Switch checked={filter.officialOnly} size="small" onChange={handleIncludeOfficiaFlilterChange} />
+            </span>
+          </div>
+        )}
+        <div>{renderExtraActionArea ? renderExtraActionArea(data) : null}</div>
+      </div>
+
       <div className="mt-6" />
-      <div className={tableClass} style={tableStyle}><Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} /></div>
+      <div className={tableClass} style={tableStyle}>
+        <Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} />
+      </div>
       {showFooter && (
         <div className="text-center mt-8">
           <p className="mb-0">© 2022-2023 algoUX. All Rights Reserved.</p>
