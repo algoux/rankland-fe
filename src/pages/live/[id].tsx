@@ -200,7 +200,7 @@ export default function LiveRanklistPage() {
     // @ts-ignore
     const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
     let matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex];
-    if (user.official === undefined || user.official === true) {
+    if (!matchedSeries && (user.official === undefined || user.official === true)) {
       matchedSeries = { style: 'iron', title: '优胜奖' };
     }
     console.log('renderUserModal matchedSeries', matchedSeries);
