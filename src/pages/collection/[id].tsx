@@ -1,4 +1,5 @@
 import React, { createRef, useEffect, useState } from 'react';
+import type * as srk from '@algoux/standard-ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useHistory, useModel, useParams } from 'umi';
@@ -20,14 +21,15 @@ import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
 import { extractQueryParams, formatUrl } from '@/configs/route.config';
+import UserInfoModal from '@/components/UserInfoModal';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const apiCache = new MiniCache();
 
-const idTranslations: Record< string, string> = {
-  'official': 'official',
-  '由官方整理和维护的': 'official',
+const idTranslations: Record<string, string> = {
+  official: 'official',
+  由官方整理和维护的: 'official',
 };
 
 function getItem(
@@ -203,7 +205,21 @@ export default function CollectionPage(props: ICollectionPageProps) {
     if (data.ranklist) {
       return (
         <div className="mt-8 mb-8">
-          <StyledRanklist data={data.ranklist.srk} name={rankId!} id={rankId!} meta={data.ranklist.info} showFooter showFilter />
+          <StyledRanklist
+            data={data.ranklist.srk}
+            name={rankId!}
+            id={rankId!}
+            meta={data.ranklist.info}
+            showFooter
+            showFilter
+            renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+              return {
+                title: user.name,
+                width: clientWidth >= 980 ? 960 : clientWidth - 20,
+                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
+              };
+            }}
+          />
         </div>
       );
     }

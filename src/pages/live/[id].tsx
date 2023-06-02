@@ -6,15 +6,15 @@ import type * as srk from '@algoux/standard-ranklist';
 import { Helmet, Link, useParams, useLocation } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';
-import { Button, Spin, Modal, Switch } from 'antd';
+import { Button, Spin, Switch } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
 import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
-import './[id].less';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
+import UserInfoModal from '@/components/UserInfoModal';
 
 const POLL_RANKLIST_INTERVAL = Number(process.env.LIVE_POLLING_INTERVAL);
 
@@ -196,55 +196,6 @@ export default function LiveRanklistPage() {
     }, 250);
   };
 
-  const renderUserModal = (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
-    // @ts-ignore
-    const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
-    let matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex];
-    if (!matchedSeries && (user.official === undefined || user.official === true)) {
-      matchedSeries = { style: 'iron', title: '优胜奖' };
-    }
-    console.log('renderUserModal matchedSeries', matchedSeries);
-    const id = `um-img-${user.id}`;
-    const handleImgError = () => {
-      const img = document.getElementById(id);
-      img?.style.setProperty('display', 'none');
-    };
-    // @ts-ignore
-    const photo = user.x_photo as string | undefined;
-    // @ts-ignore
-    const slogan = user.x_slogan as string | undefined;
-    return {
-      title: user.name,
-      width: clientWidth >= 980 ? 960 : clientWidth - 20,
-      content: (
-        <div>
-          <p>{user.organization}</p>
-          {matchedSeries && (
-            <p>
-              当前所在奖区：
-              <span className={`user-modal-segment-label bg-segment-${matchedSeries.style}`}>
-                {matchedSeries.title}
-              </span>
-            </p>
-          )}
-          <div>
-            {photo && (
-              <img
-                id={id}
-                key={id}
-                src={`${process.env.X_PHOTO_BASE}${photo}`}
-                alt="选手照片"
-                style={{ width: '100%' }}
-                onError={handleImgError}
-              />
-            )}
-            {slogan && <p className="slogan mt-4 mb-2">{slogan}</p>}
-          </div>
-        </div>
-      ),
-    };
-  };
-
   return (
     <div>
       <Helmet>
@@ -259,7 +210,13 @@ export default function LiveRanklistPage() {
           showProgress
           isLive
           tableClass="ml-4"
-          renderUserModal={renderUserModal}
+          renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+            return {
+              title: user.name,
+              width: clientWidth >= 980 ? 960 : clientWidth - 20,
+              content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
+            };
+          }}
           renderExtraActionArea={() => (
             <span className="inline-flex items-center">
               <span className="mr-1">实时滚动提交状态</span>

@@ -1,4 +1,5 @@
 import React from 'react';
+import type * as srk from '@algoux/standard-ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useParams } from 'umi';
@@ -7,10 +8,13 @@ import { api } from '@/services/api';
 import { Button, Spin } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
+import UserInfoModal from '@/components/UserInfoModal';
+import { useClientWidthHeight } from '@/hooks/use-client-wh';
 
 export default function RanklistPage(props: IRanklistPageProps) {
   const { data, error } = props;
   const { id } = useParams<{ id: string }>();
+  const [{ width: clientWidth }] = useClientWidthHeight();
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -56,7 +60,22 @@ export default function RanklistPage(props: IRanklistPageProps) {
         <title>{formatTitle(data!.info.name)}</title>
       </Helmet>
       <div className="mt-8 mb-8">
-        <StyledRanklist data={data!.srk} name={id} id={id} meta={data!.info} showFooter showFilter />
+        <StyledRanklist
+          data={data!.srk}
+          name={id}
+          id={id}
+          meta={data!.info}
+          showFooter
+          showFilter
+          tableClass="ml-4"
+          renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+            return {
+              title: user.name,
+              width: clientWidth >= 980 ? 960 : clientWidth - 20,
+              content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
+            };
+          }}
+        />
       </div>
     </div>
   );
