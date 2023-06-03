@@ -218,12 +218,17 @@ export default function LiveRanklistPage() {
               content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
             };
           }}
-          renderExtraActionArea={() => (
-            <span className="inline-flex items-center">
-              <span className="mr-1">实时滚动提交状态</span>
-              <Switch defaultChecked={enabledScrollSolution} size="small" onChange={handleSwitchScrollSolution} />
-            </span>
-          )}
+          renderExtraActionArea={() => {
+            if (clientWidth < 768) {
+              return null;
+            }
+            return (
+              <span className="inline-flex items-center">
+                <span className="mr-1">实时滚动提交状态</span>
+                <Switch defaultChecked={enabledScrollSolution} size="small" onChange={handleSwitchScrollSolution} />
+              </span>
+            );
+          }}
         />
         <ScrollSolution ref={scrollSolutionRef} containerMaxHeight={remainingHeight} />
       </div>
