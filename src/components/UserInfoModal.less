@@ -1,29 +1,48 @@
-@import url("../assets/fonts/ZCOOL_XiaoWei/stylesheet.css");
+@import url('../assets/fonts/ZCOOL_XiaoWei/stylesheet.css');
 
-.user-modal-segment-label {
-  display: inline-block;
-  padding: 4px;
-  border-radius: 4px;
-  color: #ffffff;
-}
+.user-modal {
+  --divider-color: #ececec;
 
-.bg-segment-gold {
-  background-color: var(--srk-color-gold);
-}
-.bg-segment-silver {
-  background-color: var(--srk-color-silver);
-}
-.bg-segment-bronze {
-  background-color: var(--srk-color-bronze);
-}
+  @media screen and (prefers-color-scheme: dark) {
+    --divider-color: #3e3e3e;
+  }
 
-.slogan {
-  font-family: 'ZCOOL XiaoWei', serif;text-align: center;
-  font-size: 32px;
+  .user-modal-segment-label {
+    display: inline-block;
+    padding: 4px;
+    border-radius: 4px;
+    color: #ffffff;
+  }
 
-  &::before {
-    content: 'SLOGAN';
-    display: block;
-    font-size: 14px;
+  .bg-segment-gold {
+    background-color: var(--srk-color-gold);
+  }
+  .bg-segment-silver {
+    background-color: var(--srk-color-silver);
+  }
+  .bg-segment-bronze {
+    background-color: var(--srk-color-bronze);
+  }
+
+  .slogan {
+    font-family: 'ZCOOL XiaoWei', serif;
+    text-align: center;
+    font-size: 32px;
+
+    &::before {
+      content: 'SLOGAN';
+      display: block;
+      font-size: 14px;
+    }
+  }
+
+  .user-modal-info-team-members {
+    opacity: 0.8;
+    padding-top: 6px;
+
+    .user-modal-info-team-members-slash {
+      opacity: 0.5;
+      font-size: 80%;
+    }
   }
 }

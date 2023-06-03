@@ -1,4 +1,5 @@
 import type * as srk from '@algoux/standard-ranklist';
+import { resolveText } from '@algoux/standard-ranklist-renderer-component';
 import './UserInfoModal.less';
 
 export interface IUserInfoModalProps {
@@ -16,6 +17,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   // if (!matchedSeries && (user.official === undefined || user.official === true)) {
   //   matchedSeries = { style: 'iron', title: '优胜奖' };
   // }
+  const hasMembers = !!user.teamMembers && user.teamMembers.length > 0;
   const id = `um-img-${user.id}`;
   const handleImgError = () => {
     const img = document.getElementById(id);
@@ -26,9 +28,19 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   // @ts-ignore
   const slogan = user.x_slogan as string | undefined;
   return (
-    <div>
+    <div className="user-modal">
       <p className="mb-0">{user.organization}</p>
       {user.official === false && <p className="mt-4 mb-0">* 非正式参加者</p>}
+      {hasMembers && (
+        <div className="user-modal-info-team-members mt-2">
+          {user.teamMembers!.map((m, mIndex) => (
+            <span key={resolveText(m.name)}>
+              {mIndex > 0 && <span className="user-modal-info-team-members-slash"> / </span>}
+              <span>{resolveText(m.name)}</span>
+            </span>
+          ))}
+        </div>
+      )}
       {matchedSeries && (
         <p className="mt-4 mb-0">
           所在奖区：
