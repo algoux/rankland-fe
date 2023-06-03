@@ -208,6 +208,7 @@ export default function LiveRanklistPage() {
           id={key}
           showFilter
           showProgress
+          showFooter
           isLive
           tableClass="ml-4"
           renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
