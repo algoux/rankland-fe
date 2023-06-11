@@ -297,7 +297,7 @@ export default function StyledRanklistRenderer({
       <div className={tableClass} style={tableStyle}>
         {staticData.remarks && (
           <div className="mb-4 text-center">
-            <span className="srk-remarks">备注：{staticData.remarks}</span>
+            <span className="srk-remarks">备注：{resolveText(staticData.remarks)}</span>
           </div>
         )}
         <Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} />
