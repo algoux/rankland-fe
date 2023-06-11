@@ -2,7 +2,7 @@
 
 html:not(.dark) {
   @include meta.load-css('./antd.light.css', $with: null);
-  --primary-color-r: 255, 164, 10;
+  --primary-color-r: 255, 129, 4;
 }
 
 html.dark {

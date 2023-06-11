@@ -17,6 +17,8 @@ import cateIcpcLogoLight from '@/assets/icpc_logo_black.png';
 import cateIcpcLogoDark from '@/assets/icpc_logo_white.png';
 import cateCcpcLogoLight from '@/assets/ccpc_logo_black.png';
 import cateCcpcLogoDark from '@/assets/ccpc_logo_white.png';
+import cateProvincialCpcLogoLight from '@/assets/provincial_cpc_logo_black.png';
+import cateProvincialCpcLogoDark from '@/assets/provincial_cpc_logo_white.png';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
@@ -67,6 +69,12 @@ function convertCollectionToMenuItems(
         icon = (
           <span className="srk-collection-menu-icon">
             <img src={theme === 'dark' ? cateCcpcLogoDark : cateCcpcLogoLight} alt="CCPC" />
+          </span>
+        );
+      } else if (item.uniqueKey === 'dir-provincial') {
+        icon = (
+          <span className="srk-collection-menu-icon">
+            <img src={theme === 'dark' ? cateProvincialCpcLogoDark : cateProvincialCpcLogoLight} alt="Provincial CPC" />
           </span>
         );
       }
