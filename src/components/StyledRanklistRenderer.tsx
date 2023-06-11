@@ -28,6 +28,7 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { formatUrl } from '@/configs/route.config';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 import ClientOnly from './ClientOnly';
+import './StyledRanklistRenderer.less';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -294,6 +295,11 @@ export default function StyledRanklistRenderer({
 
       <div className="mt-6" />
       <div className={tableClass} style={tableStyle}>
+        {staticData.remarks && (
+          <div className="mb-4 text-center">
+            <span className="srk-remarks">备注：{staticData.remarks}</span>
+          </div>
+        )}
         <Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} />
       </div>
       {showFooter && (

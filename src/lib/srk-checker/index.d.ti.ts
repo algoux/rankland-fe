@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.0');
+export const Version = t.lit('0.3.2');
 
 export const DatetimeISOString = t.name("string");
 
@@ -93,7 +93,7 @@ export const SolutionResultFull = t.union("SolutionResultLite", t.lit('WA'), t.l
 export const SolutionResultCustom = t.name("string");
 
 export const Solution = t.iface([], {
-  "result": "string",
+  "result": t.union(t.lit("FB"), t.lit("AC"), t.lit("RJ"), t.lit("?"), t.lit("WA"), t.lit("PE"), t.lit("TLE"), t.lit("MLE"), t.lit("OLE"), t.lit("RTE"), t.lit("CE"), t.lit("UKE"), "SolutionResultCustom"),
   "score": t.opt("number"),
   "time": "TimeDuration",
   "link": t.opt("Link"),
@@ -126,7 +126,7 @@ export const RankSeriesRulePresetNormal = t.iface([], {
 export const RankSeriesRulePresetUniqByUserField = t.iface([], {
   "preset": t.lit('UniqByUserField'),
   "options": t.iface([], {
-    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
+    "field": t.union(t.lit('id'), t.lit('name'), t.lit('avatar'), t.lit('organization'), t.lit('marker'), t.lit('teamMembers')),
     "includeOfficialOnly": t.opt("boolean"),
   }),
 });
@@ -138,9 +138,11 @@ export const RankSeriesRulePresetICPC = t.iface([], {
       "value": t.array("number"),
       "rounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
       "denominator": t.opt(t.union(t.lit('all'), t.lit('submitted'))),
+      "noTied": t.opt("boolean"),
     })),
     "count": t.opt(t.iface([], {
       "value": t.array("number"),
+      "noTied": t.opt("boolean"),
     })),
   }),
 });
@@ -188,6 +190,8 @@ export const SorterICPC = t.iface(["SorterBase"], {
   "config": t.iface([], {
     "penalty": t.opt("TimeDuration"),
     "noPenaltyResults": t.opt(t.array("SolutionResultFull")),
+    "timePrecision": t.opt("TimeUnit"),
+    "timeRounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
   }),
 });
 
@@ -203,6 +207,7 @@ export const Ranklist = t.iface([], {
   "markers": t.opt(t.array("Marker")),
   "sorter": t.opt("Sorter"),
   "contributors": t.opt(t.array("Contributor")),
+  "remarks": t.opt("Text"),
   "_now": t.opt("DatetimeISOString"),
 });
 
