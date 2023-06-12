@@ -15355,7 +15355,7 @@ textarea.ant-input-number {
   flex-direction: column;
   /* fix firefox can't set height smaller than content on flex item */
   min-height: 0;
-  background: #f0f2f5;
+  background: #f2f2f2;
 }
 .ant-layout,
 .ant-layout * {
@@ -15383,7 +15383,7 @@ textarea.ant-input-number {
   padding: 24px 50px;
   color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
-  background: #f0f2f5;
+  background: #f2f2f2;
 }
 .ant-layout-content {
   flex: auto;
