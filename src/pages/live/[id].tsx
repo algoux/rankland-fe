@@ -10,7 +10,7 @@ import { Button, Spin, Switch } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useReq } from '@/utils/request';
-import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.utils';
+import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.util';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';

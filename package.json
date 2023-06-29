@@ -8,13 +8,15 @@
     "ci:server": "cd server && pnpm i --frozen-lockfile && cd ..",
     "dev:client": "cross-env NODE_ENV=development umi dev",
     "dev:server": "cross-env NODE_ENV=development nodemon --inspect=127.0.0.1:9239 --delay 0.2 server/index.js",
+    "dev:server:redirect": "cross-env NODE_ENV=development nodemon --inspect=127.0.0.1:9239 --delay 0.2 server/deprecated-redirect.js",
     "dev": "concurrently \"npm:dev:client\" \"npm:dev:server\"",
     "build": "umi build",
     "start": "NODE_ENV=production node server/index.js",
     "postinstall": "umi generate tmp",
     "theme:antd": "lessc --js src/styles/antd.light.less src/styles/antd.light.css && lessc --js src/styles/antd.dark.less src/styles/antd.dark.css",
     "build:type-checker": "`npm bin`/ts-interface-builder -o src/lib/srk-checker -s .ti node_modules/@algoux/standard-ranklist/index.d.ts",
-    "start:docker": "cd server && npm start && cd .."
+    "start:docker": "cd server && npm start && cd ..",
+    "start:docker:redirect": "cd server && npm run start:redirect && cd .."
   },
   "dependencies": {
     "@algoux/standard-ranklist-renderer-component": "^0.3.14",

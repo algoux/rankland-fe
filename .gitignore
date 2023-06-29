@@ -9,3 +9,5 @@ node_modules
 /dist
 /logs
 /分发
+.pnpm-debug.log
+npm-debug.log*

@@ -329,7 +329,7 @@ export default function StyledRanklistRenderer({
               <a>联系我们</a>
             </ContactUs>
           </p>
-          {process.env.SITE_ALIAS === 'cn' && (
+          {process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn' && (
             <p className="mt-1 mb-0">
               备案号：
               <BeianLink />

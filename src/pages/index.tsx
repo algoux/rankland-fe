@@ -109,7 +109,7 @@ export default function HomePage(props: IHomePageProps) {
               服务状态
             </a>
           </p>
-          {process.env.SITE_ALIAS === 'cn' && (
+          {(process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn') && (
             <p>
               备案号：<BeianLink />
             </p>

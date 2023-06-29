@@ -2,29 +2,20 @@ import React from 'react';
 import { Button, Dropdown, Menu } from 'antd';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { ArrowRightOutlined } from '@ant-design/icons';
-import { knownUrlKeywordToGeneralReplacementMap, knownUrlKeywordToAliasReplacementMap } from '@/configs/route.config';
 
 export default function RightMenu() {
   const { url } = useCurrentUrl();
 
-  const convertUrl = (url: string, usingReplacementMap: Record<string, string>) => {
-    let newUrl = url;
-    Object.keys(usingReplacementMap).forEach((key) => {
-      newUrl = newUrl.replace(key, usingReplacementMap[key]);
-    });
-    return newUrl;
-  };
-
   const switchSiteMenu = (
     <Menu
       items={
-        process.env.SITE_ALIAS === 'cn'
+        process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn'
           ? [
               {
                 key: 'global',
                 label: (
                   <a
-                    href={`//${process.env.HOST_GLOBAL}${convertUrl(url, knownUrlKeywordToGeneralReplacementMap)}`}
+                    href={`//${process.env.HOST_GLOBAL}${url}`}
                     target="_blank"
                   >
                     全球站点 <ArrowRightOutlined rotate={-45} />
@@ -37,7 +28,7 @@ export default function RightMenu() {
                 key: 'cn',
                 label: (
                   <a
-                    href={`//${process.env.HOST_CN}${convertUrl(url, knownUrlKeywordToAliasReplacementMap.cn)}`}
+                    href={`//${process.env.HOST_CN}${url}`}
                     target="_blank"
                     style={{ wordBreak: 'keep-all' }}
                   >

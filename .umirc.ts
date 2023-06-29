@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const siteAlias = process.env.SITE_ALIAS;
 
 const outputPath = isProd && siteAlias === 'cn' ? '分发' : 'dist';
-const publicProdPrefix = siteAlias === 'cn' ? 'https://内容分发网络.算法与用户体验.中国/榜单大陆/' : '/';
+const publicProdPrefix = siteAlias === 'cn' ? 'https://内容分发网络.算法与用户体验.中国/榜单大陆/' : siteAlias === 'cnn' ? 'https://内容分发网络.算法与用户体验.中国/rl/' : '/';
 const publicPath = isProd ? `${publicProdPrefix}${outputPath}/` : `http://127.0.0.1:8000/${outputPath}/`;
 console.log(
   'Build options:',
@@ -42,8 +42,8 @@ export default defineConfig({
     'process.env.WS_BASE': isProd ? 'wss://rl.mushan.top' : 'ws://rl_dev.mushan.top',
     'process.env.SITE_ALIAS': process.env.SITE_ALIAS,
     'process.env.HOST_GLOBAL': 'rl.algoux.org',
-    'process.env.HOST_CN': '榜单大陆.算法与用户体验.中国',
-    'process.env.BEIAN': '粤ICP备2022146651号',
+    'process.env.HOST_CN': 'rl.algoux.cn',
+    'process.env.BEIAN': '鲁ICP备18021776号-5',
     'process.env.LIVE_POLLING_INTERVAL': '10000',
     'process.env.X_PHOTO_BASE': 'https://share-bj-1252277595.cos.ap-beijing.myqcloud.com/',
     'GTAG': siteAlias === 'cn' ? 'G-D4PSNCRQJC' : 'G-D6CVTJBDZT',
