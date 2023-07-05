@@ -21,6 +21,7 @@
   "dependencies": {
     "@algoux/standard-ranklist-renderer-component": "^0.3.17",
     "@ant-design/icons": "^4.7.0",
+    "@antv/g-lite": "^1.2.1",
     "@antv/g2": "^5.0.13",
     "ahooks": "^3.5.2",
     "antd": "^4.21.7",
