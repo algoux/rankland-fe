@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Ranklist,
   ProgressBar,
@@ -29,6 +29,12 @@ import { formatUrl } from '@/configs/route.config';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
 import ClientOnly from './ClientOnly';
 import './StyledRanklistRenderer.less';
+import UserInfoModal from '@/components/UserInfoModal';
+import { useClientWidthHeight } from '@/hooks/use-client-wh';
+import { RankTimeDataContext } from './RankTimeDataContext';
+import type { IRankTimeData } from './RankTimeDataContext';
+import { getAllRankTimeData, getProperRankTimeChunkUnit } from '@/utils/rank-time-data.util';
+import type { IRankTimeDataSet } from '@/utils/rank-time-data.util';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -51,8 +57,29 @@ export interface IStyledRanklistRendererProps {
   isLive?: boolean;
   tableClass?: string;
   tableStyle?: React.CSSProperties;
-  renderUserModal?: RanklistProps['renderUserModal'];
   renderExtraActionArea?: (ranklist: srk.Ranklist) => React.ReactNode;
+}
+
+function getInitialRankTimeDataSet(): IRankTimeDataSet {
+  return {
+    unit: 'min',
+    userRankTimePoints: new Map(),
+    userRankTimeSolvedEventPoints: new Map(),
+    seriesSegments: [],
+    totalUsers: 0,
+  };
+}
+
+function getInitialRankTimeData(): IRankTimeData {
+  return {
+    key: '',
+    initialized: false,
+    unit: 'min',
+    points: [],
+    solvedEventPoints: [],
+    seriesSegments: [],
+    totalUsers: 0,
+  };
 }
 
 export default function StyledRanklistRenderer({
@@ -66,15 +93,18 @@ export default function StyledRanklistRenderer({
   isLive = false,
   tableClass,
   tableStyle,
-  renderUserModal,
   renderExtraActionArea,
 }: IStyledRanklistRendererProps) {
+  const [{ width: clientWidth }] = useClientWidthHeight();
   const { theme } = useModel('theme');
   const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
     organizations: [],
     officialOnly: false,
   });
   const [timeTravelTime, setTimeTravelTime] = useState<number | null>(null);
+  const [rankTimeDataInitialized, setRankTimeDataInitialized] = useState(false);
+  const [rankTimeDataSet, setRankTimeDataSet] = useState<IRankTimeDataSet>(getInitialRankTimeDataSet());
+  const [rankTimeData, setRankTimeData] = useState<IRankTimeData>(getInitialRankTimeData());
 
   const download = () => {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
@@ -95,6 +125,12 @@ export default function StyledRanklistRenderer({
   }, [data, solutions, timeTravelTime]);
 
   const staticData = useMemo(() => convertToStaticRanklist(genData), [genData]);
+
+  useEffect(() => {
+    setRankTimeDataSet(getInitialRankTimeDataSet());
+    setRankTimeData(getInitialRankTimeData());
+    setRankTimeDataInitialized(false);
+  }, [staticData]);
 
   const organizations = useMemo(
     () =>
@@ -128,6 +164,28 @@ export default function StyledRanklistRenderer({
 
   const handleTimeTravel = (time: number | null) => {
     setTimeTravelTime(time);
+  };
+
+  const handleUserModalOpen = async (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+    setRankTimeData(getInitialRankTimeData());
+    setTimeout(() => {
+      let rankTimeDataSetValue = rankTimeDataSet;
+      if (!rankTimeDataInitialized) {
+        rankTimeDataSetValue = getAllRankTimeData(data, solutions, getProperRankTimeChunkUnit(data.contest));
+        setRankTimeDataSet(rankTimeDataSetValue);
+        setRankTimeDataInitialized(true);
+      }
+      setRankTimeData({
+        key: `${user.id}_${Date.now()}`,
+        initialized: true,
+        unit: rankTimeDataSetValue.unit,
+        points: rankTimeDataSetValue.userRankTimePoints.get(user.id)!,
+        solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(user.id)!,
+        seriesSegments: rankTimeDataSetValue.seriesSegments,
+        totalUsers: rankTimeDataSetValue.totalUsers,
+      });
+      console.log(`[RankTimeData] updated user ${user.id}`);
+    }, 300);
   };
 
   const renderContributor = (contributor: srk.Contributor) => {
@@ -300,7 +358,20 @@ export default function StyledRanklistRenderer({
             <span className="srk-remarks">备注：{resolveText(staticData.remarks)}</span>
           </div>
         )}
-        <Ranklist data={usingData as any} theme={theme as EnumTheme} renderUserModal={renderUserModal} />
+        <RankTimeDataContext.Provider value={rankTimeData}>
+          <Ranklist
+            data={usingData as any}
+            theme={theme as EnumTheme}
+            onUserModalOpen={handleUserModalOpen}
+            renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+              return {
+                title: user.name,
+                width: clientWidth >= 980 ? 960 : clientWidth - 20,
+                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
+              };
+            }}
+          />
+        </RankTimeDataContext.Provider>
       </div>
       {showFooter && (
         <div className="text-center mt-8">
@@ -329,7 +400,7 @@ export default function StyledRanklistRenderer({
               <a>联系我们</a>
             </ContactUs>
           </p>
-          {process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn' && (
+          {(process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn') && (
             <p className="mt-1 mb-0">
               备案号：
               <BeianLink />

@@ -220,13 +220,6 @@ export default function CollectionPage(props: ICollectionPageProps) {
             meta={data.ranklist.info}
             showFooter
             showFilter
-            renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
-              return {
-                title: user.name,
-                width: clientWidth >= 980 ? 960 : clientWidth - 20,
-                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
-              };
-            }}
           />
         </div>
       );

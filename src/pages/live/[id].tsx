@@ -211,13 +211,6 @@ export default function LiveRanklistPage() {
           showFooter
           isLive
           tableClass="ml-4"
-          renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
-            return {
-              title: user.name,
-              width: clientWidth >= 980 ? 960 : clientWidth - 20,
-              content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
-            };
-          }}
           renderExtraActionArea={() => {
             if (clientWidth < 768) {
               return null;

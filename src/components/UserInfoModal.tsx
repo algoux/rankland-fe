@@ -1,6 +1,9 @@
+import React, { useContext } from 'react';
 import type * as srk from '@algoux/standard-ranklist';
 import { resolveText } from '@algoux/standard-ranklist-renderer-component';
 import './UserInfoModal.less';
+import { RankTimeDataContext } from './RankTimeDataContext';
+import RankCurve from './RankCurve';
 
 export interface IUserInfoModalProps {
   user: srk.User;
@@ -11,6 +14,7 @@ export interface IUserInfoModalProps {
 
 export default function UserInfoModal(props: IUserInfoModalProps) {
   const { user, row, ranklist } = props;
+  const rankTimeData = useContext(RankTimeDataContext);
   // @ts-ignore
   const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
   let matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex];
@@ -60,6 +64,18 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
         )}
         {slogan && <p className="slogan mt-4 mb-2">{slogan}</p>}
       </div>
+      {user.official && rankTimeData.initialized && (
+        <div className="mt-4">
+          <RankCurve
+            key={rankTimeData.key}
+            unit={rankTimeData.unit}
+            points={rankTimeData.points}
+            solvedEventPoints={rankTimeData.solvedEventPoints}
+            seriesSegments={rankTimeData.seriesSegments}
+            totalUsers={rankTimeData.totalUsers}
+          />
+        </div>
+      )}
     </div>
   );
 }
