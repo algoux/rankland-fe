@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Chart } from '@antv/g2';
-import { formatTimeDuration, secToTimeStr } from '@algoux/standard-ranklist-renderer-component';
+import { formatTimeDuration, secToTimeStr } from '@algoux/standard-ranklist-utils';
 import { useModel } from 'umi';
 import type { IRankTimePoint, IRankTimeSeriesSegment } from '@/utils/rank-time-data.util';
 import type { IRankTimeData } from './RankTimeDataContext';

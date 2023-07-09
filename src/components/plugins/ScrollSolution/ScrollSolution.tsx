@@ -3,7 +3,7 @@ import { ToastContainer, toast, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './index.less';
 import * as srk from '@algoux/standard-ranklist';
-import { resolveText } from '@algoux/standard-ranklist-renderer-component';
+import { resolveText } from '@algoux/standard-ranklist-utils';
 
 export interface ScrollSolutionDataItem {
   problem: {

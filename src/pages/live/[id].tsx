@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { resolveText } from '@algoux/standard-ranklist-renderer-component';
+import { resolveText } from '@algoux/standard-ranklist-utils';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import type * as srk from '@algoux/standard-ranklist';

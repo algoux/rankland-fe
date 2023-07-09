@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import type * as srk from '@algoux/standard-ranklist';
-import { resolveText } from '@algoux/standard-ranklist-renderer-component';
+import { resolveText } from '@algoux/standard-ranklist-utils';
 import './UserInfoModal.less';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import RankCurve from './RankCurve';

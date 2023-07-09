@@ -1,5 +1,4 @@
 import React from 'react';
-import type * as srk from '@algoux/standard-ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useParams } from 'umi';

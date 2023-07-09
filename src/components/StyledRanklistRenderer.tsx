@@ -1,16 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Ranklist, ProgressBar, convertToStaticRanklist } from '@algoux/standard-ranklist-renderer-component';
+import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import {
-  Ranklist,
-  ProgressBar,
-  convertToStaticRanklist,
   resolveText,
   resolveContributor,
   filterSolutionsUntil,
   regenerateRanklistBySolutions,
   getSortedCalculatedRawSolutions,
-} from '@algoux/standard-ranklist-renderer-component';
-import type { EnumTheme, RanklistProps } from '@algoux/standard-ranklist-renderer-component';
-import '@algoux/standard-ranklist-renderer-component/dist/style.css';
+} from '@algoux/standard-ranklist-utils';
+import type { EnumTheme } from '@algoux/standard-ranklist-utils';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
 import { Alert, Dropdown, Menu, notification, Select, Switch } from 'antd';
@@ -20,10 +18,15 @@ import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
+import copy from 'copy-to-clipboard';
+import {
+  CodeforcesGymGhostDATConverter,
+  VJudgeReplayConverter,
+  GeneralExcelConverter,
+} from '@algoux/standard-ranklist-convert-to';
 import { formatSrkTimeDuration } from '@/utils/time-format.util';
 import ContactUs from './ContactUs';
 import BeianLink from './BeianLink';
-import CopyToClipboard from 'react-copy-to-clipboard';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { formatUrl } from '@/configs/route.config';
 import type { ItemType } from 'antd/lib/menu/hooks/useItems';
@@ -109,6 +112,23 @@ export default function StyledRanklistRenderer({
   const download = () => {
     const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
     FileSaver.saveAs(blob, `${name}.srk.json`);
+  };
+
+  const exportAsGymGhost = () => {
+    const converter = new CodeforcesGymGhostDATConverter();
+    const file = converter.convert(data);
+    const blob = new Blob([file.content], { type: 'text/plain;charset=utf-8' });
+    FileSaver.saveAs(blob, `${name}_gymghost.${file.ext}`);
+  };
+
+  const exportAsVJReplay = () => {
+    const converter = new VJudgeReplayConverter();
+    converter.convertAndWrite(data, `${name}_vjreplay.xlsx`);
+  };
+
+  const exportAsGeneralExcel = () => {
+    const converter = new GeneralExcelConverter();
+    converter.convertAndWrite(data, `${name}.xlsx`);
   };
 
   const solutions = useMemo(() => {
@@ -224,8 +244,44 @@ export default function StyledRanklistRenderer({
         <ClientOnly>
           {() => (
             <>
-              <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2" onClick={download}>
-                <DownloadOutlined /> srk
+              <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2">
+                <Dropdown
+                  overlay={
+                    <Menu
+                      items={[
+                        {
+                          key: 'export-srk',
+                          label: '导出为',
+                          type: 'group',
+                          children: [
+                            {
+                              key: 'export-srk',
+                              label: '标准榜单格式 (srk)',
+                              onClick: download,
+                            },
+                            {
+                              key: 'export-gym-ghost',
+                              label: 'Codeforces Gym Ghost (dat)',
+                              onClick: exportAsGymGhost,
+                            },
+                            {
+                              key: 'export-vjudge-replay',
+                              label: 'Virtual Judge Replay (xlsx)',
+                              onClick: exportAsVJReplay,
+                            },
+                            {
+                              key: 'export-xlsx',
+                              label: 'Excel 表格 (xlsx)',
+                              onClick: exportAsGeneralExcel,
+                            },
+                          ],
+                        },
+                      ]}
+                    />
+                  }
+                >
+                  <DownloadOutlined />
+                </Dropdown>
               </a>
               <a className="pl-2 border-0 border-l border-solid border-gray-400">
                 <Dropdown
@@ -235,52 +291,41 @@ export default function StyledRanklistRenderer({
                         [
                           {
                             key: 'copy-url',
-                            label: (
-                              <CopyToClipboard
-                                text={fullUrl}
-                                onCopy={(text: string, result: boolean) => {
-                                  if (result) {
+                            label: '复制本页链接',
+                            onClick: () => {
+                              if (copy(fullUrl, { format: 'text/plain' })) {
+                                notification.success({
+                                  message: '链接已复制',
+                                  duration: 2,
+                                  style: {
+                                    width: 280,
+                                  },
+                                });
+                              }
+                            },
+                          },
+                          id
+                            ? {
+                                key: 'copy-embedded',
+                                label: '复制嵌入代码',
+                                onClick: () => {
+                                  const content = `<iframe src="${window.location.origin}${formatUrl(
+                                    isLive ? 'Live' : 'Ranklist',
+                                    {
+                                      id,
+                                      focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
+                                    },
+                                  )}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`;
+                                  if (copy(content, { format: 'text/plain' })) {
                                     notification.success({
-                                      message: '链接已复制',
+                                      message: '嵌入代码已复制',
                                       duration: 2,
                                       style: {
                                         width: 280,
                                       },
                                     });
                                   }
-                                }}
-                              >
-                                <span>复制本页链接</span>
-                              </CopyToClipboard>
-                            ),
-                          },
-                          id
-                            ? {
-                                key: 'copy-embedded',
-                                label: (
-                                  <CopyToClipboard
-                                    text={`<iframe src="${window.location.origin}${formatUrl(
-                                      isLive ? 'Live' : 'Ranklist',
-                                      {
-                                        id,
-                                        focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
-                                      },
-                                    )}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`}
-                                    onCopy={(text: string, result: boolean) => {
-                                      if (result) {
-                                        notification.success({
-                                          message: '嵌入代码已复制',
-                                          duration: 2,
-                                          style: {
-                                            width: 280,
-                                          },
-                                        });
-                                      }
-                                    }}
-                                  >
-                                    <span>复制嵌入代码</span>
-                                  </CopyToClipboard>
-                                ),
+                                },
                               }
                             : undefined,
                         ].filter(Boolean) as ItemType[]

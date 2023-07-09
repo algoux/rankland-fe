@@ -7,8 +7,8 @@ import {
   convertToStaticRanklist,
   resolveThemeColor,
   EnumTheme,
-} from '@algoux/standard-ranklist-renderer-component';
-import type { CalculatedSolutionTetrad, StaticRanklist } from '@algoux/standard-ranklist-renderer-component';
+} from '@algoux/standard-ranklist-utils';
+import type { CalculatedSolutionTetrad, StaticRanklist } from '@algoux/standard-ranklist-utils';
 
 export function getProperRankTimeChunkUnit(contest: srk.Contest): srk.TimeDuration {
   const duration = contest.duration;
