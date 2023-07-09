@@ -60,6 +60,9 @@ export default defineConfig({
   },
   outputPath,
   publicPath,
+  // terserOptions: {
+  //   compress: false,
+  // },
   chainWebpack(memo, { type }) {
     if (type === BundlerConfigType.csr) {
       memo.plugin('MonacoWebpackPlugin').use(MonacoWebpackPlugin, [
@@ -68,6 +71,10 @@ export default defineConfig({
           publicPath: `/${outputPath}`,
         },
       ]);
+    }
+    if (type === BundlerConfigType.ssr) {
+      // disable all webpack minify
+      memo.optimization.minimize(false);
     }
     memo.module.rule('mjs-rule').test(/.m?js/).resolve.set('fullySpecified', false);
   },
