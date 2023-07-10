@@ -159,6 +159,7 @@ app.use(async (ctx, next) => {
       } else {
         const renderRes = await render({
           path: url,
+          htmlTemplate: indexHtmlTemplate,
         });
         if (renderRes.error) {
           throw renderRes.error;
