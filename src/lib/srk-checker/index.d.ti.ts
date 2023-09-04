@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.2');
+export const Version = t.lit('0.3.3');
 
 export const DatetimeISOString = t.name("string");
 
@@ -14,11 +14,18 @@ export const TimeUnit = t.union(t.lit('ms'), t.lit('s'), t.lit('min'), t.lit('h'
 
 export const TimeDuration = t.tuple("number", "TimeUnit");
 
+export const I18NStringSet = t.iface([], {
+  "fallback": "string",
+  [t.indexKey]: "string",
+});
+
+export const Text = t.union("string", "I18NStringSet");
+
 export const Link = t.name("string");
 
 export const LinkWithTitle = t.iface([], {
   "link": "Link",
-  "title": "string",
+  "title": "Text",
 });
 
 export const Base64 = t.name("string");
@@ -47,13 +54,6 @@ export const Style = t.iface([], {
   "textColor": t.opt("ThemeColor"),
   "backgroundColor": t.opt("ThemeColor"),
 });
-
-export const I18NStringSet = t.iface([], {
-  "fallback": "string",
-  [t.indexKey]: "string",
-});
-
-export const Text = t.union("string", "I18NStringSet");
 
 export const Contributor = t.name("string");
 
@@ -93,7 +93,7 @@ export const SolutionResultFull = t.union("SolutionResultLite", t.lit('WA'), t.l
 export const SolutionResultCustom = t.name("string");
 
 export const Solution = t.iface([], {
-  "result": t.union(t.lit("FB"), t.lit("AC"), t.lit("RJ"), t.lit("?"), t.lit("WA"), t.lit("PE"), t.lit("TLE"), t.lit("MLE"), t.lit("OLE"), t.lit("RTE"), t.lit("CE"), t.lit("UKE"), "SolutionResultCustom"),
+  "result": "string",
   "score": t.opt("number"),
   "time": "TimeDuration",
   "link": t.opt("Link"),
@@ -105,7 +105,6 @@ export const Contest = t.iface([], {
   "duration": "TimeDuration",
   "frozenDuration": t.opt("TimeDuration"),
   "banner": t.opt(t.union("Image", "ImageWithLink")),
-  "link": t.opt("Link"),
   "refLinks": t.opt(t.array("LinkWithTitle")),
 });
 
@@ -126,7 +125,7 @@ export const RankSeriesRulePresetNormal = t.iface([], {
 export const RankSeriesRulePresetUniqByUserField = t.iface([], {
   "preset": t.lit('UniqByUserField'),
   "options": t.iface([], {
-    "field": t.union(t.lit('id'), t.lit('name'), t.lit('avatar'), t.lit('organization'), t.lit('marker'), t.lit('teamMembers')),
+    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
     "includeOfficialOnly": t.opt("boolean"),
   }),
 });
@@ -143,6 +142,12 @@ export const RankSeriesRulePresetICPC = t.iface([], {
     "count": t.opt(t.iface([], {
       "value": t.array("number"),
       "noTied": t.opt("boolean"),
+    })),
+    "filter": t.opt(t.iface([], {
+      "byUserFields": t.opt(t.array(t.iface([], {
+        "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
+        "rule": "string",
+      }))),
     })),
   }),
 });
@@ -217,6 +222,8 @@ const exportedTypeSuite: t.ITypeSuite = {
   DatetimeISOString,
   TimeUnit,
   TimeDuration,
+  I18NStringSet,
+  Text,
   Link,
   LinkWithTitle,
   Base64,
@@ -228,8 +235,6 @@ const exportedTypeSuite: t.ITypeSuite = {
   Color,
   ThemeColor,
   Style,
-  I18NStringSet,
-  Text,
   Contributor,
   ExternalUser,
   User,
