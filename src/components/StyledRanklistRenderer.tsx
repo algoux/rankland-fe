@@ -16,7 +16,7 @@ import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
-import { DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretDownOutlined, DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { uniq } from 'lodash-es';
 import copy from 'copy-to-clipboard';
 import {
@@ -216,7 +216,7 @@ export default function StyledRanklistRenderer({
     const { name, url } = contributorObj;
     if (url) {
       return (
-        <a href={url} target="_blank">
+        <a href={url} target="_blank" rel="noopener">
           {name}
         </a>
       );
@@ -231,6 +231,52 @@ export default function StyledRanklistRenderer({
         {renderContributor(contributor)}
       </span>
     ));
+  };
+
+  const renderContestRefLink = (refLink: srk.LinkWithTitle) => {
+    const title = resolveText(refLink.title);
+    const link = refLink.link;
+    return (
+      <a href={link} target="_blank" rel="noopener">
+        {title}
+      </a>
+    );
+  };
+
+  const renderContestRefLinks = (refLinks: srk.Contest['refLinks']) => {
+    if (!refLinks || refLinks.length === 0) {
+      return null;
+    }
+    const mainLinks = refLinks.slice(0, 3);
+    const hiddenLinks = refLinks.slice(3);
+    const mainLinksPart = mainLinks.map((refLink, i) => (
+      <span key={`${i}-${refLink.link}`}>
+        {i > 0 && ', '}
+        {renderContestRefLink(refLink)}
+      </span>
+    ));
+    const hiddenLinksPart =
+      hiddenLinks.length > 0 ? (
+        <Dropdown
+          overlay={
+            <Menu
+              items={hiddenLinks.map((refLink, i) => ({
+                key: `${i}-${refLink.link}`,
+                label: renderContestRefLink(refLink),
+              }))}
+            />
+          }
+        >
+          <span style={{ cursor: 'pointer' }}>
+            and {hiddenLinks.length} more <CaretDownOutlined />
+          </span>
+        </Dropdown>
+      ) : null;
+    return (
+      <span>
+        相关链接：{mainLinksPart} {hiddenLinksPart}
+      </span>
+    );
   };
 
   const renderHeader = () => {
@@ -342,6 +388,7 @@ export default function StyledRanklistRenderer({
         {Array.isArray(staticData.contributors) && staticData.contributors.length > 0 && (
           <p className="mb-0">贡献者：{renderContributors(staticData.contributors)}</p>
         )}
+        {renderContestRefLinks(staticData.contest.refLinks)}
       </div>
     );
     return (
