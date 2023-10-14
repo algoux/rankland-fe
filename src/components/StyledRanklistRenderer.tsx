@@ -199,8 +199,8 @@ export default function StyledRanklistRenderer({
         key: `${user.id}_${Date.now()}`,
         initialized: true,
         unit: rankTimeDataSetValue.unit,
-        points: rankTimeDataSetValue.userRankTimePoints.get(user.id)!,
-        solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(user.id)!,
+        points: rankTimeDataSetValue.userRankTimePoints.get(user.id) || [],
+        solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(user.id) || [],
         seriesSegments: rankTimeDataSetValue.seriesSegments,
         totalUsers: rankTimeDataSetValue.totalUsers,
       });
