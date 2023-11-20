@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const siteAlias = process.env.SITE_ALIAS;
 
 const outputPath = isProd && siteAlias === 'cn' ? '分发' : 'dist';
-const publicProdPrefix = siteAlias === 'cn' ? 'https://内容分发网络.算法与用户体验.中国/榜单大陆/' : siteAlias === 'cnn' ? 'https://cdn.algoux.cn/rl/' : '/';
+const publicProdPrefix = siteAlias === 'cn' ? 'https://cdn.algoux.cn/rl/' : siteAlias === 'cnn' ? 'https://cdn.algoux.cn/rl/' : '/';
 const publicPath = isProd ? `${publicProdPrefix}${outputPath}/` : `http://127.0.0.1:8000/${outputPath}/`;
 console.log(
   'Build options:',
@@ -38,7 +38,7 @@ export default defineConfig({
     'process.env.API_BASE_CLIENT': isProd ? 'https://rl.mushan.top' : 'https://rl.mushan.top',
     'process.env.API_BASE_SERVER': isProd ? 'https://rl.mushan.top' : 'https://rl.mushan.top',
     'process.env.CDN_API_BASE_CLIENT': isProd ? 'https://algoux-rl.cdn.blueverse.cc' : 'https://rl.mushan.top',
-    'process.env.CDN_API_BASE_SERVER': isProd ? 'https://algoux-rl.cdn.blueverse.cc' : 'https://rl.mushan.top',
+    'process.env.CDN_API_BASE_SERVER': isProd ? 'https://rl.mushan.top' : 'https://rl.mushan.top',
     'process.env.WS_BASE': isProd ? 'wss://rl.mushan.top' : 'wss://rl.mushan.top',
     'process.env.SITE_ALIAS': process.env.SITE_ALIAS,
     'process.env.HOST_GLOBAL': 'rl.algoux.org',
