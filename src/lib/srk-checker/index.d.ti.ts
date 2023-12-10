@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.3');
+export const Version = t.lit('0.3.4');
 
 export const DatetimeISOString = t.name("string");
 
@@ -88,7 +88,7 @@ export const Problem = t.iface([], {
 
 export const SolutionResultLite = t.union(t.lit('FB'), t.lit('AC'), t.lit('RJ'), t.lit('?'), "null");
 
-export const SolutionResultFull = t.union("SolutionResultLite", t.lit('WA'), t.lit('PE'), t.lit('TLE'), t.lit('MLE'), t.lit('OLE'), t.lit('RTE'), t.lit('CE'), t.lit('UKE'));
+export const SolutionResultFull = t.union("SolutionResultLite", t.lit('WA'), t.lit('PE'), t.lit('TLE'), t.lit('MLE'), t.lit('OLE'), t.lit('RTE'), t.lit('NOUT'), t.lit('CE'), t.lit('UKE'));
 
 export const SolutionResultCustom = t.name("string");
 
@@ -200,7 +200,12 @@ export const SorterICPC = t.iface(["SorterBase"], {
   }),
 });
 
-export const Sorter = t.name("SorterICPC");
+export const SorterScore = t.iface(["SorterBase"], {
+  "algorithm": t.lit('score'),
+  "config": "any",
+});
+
+export const Sorter = t.union("SorterICPC", "SorterScore");
 
 export const Ranklist = t.iface([], {
   "type": t.union("Type", "string"),
@@ -259,6 +264,7 @@ const exportedTypeSuite: t.ITypeSuite = {
   Marker,
   SorterBase,
   SorterICPC,
+  SorterScore,
   Sorter,
   Ranklist,
 };
