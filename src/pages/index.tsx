@@ -105,7 +105,7 @@ export default function HomePage(props: IHomePageProps) {
               首页
             </a>
             <span className="mx-2">|</span>
-            <a href="https://service-status.algoux.org/status/rankland" target="_blank">
+            <a href="https://servicestatus.algoux.org" target="_blank">
               服务状态
             </a>
           </p>
