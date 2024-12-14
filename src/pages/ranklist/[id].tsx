@@ -7,7 +7,6 @@ import { api } from '@/services/api';
 import { Button, Spin } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
-import UserInfoModal from '@/components/UserInfoModal';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 
 export default function RanklistPage(props: IRanklistPageProps) {

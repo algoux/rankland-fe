@@ -282,15 +282,17 @@ export default function StyledRanklistRenderer({
   const renderHeader = () => {
     const startAt = new Date(staticData.contest.startAt).getTime();
     const endAt = startAt + formatSrkTimeDuration(staticData.contest.duration, 'ms');
-    const metaBlock = !meta ? null : (
+    const metaBlock = (
       <div className="text-center mt-1">
-        <span className="mr-2">
-          <EyeOutlined /> {meta.viewCnt || '-'}
-        </span>
+        {meta && (
+          <span className="mr-2">
+            <EyeOutlined /> {meta.viewCnt || '-'}
+          </span>
+        )}
         <ClientOnly>
           {() => (
             <>
-              <a className="pl-2 border-0 border-l border-solid border-gray-400 mr-2">
+              <a className={`border-0 border-solid border-gray-400 mr-2 ${meta ? 'pl-2 border-l' : ''}`}>
                 <Dropdown
                   overlay={
                     <Menu
@@ -459,7 +461,7 @@ export default function StyledRanklistRenderer({
               return {
                 title: user.name,
                 width: clientWidth >= 980 ? 960 : clientWidth - 20,
-                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} />,
+                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} assetsScope={id!} />,
               };
             }}
           />
@@ -467,7 +469,7 @@ export default function StyledRanklistRenderer({
       </div>
       {showFooter && (
         <div className="text-center mt-8">
-          <p className="mb-0">© 2022-2023 algoUX. All Rights Reserved.</p>
+          <p className="mb-0">© 2022-present algoUX. All Rights Reserved.</p>
           <p className="mt-1 mb-0">
             Find us on{' '}
             <a href="https://github.com/algoux" target="_blank">

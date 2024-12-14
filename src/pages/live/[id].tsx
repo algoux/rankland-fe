@@ -14,7 +14,6 @@ import { parseRealtimeSolutionBuffer } from '@/utils/realtime-solutions.util';
 import ScrollSolution from '@/components/plugins/ScrollSolution/ScrollSolution';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
-import UserInfoModal from '@/components/UserInfoModal';
 
 const POLL_RANKLIST_INTERVAL = Number(process.env.LIVE_POLLING_INTERVAL);
 

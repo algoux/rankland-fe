@@ -10,10 +10,11 @@ export interface IUserInfoModalProps {
   row: srk.RanklistRow;
   index: number;
   ranklist: srk.Ranklist;
+  assetsScope: string;
 }
 
 export default function UserInfoModal(props: IUserInfoModalProps) {
-  const { user, row, ranklist } = props;
+  const { user, row, ranklist, assetsScope } = props;
   const rankTimeData = useContext(RankTimeDataContext);
   // @ts-ignore
   const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
@@ -56,7 +57,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
           <img
             id={id}
             key={id}
-            src={`${process.env.X_PHOTO_BASE}${photo}`}
+            src={`${process.env.X_PHOTO_BASE}/${assetsScope}/${photo}`}
             alt="选手照片"
             style={{ width: '100%' }}
             onError={handleImgError}

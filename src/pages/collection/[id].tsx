@@ -23,7 +23,6 @@ import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
 import { extractQueryParams, formatUrl } from '@/configs/route.config';
-import UserInfoModal from '@/components/UserInfoModal';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
