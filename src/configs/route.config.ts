@@ -70,7 +70,7 @@ const _routes = [
     path: '/playground',
     alias: {
       cn: {
-        path: '/游乐场',
+        path: '/演练场',
       },
     },
     component: '@/pages/playground/index',
@@ -101,7 +101,7 @@ export const knownUrlKeywordToGeneralReplacementMap = {
   榜单合集: 'collection',
   探索: 'search',
   榜单: 'ranklist',
-  游乐场: 'playground',
+  演练场: 'playground',
   直播: 'live',
   关键词: 'kw',
   聚焦: 'focus',
@@ -113,7 +113,7 @@ export const knownUrlKeywordToAliasReplacementMap = {
     search: '探索',
     ranklist: '榜单',
     collection: '榜单合集',
-    playground: '游乐场',
+    playground: '演练场',
     live: '直播',
     rankId: '当前选中榜单的标识符',
     kw: '关键词',

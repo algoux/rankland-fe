@@ -16,7 +16,7 @@ const knownUrlKeywordToGeneralReplacementMap = {
   榜单合集: 'collection',
   探索: 'search',
   榜单: 'ranklist',
-  游乐场: 'playground',
+  演练场: 'playground',
   直播: 'live',
   关键词: 'kw',
   聚焦: 'focus',

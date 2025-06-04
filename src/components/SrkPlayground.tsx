@@ -94,13 +94,13 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
           setReady(true);
           if (messageRead !== 'true') {
             Modal.info({
-              title: '欢迎来到游乐场！',
+              title: '欢迎来到演练场！',
               width: 600,
               content: (
                 <div className="mt-6">
                   <p>你可以调试标准榜单格式（srk）数据并实时预览效果，推荐使用桌面端设备。</p>
                   <p>
-                    如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，游乐场可以帮助你直观地了解 srk 的字段及其作用。
+                    如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，演练场可以帮助你直观地了解 srk 的字段及其作用。
                   </p>
                   <p>
                     需要参考 srk 规范？请点击右上角的 <QuestionCircleOutlined /> 图标。

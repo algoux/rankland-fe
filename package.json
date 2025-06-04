@@ -19,9 +19,9 @@
     "start:docker:redirect": "cd server && npm run start:redirect && cd .."
   },
   "dependencies": {
-    "@algoux/standard-ranklist-convert-to": "^0.1.0",
+    "@algoux/standard-ranklist-convert-to": "^0.2.0",
     "@algoux/standard-ranklist-renderer-component": "0.4.3",
-    "@algoux/standard-ranklist-utils": "^0.1.1",
+    "@algoux/standard-ranklist-utils": "^0.2.2",
     "@ant-design/icons": "^4.7.0",
     "@antv/g-lite": "^1.2.1",
     "@antv/g2": "^5.0.13",
@@ -49,6 +49,7 @@
     "umi": "~3.4.25",
     "umi-request": "^1.4.0",
     "urlcat": "^2.0.4",
+    "use-deep-compare-effect": "^1.8.1",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

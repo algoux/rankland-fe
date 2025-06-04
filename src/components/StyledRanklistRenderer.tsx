@@ -17,13 +17,14 @@ import { useModel } from 'umi';
 import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { CaretDownOutlined, DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { uniq } from 'lodash-es';
+import { uniq, omit } from 'lodash-es';
 import copy from 'copy-to-clipboard';
 import {
   CodeforcesGymGhostDATConverter,
   VJudgeReplayConverter,
   GeneralExcelConverter,
 } from '@algoux/standard-ranklist-convert-to';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 import { formatSrkTimeDuration } from '@/utils/time-format.util';
 import ContactUs from './ContactUs';
 import BeianLink from './BeianLink';
@@ -108,49 +109,59 @@ export default function StyledRanklistRenderer({
   const [rankTimeDataInitialized, setRankTimeDataInitialized] = useState(false);
   const [rankTimeDataSet, setRankTimeDataSet] = useState<IRankTimeDataSet>(getInitialRankTimeDataSet());
   const [rankTimeData, setRankTimeData] = useState<IRankTimeData>(getInitialRankTimeData());
+  const [currentShownUserHash, setCurrentShownUserHash] = useState<string>('');
+
+  const comparingData = omit(data, ['_now']);
+  const [memorizedData, setMemorizedData] = useState<srk.Ranklist>(data);
+  useDeepCompareEffect(() => {
+    setMemorizedData(comparingData);
+    console.log('[StyledRanklistRenderer] data updated');
+  }, [comparingData]);
 
   const download = () => {
-    const blob = new Blob([JSON.stringify(data)], { type: 'application/json;charset=utf-8' });
+    const blob = new Blob([JSON.stringify(memorizedData)], { type: 'application/json;charset=utf-8' });
     FileSaver.saveAs(blob, `${name}.srk.json`);
   };
 
   const exportAsGymGhost = () => {
     const converter = new CodeforcesGymGhostDATConverter();
-    const file = converter.convert(data);
+    const file = converter.convert(memorizedData);
     const blob = new Blob([file.content], { type: 'text/plain;charset=utf-8' });
     FileSaver.saveAs(blob, `${name}_gymghost.${file.ext}`);
   };
 
   const exportAsVJReplay = () => {
     const converter = new VJudgeReplayConverter();
-    converter.convertAndWrite(data, `${name}_vjreplay.xlsx`);
+    converter.convertAndWrite(memorizedData, `${name}_vjreplay.xlsx`);
   };
 
   const exportAsGeneralExcel = () => {
     const converter = new GeneralExcelConverter();
-    converter.convertAndWrite(data, `${name}.xlsx`);
+    converter.convertAndWrite(memorizedData, `${name}.xlsx`);
   };
 
   const solutions = useMemo(() => {
-    return getSortedCalculatedRawSolutions(data.rows);
-  }, [data]);
+    return getSortedCalculatedRawSolutions(memorizedData.rows);
+  }, [memorizedData]);
 
   const genData = useMemo(() => {
     if (timeTravelTime === null) {
-      return data;
+      return memorizedData;
     }
     const filteredSolutions = filterSolutionsUntil(solutions, [timeTravelTime, 'ms']);
     const newData = regenerateRanklistBySolutions(data, filteredSolutions);
     return newData;
-  }, [data, solutions, timeTravelTime]);
+  }, [memorizedData, solutions, timeTravelTime]);
 
   const staticData = useMemo(() => convertToStaticRanklist(genData), [genData]);
 
   useEffect(() => {
+    console.log('[StyledRanklistRenderer] id:', id);
+    setCurrentShownUserHash('');
     setRankTimeDataSet(getInitialRankTimeDataSet());
     setRankTimeData(getInitialRankTimeData());
     setRankTimeDataInitialized(false);
-  }, [staticData]);
+  }, [id]);
 
   const organizations = useMemo(
     () =>
@@ -186,27 +197,43 @@ export default function StyledRanklistRenderer({
     setTimeTravelTime(time);
   };
 
-  const handleUserModalOpen = async (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+  const calcUserRankTimeData = async (userHash: string) => {
     setRankTimeData(getInitialRankTimeData());
-    setTimeout(() => {
-      let rankTimeDataSetValue = rankTimeDataSet;
-      if (!rankTimeDataInitialized) {
-        rankTimeDataSetValue = getAllRankTimeData(data, solutions, getProperRankTimeChunkUnit(data.contest));
-        setRankTimeDataSet(rankTimeDataSetValue);
-        setRankTimeDataInitialized(true);
-      }
-      setRankTimeData({
-        key: `${user.id}_${Date.now()}`,
-        initialized: true,
-        unit: rankTimeDataSetValue.unit,
-        points: rankTimeDataSetValue.userRankTimePoints.get(user.id) || [],
-        solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(user.id) || [],
-        seriesSegments: rankTimeDataSetValue.seriesSegments,
-        totalUsers: rankTimeDataSetValue.totalUsers,
-      });
-      console.log(`[RankTimeData] updated user ${user.id}`);
-    }, 300);
+    let rankTimeDataSetValue = rankTimeDataSet;
+    if (!rankTimeDataInitialized) {
+      rankTimeDataSetValue = getAllRankTimeData(
+        memorizedData,
+        solutions,
+        getProperRankTimeChunkUnit(memorizedData.contest),
+      );
+      setRankTimeDataSet(rankTimeDataSetValue);
+      setRankTimeDataInitialized(true);
+    }
+    setRankTimeData({
+      key: `${userHash}_${Date.now()}`,
+      initialized: true,
+      unit: rankTimeDataSetValue.unit,
+      points: rankTimeDataSetValue.userRankTimePoints.get(userHash) || [],
+      solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(userHash) || [],
+      seriesSegments: rankTimeDataSetValue.seriesSegments,
+      totalUsers: rankTimeDataSetValue.totalUsers,
+    });
+    console.log(`[RankTimeData] updated user ${userHash}`);
   };
+
+  const handleUserModalOpen = async (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
+    setCurrentShownUserHash(`${user.id}`);
+  };
+
+  useDeepCompareEffect(() => {
+    if (currentShownUserHash) {
+      calcUserRankTimeData(currentShownUserHash);
+    } else {
+      setRankTimeDataSet(getInitialRankTimeDataSet());
+      setRankTimeData(getInitialRankTimeData());
+      setRankTimeDataInitialized(false);
+    }
+  }, [staticData, currentShownUserHash]);
 
   const renderContributor = (contributor: srk.Contributor) => {
     const contributorObj = resolveContributor(contributor);
@@ -409,7 +436,7 @@ export default function StyledRanklistRenderer({
       {renderHeader()}
       <div className="mx-4">
         <ProgressBar
-          data={data}
+          data={memorizedData}
           enableTimeTravel
           onTimeTravel={handleTimeTravel}
           live={isLive}
@@ -442,7 +469,7 @@ export default function StyledRanklistRenderer({
             </span>
           </div>
         )}
-        <div>{renderExtraActionArea ? renderExtraActionArea(data) : null}</div>
+        <div>{renderExtraActionArea ? renderExtraActionArea(memorizedData) : null}</div>
       </div>
 
       <div className="mt-6" />

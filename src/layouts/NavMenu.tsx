@@ -24,7 +24,7 @@ export default function NavMenu() {
           ),
           label: '榜单合集',
         },
-        { key: decodeURIComponent(formatUrl('Playground')), label: '游乐场' },
+        { key: decodeURIComponent(formatUrl('Playground')), label: '演练场' },
       ]}
       selectedKeys={[decodeURIComponent(pathname)]}
       onClick={onClick}

@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@algoux/standard-ranklist-convert-to':
-    specifier: ^0.1.0
-    version: 0.1.0(@algoux/standard-ranklist@0.3.4)
+    specifier: ^0.2.0
+    version: 0.2.0(@algoux/standard-ranklist@0.3.4)
   '@algoux/standard-ranklist-renderer-component':
     specifier: 0.4.3
     version: 0.4.3(@algoux/standard-ranklist@0.3.4)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.1.1
-    version: 0.1.1(@algoux/standard-ranklist@0.3.4)
+    specifier: ^0.2.2
+    version: 0.2.2(@algoux/standard-ranklist@0.3.4)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -95,6 +95,9 @@ dependencies:
   urlcat:
     specifier: ^2.0.4
     version: 2.0.4
+  use-deep-compare-effect:
+    specifier: ^1.8.1
+    version: 1.8.1(react@17.0.2)
   uuid:
     specifier: ^8.3.2
     version: 8.3.2
@@ -197,13 +200,13 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-convert-to@0.1.0(@algoux/standard-ranklist@0.3.4):
-    resolution: {integrity: sha512-M/VZ8mW5sbTNuNHMEOmbmNrIrKK8P3LlXdEQ9MxMV42XbhsU4gCHy4DhEqK0tllxjzNZRd+MZEddkdbwWy9iSg==}
+  /@algoux/standard-ranklist-convert-to@0.2.0(@algoux/standard-ranklist@0.3.4):
+    resolution: {integrity: sha512-0dF4s0EbNVxUT0Qkown3TUmA4G4za6JVX01Gxv74H1bhPaHB+wXkTuGmTygd7Nqgl5f34wvAghd4smQXRX51Gw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
       '@algoux/standard-ranklist': 0.3.4
-      '@algoux/standard-ranklist-utils': 0.1.1(@algoux/standard-ranklist@0.3.4)
+      '@algoux/standard-ranklist-utils': 0.2.2(@algoux/standard-ranklist@0.3.4)
       xlsx: 0.18.5
     dev: false
 
@@ -232,6 +235,19 @@ packages:
       '@algoux/standard-ranklist': '*'
     dependencies:
       '@algoux/standard-ranklist': 0.3.4
+      bcp-47-match: 2.0.2
+      bignumber.js: 9.1.1
+      semver: 7.5.4
+      textcolor: 1.0.2
+    dev: false
+
+  /@algoux/standard-ranklist-utils@0.2.2(@algoux/standard-ranklist@0.3.4):
+    resolution: {integrity: sha512-T8GfYPh3dHtCAePSqm+ZwUSPy0vjI7Mlzdk/aBBRYH4Q8sDIsTxFXnbcNOfop5nVhitsTZTRyUcjgugpWMYfiA==}
+    peerDependencies:
+      '@algoux/standard-ranklist': '*'
+    dependencies:
+      '@algoux/standard-ranklist': 0.3.4
+      '@types/semver': 7.7.0
       bcp-47-match: 2.0.2
       bignumber.js: 9.1.1
       semver: 7.5.4
@@ -880,6 +896,10 @@ packages:
   /@types/scheduler@0.16.2:
     resolution: {integrity: sha512-hppQEBDmlwhFAXKJX2KnWLYu5yMfi91yazPb2l+lbJiwW+wdo1gNeRA+3RgNSO39WYX2euey41KEwnqesU2Jew==}
 
+  /@types/semver@7.7.0:
+    resolution: {integrity: sha512-k107IF4+Xr7UHjwDc7Cfd6PRQfbdkiRabXGRjo07b4WyPahFBZCZ1sE+BNxYIJPPg73UkfOsVOLwqVc/6ETrIA==}
+    dev: false
+
   /@typescript-eslint/eslint-plugin@5.31.0(@typescript-eslint/parser@5.31.0)(eslint@8.20.0)(typescript@4.1.2):
     resolution: {integrity: sha512-VKW4JPHzG5yhYQrQ1AzXgVgX8ZAJEvCz0QI6mLRX4tf7rnFfh5D8SKm0Pq6w5PyNfAWJk6sv313+nEt3ohWMBQ==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -1358,6 +1378,7 @@ packages:
 
   /acorn-import-assertions@1.9.0(acorn@8.9.0):
     resolution: {integrity: sha512-cmMwop9x+8KFhxvKrKfPYmN6/pKTYYHBqLa0DfvVZcKMJWNyWLnaqND7dx/qn66R7ewM1UX5XMaDVP5wlVTaVA==}
+    deprecated: package has been renamed to acorn-import-attributes
     peerDependencies:
       acorn: ^8
     dependencies:
@@ -2384,6 +2405,11 @@ packages:
   /delayed-stream@1.0.0:
     resolution: {integrity: sha512-ZySD7Nf91aLB0RxL4KGrKHBXl7Eds1DAmEdcoVawXnLD7SDhpNgtuII2aAkg7a7QS41jxPSZ17p4VdGnMHk3MQ==}
     engines: {node: '>=0.4.0'}
+    dev: false
+
+  /dequal@2.0.3:
+    resolution: {integrity: sha512-0je+qPKHEMohvfRTCEo3CrPG6cAzAYgmzKyxRiYSSDkS6eGJdyVJm7WaYA5ECaAD9wLB2T4EEeymA5aFVcYXCA==}
+    engines: {node: '>=6'}
     dev: false
 
   /des.js@1.0.1:
@@ -4257,6 +4283,7 @@ packages:
   /pify@4.0.1:
     resolution: {integrity: sha512-uB80kBFb/tfd68bVleG9T5GGsGPjJrLAUpR5PZIrhBnIaRTQRjqdJSsIKkOP6OAIFbj7GOrcudc5pNjZ+geV2g==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -4660,6 +4687,7 @@ packages:
 
   /prr@1.0.1:
     resolution: {integrity: sha512-yPw4Sng1gWghHQWj0B3ZggWUm4qVbPwPFcRG8KyxiU7J2OHFSoEHKS+EZ3fv5l1t9CyCiop6l/ZYeWbrgoQejw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -5679,6 +5707,7 @@ packages:
 
   /sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+    requiresBuild: true
     dev: true
     optional: true
 
@@ -6368,6 +6397,17 @@ packages:
 
   /urlcat@2.0.4:
     resolution: {integrity: sha512-12c4Vi40DHVdZ/8mOLjZjp0asCzM6hi8Gj116fpImRP1FN4gBMCtMi9XhLNOmre/FEQYNqHbZmX8iyYAtIcy8Q==}
+    dev: false
+
+  /use-deep-compare-effect@1.8.1(react@17.0.2):
+    resolution: {integrity: sha512-kbeNVZ9Zkc0RFGpfMN3MNfaKNvcLNyxOAAd9O4CBZ+kCBXXscn9s/4I+8ytUER4RDpEYs5+O6Rs4PqiZ+rHr5Q==}
+    engines: {node: '>=10', npm: '>=6'}
+    peerDependencies:
+      react: '>=16.13'
+    dependencies:
+      '@babel/runtime': 7.18.9
+      dequal: 2.0.3
+      react: 17.0.2
     dev: false
 
   /use-subscription@1.5.1(react@16.14.0):
