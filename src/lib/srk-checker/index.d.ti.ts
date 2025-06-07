@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.4');
+export const Version = t.lit('0.3.6');
 
 export const DatetimeISOString = t.name("string");
 
@@ -71,6 +71,7 @@ export const User = t.iface([], {
   "organization": t.opt("Text"),
   "teamMembers": t.opt(t.array("ExternalUser")),
   "marker": t.opt("string"),
+  "markers": t.opt(t.array("string")),
 });
 
 export const ProblemStatistics = t.iface([], {
@@ -125,7 +126,7 @@ export const RankSeriesRulePresetNormal = t.iface([], {
 export const RankSeriesRulePresetUniqByUserField = t.iface([], {
   "preset": t.lit('UniqByUserField'),
   "options": t.iface([], {
-    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
+    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker'), t.lit('markers')),
     "includeOfficialOnly": t.opt("boolean"),
   }),
 });
@@ -145,7 +146,7 @@ export const RankSeriesRulePresetICPC = t.iface([], {
     })),
     "filter": t.opt(t.iface([], {
       "byUserFields": t.opt(t.array(t.iface([], {
-        "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker')),
+        "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker'), t.lit('markers')),
         "rule": "string",
       }))),
     })),
