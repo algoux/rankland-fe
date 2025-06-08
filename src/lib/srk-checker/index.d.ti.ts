@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.6');
+export const Version = t.lit('0.3.7');
 
 export const DatetimeISOString = t.name("string");
 
@@ -198,6 +198,8 @@ export const SorterICPC = t.iface(["SorterBase"], {
     "noPenaltyResults": t.opt(t.array("SolutionResultFull")),
     "timePrecision": t.opt("TimeUnit"),
     "timeRounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
+    "rankingTimePrecision": t.opt("TimeUnit"),
+    "rankingTimeRounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
   }),
 });
 

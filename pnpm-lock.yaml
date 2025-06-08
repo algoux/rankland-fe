@@ -7,13 +7,13 @@ settings:
 dependencies:
   '@algoux/standard-ranklist-convert-to':
     specifier: ^0.2.0
-    version: 0.2.0(@algoux/standard-ranklist@0.3.6)
+    version: 0.2.0(@algoux/standard-ranklist@0.3.7)
   '@algoux/standard-ranklist-renderer-component':
-    specifier: 0.4.4
-    version: 0.4.4(@algoux/standard-ranklist@0.3.6)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 0.4.5
+    version: 0.4.5(@algoux/standard-ranklist@0.3.7)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.2.2
-    version: 0.2.2(@algoux/standard-ranklist@0.3.6)
+    specifier: ^0.2.3
+    version: 0.2.3(@algoux/standard-ranklist@0.3.7)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -104,8 +104,8 @@ dependencies:
 
 devDependencies:
   '@algoux/standard-ranklist':
-    specifier: ^0.3.6
-    version: 0.3.6
+    specifier: ^0.3.7
+    version: 0.3.7
   '@types/file-saver':
     specifier: ^2.0.5
     version: 2.0.5
@@ -200,26 +200,26 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-convert-to@0.2.0(@algoux/standard-ranklist@0.3.6):
+  /@algoux/standard-ranklist-convert-to@0.2.0(@algoux/standard-ranklist@0.3.7):
     resolution: {integrity: sha512-0dF4s0EbNVxUT0Qkown3TUmA4G4za6JVX01Gxv74H1bhPaHB+wXkTuGmTygd7Nqgl5f34wvAghd4smQXRX51Gw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.6
-      '@algoux/standard-ranklist-utils': 0.2.2(@algoux/standard-ranklist@0.3.6)
+      '@algoux/standard-ranklist': 0.3.7
+      '@algoux/standard-ranklist-utils': 0.2.3(@algoux/standard-ranklist@0.3.7)
       xlsx: 0.18.5
     dev: false
 
-  /@algoux/standard-ranklist-renderer-component@0.4.4(@algoux/standard-ranklist@0.3.6)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-JLDJbQHOCLA2htkem6iyE/5Al/l9gNAWcmqBQfs/Zr4sdk2oIG8gy1iZmblMKIFAGiit69pWmrTLiNOhgFSgjg==}
+  /@algoux/standard-ranklist-renderer-component@0.4.5(@algoux/standard-ranklist@0.3.7)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-/jG8aAkMkItez1gDiLUEZAuMC87SRs4nZM3MUb+8phWskazqGyi8P5C/yfhtZVeiIr2f0ypFYAfMK7BphvIX6g==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.6
-      '@algoux/standard-ranklist-utils': 0.2.2(@algoux/standard-ranklist@0.3.6)
+      '@algoux/standard-ranklist': 0.3.7
+      '@algoux/standard-ranklist-utils': 0.2.3(@algoux/standard-ranklist@0.3.7)
       classnames: 2.3.1
       color: 4.2.3
       rc-dialog: 8.9.0(react-dom@17.0.2)(react@17.0.2)
@@ -229,12 +229,12 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@algoux/standard-ranklist-utils@0.2.2(@algoux/standard-ranklist@0.3.6):
-    resolution: {integrity: sha512-T8GfYPh3dHtCAePSqm+ZwUSPy0vjI7Mlzdk/aBBRYH4Q8sDIsTxFXnbcNOfop5nVhitsTZTRyUcjgugpWMYfiA==}
+  /@algoux/standard-ranklist-utils@0.2.3(@algoux/standard-ranklist@0.3.7):
+    resolution: {integrity: sha512-+MwwpgrG+74fKyPUm4HUT4QfI+G/36swAwT0HX+92UsLOQX6MhRj6O1yKuXKgSlb2lDbDn+UOKhvyjSi5/G9bw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.6
+      '@algoux/standard-ranklist': 0.3.7
       '@types/semver': 7.7.0
       bcp-47-match: 2.0.2
       bignumber.js: 9.1.1
@@ -242,8 +242,8 @@ packages:
       textcolor: 1.0.2
     dev: false
 
-  /@algoux/standard-ranklist@0.3.6:
-    resolution: {integrity: sha512-ImomxTko8f076XCyWIWi+S1OsnKL+ZiTQ1mGGBR+BXOdi+unUpg7HjppjumbCbTQK+0BsaAkMC2YdWqZTo/3ug==}
+  /@algoux/standard-ranklist@0.3.7:
+    resolution: {integrity: sha512-iVP8DfZ4FVNfmhbRiQy80dHk/u9hBcooxAr6bkb1lanQvVoMNbL6tGNAe/Er9RYa7kSQkvfbgjG9ePh0HdTYGQ==}
 
   /@ant-design/colors@6.0.0:
     resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}

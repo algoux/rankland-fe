@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@algoux/standard-ranklist-convert-to": "^0.2.0",
-    "@algoux/standard-ranklist-renderer-component": "0.4.4",
-    "@algoux/standard-ranklist-utils": "^0.2.2",
+    "@algoux/standard-ranklist-renderer-component": "0.4.5",
+    "@algoux/standard-ranklist-utils": "^0.2.3",
     "@ant-design/icons": "^4.7.0",
     "@antv/g-lite": "^1.2.1",
     "@antv/g2": "^5.0.13",
@@ -53,7 +53,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
-    "@algoux/standard-ranklist": "^0.3.6",
+    "@algoux/standard-ranklist": "^0.3.7",
     "@types/file-saver": "^2.0.5",
     "@types/lodash-es": "^4.17.6",
     "@types/punycode": "^2.1.0",
