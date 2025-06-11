@@ -20,8 +20,8 @@
   },
   "dependencies": {
     "@algoux/standard-ranklist-convert-to": "^0.2.0",
-    "@algoux/standard-ranklist-renderer-component": "0.4.5",
-    "@algoux/standard-ranklist-utils": "^0.2.3",
+    "@algoux/standard-ranklist-renderer-component": "0.4.8",
+    "@algoux/standard-ranklist-utils": "^0.2.4",
     "@ant-design/icons": "^4.7.0",
     "@antv/g-lite": "^1.2.1",
     "@antv/g2": "^5.0.13",
@@ -29,6 +29,7 @@
     "antd": "^4.21.7",
     "axios": "^0.27.2",
     "bowser": "^2.11.0",
+    "classnames": "^2.5.1",
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.5",
     "file-saver": "^2.0.5",
@@ -78,7 +79,7 @@
     "nodemon": "^2.0.19",
     "prettier": "^2.7.1",
     "ts-interface-builder": "^0.3.3",
-    "typescript": "4.1.2",
+    "typescript": "4.7.4",
     "umi-plugin-tailwindcss": "^3.2.1",
     "yorkie": "^2.0.0"
   }

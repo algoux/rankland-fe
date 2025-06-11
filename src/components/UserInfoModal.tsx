@@ -1,6 +1,9 @@
 import React, { useContext } from 'react';
 import type * as srk from '@algoux/standard-ranklist';
-import { resolveText } from '@algoux/standard-ranklist-utils';
+import { EnumTheme, resolveStyle, resolveText, resolveUserMarkers } from '@algoux/standard-ranklist-utils';
+import { MarkerLabel } from '@algoux/standard-ranklist-renderer-component';
+import { useModel } from 'umi';
+import classnames from 'classnames';
 import './UserInfoModal.less';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import RankCurve from './RankCurve';
@@ -15,6 +18,7 @@ export interface IUserInfoModalProps {
 
 export default function UserInfoModal(props: IUserInfoModalProps) {
   const { user, row, ranklist, assetsScope } = props;
+  const { theme } = useModel('theme');
   const rankTimeData = useContext(RankTimeDataContext);
   // @ts-ignore
   const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
@@ -32,6 +36,8 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   const photo = user.x_photo as string | undefined;
   // @ts-ignore
   const slogan = user.x_slogan as string | undefined;
+  const userMarkers = resolveUserMarkers(user, ranklist.markers);
+
   return (
     <div className="user-modal">
       <p className="mb-0">{user.organization}</p>
@@ -43,6 +49,18 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
               {mIndex > 0 && <span className="user-modal-info-team-members-slash"> / </span>}
               <span>{resolveText(m.name)}</span>
             </span>
+          ))}
+        </div>
+      )}
+      {userMarkers.length > 0 && (
+        <div className="user-modal-info-markers mt-2">
+          {userMarkers.map((marker, index) => (
+            <MarkerLabel
+              key={marker.id}
+              marker={marker}
+              theme={theme as EnumTheme}
+              className="user-modal-info-marker"
+            />
           ))}
         </div>
       )}
