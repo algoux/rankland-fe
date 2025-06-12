@@ -7,11 +7,12 @@ import {
   filterSolutionsUntil,
   regenerateRanklistBySolutions,
   getSortedCalculatedRawSolutions,
+  resolveUserMarkers,
 } from '@algoux/standard-ranklist-utils';
 import type { EnumTheme } from '@algoux/standard-ranklist-utils';
 import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
-import { Alert, Dropdown, Menu, notification, Select, Switch } from 'antd';
+import { Alert, Dropdown, Menu, notification, Radio, Select, Switch } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { useModel } from 'umi';
 import dayjs from 'dayjs';
@@ -101,9 +102,10 @@ export default function StyledRanklistRenderer({
 }: IStyledRanklistRendererProps) {
   const [{ width: clientWidth }] = useClientWidthHeight();
   const { theme } = useModel('theme');
-  const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean }>({
+  const [filter, setFilter] = useState<{ organizations: string[]; officialOnly: boolean; marker: string }>({
     organizations: [],
     officialOnly: false,
+    marker: '',
   });
   const [timeTravelTime, setTimeTravelTime] = useState<number | null>(null);
   const [rankTimeDataInitialized, setRankTimeDataInitialized] = useState(false);
@@ -161,6 +163,11 @@ export default function StyledRanklistRenderer({
     setRankTimeDataSet(getInitialRankTimeDataSet());
     setRankTimeData(getInitialRankTimeData());
     setRankTimeDataInitialized(false);
+    setFilter({
+      organizations: [],
+      officialOnly: false,
+      marker: '',
+    })
   }, [id]);
 
   const organizations = useMemo(
@@ -170,11 +177,17 @@ export default function StyledRanklistRenderer({
       ),
     [staticData.rows],
   );
+  const markers = useMemo(() => {
+    return staticData.markers || [];
+  }, [staticData.rows]);
   const filteredRows = useMemo(() => {
     return staticData.rows.filter((row) => {
       let ok = true;
       ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(row.user?.organization as string));
       ok && filter.officialOnly && (ok = row.user?.official === true);
+      ok &&
+        filter.marker &&
+        (ok = resolveUserMarkers(row.user, staticData.markers).some((m) => m.id === filter.marker));
       return ok;
     });
   }, [filter, staticData.rows]);
@@ -189,8 +202,12 @@ export default function StyledRanklistRenderer({
     setFilter((prev) => ({ ...prev, organizations: value }));
   };
 
-  const handleIncludeOfficiaFlilterChange = (checked: boolean) => {
+  const handleIncludeOfficialFillterChange = (checked: boolean) => {
     setFilter((prev) => ({ ...prev, officialOnly: checked }));
+  };
+
+  const handleMarkerFilterChange = (e: any) => {
+    setFilter((prev) => ({ ...prev, marker: e.target.value }));
   };
 
   const handleTimeTravel = (time: number | null) => {
@@ -463,10 +480,27 @@ export default function StyledRanklistRenderer({
                 </Select.Option>
               ))}
             </Select>
-            <span className="ml-4 inline-flex items-center">
-              <span className="mr-1">仅包含正式参加者</span>
-              <Switch checked={filter.officialOnly} size="small" onChange={handleIncludeOfficiaFlilterChange} />
+            <span className="ml-5 inline-flex items-center">
+              <span className="mr-1">仅正式参赛</span>
+              <Switch checked={filter.officialOnly} size="small" onChange={handleIncludeOfficialFillterChange} />
             </span>
+            {markers.length > 0 && (
+              <>
+                {/* <span className="ml-5 inline-flex items-center">分组</span> */}
+                <Radio.Group
+                  className="ml-5 inline-flex items-center"
+                  onChange={handleMarkerFilterChange}
+                  value={filter.marker}
+                >
+                  <Radio.Button value="">全部</Radio.Button>
+                  {markers.map((marker) => (
+                    <Radio.Button key={marker.id} value={marker.id}>
+                      {resolveText(marker.label)}
+                    </Radio.Button>
+                  ))}
+                </Radio.Group>
+              </>
+            )}
           </div>
         )}
         <div>{renderExtraActionArea ? renderExtraActionArea(memorizedData) : null}</div>
