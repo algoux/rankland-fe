@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.7');
+export const Version = t.lit('0.3.8');
 
 export const DatetimeISOString = t.name("string");
 
@@ -137,7 +137,7 @@ export const RankSeriesRulePresetICPC = t.iface([], {
     "ratio": t.opt(t.iface([], {
       "value": t.array("number"),
       "rounding": t.opt(t.union(t.lit('floor'), t.lit('ceil'), t.lit('round'))),
-      "denominator": t.opt(t.union(t.lit('all'), t.lit('submitted'))),
+      "denominator": t.opt(t.union(t.lit('all'), t.lit('submitted'), t.lit('scored'))),
       "noTied": t.opt("boolean"),
     })),
     "count": t.opt(t.iface([], {

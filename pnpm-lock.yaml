@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@algoux/standard-ranklist-convert-to':
-    specifier: ^0.2.0
-    version: 0.2.0(@algoux/standard-ranklist@0.3.7)
+    specifier: ^0.2.1
+    version: 0.2.1(@algoux/standard-ranklist@0.3.8)
   '@algoux/standard-ranklist-renderer-component':
-    specifier: 0.4.8
-    version: 0.4.8(@algoux/standard-ranklist@0.3.7)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 0.4.9
+    version: 0.4.9(@algoux/standard-ranklist@0.3.8)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.2.4
-    version: 0.2.4(@algoux/standard-ranklist@0.3.7)
+    specifier: ^0.2.5
+    version: 0.2.5(@algoux/standard-ranklist@0.3.8)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -107,8 +107,8 @@ dependencies:
 
 devDependencies:
   '@algoux/standard-ranklist':
-    specifier: ^0.3.7
-    version: 0.3.7
+    specifier: ^0.3.8
+    version: 0.3.8
   '@types/file-saver':
     specifier: ^2.0.5
     version: 2.0.5
@@ -203,26 +203,26 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-convert-to@0.2.0(@algoux/standard-ranklist@0.3.7):
-    resolution: {integrity: sha512-0dF4s0EbNVxUT0Qkown3TUmA4G4za6JVX01Gxv74H1bhPaHB+wXkTuGmTygd7Nqgl5f34wvAghd4smQXRX51Gw==}
+  /@algoux/standard-ranklist-convert-to@0.2.1(@algoux/standard-ranklist@0.3.8):
+    resolution: {integrity: sha512-5Kvbrgq8fbsb+DLak5+ALdBenhGisBomAEHTcagBPf+675XTfGg23sVFkh73pWN+FV103qQh6kg0hUT+89OZZw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.7
-      '@algoux/standard-ranklist-utils': 0.2.4(@algoux/standard-ranklist@0.3.7)
+      '@algoux/standard-ranklist': 0.3.8
+      '@algoux/standard-ranklist-utils': 0.2.5(@algoux/standard-ranklist@0.3.8)
       xlsx: 0.18.5
     dev: false
 
-  /@algoux/standard-ranklist-renderer-component@0.4.8(@algoux/standard-ranklist@0.3.7)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-2c6t/1OadGrSyyUH2AdfmP2lA+EsxaobuTtVMRYA2NNSRG0uU7ABGK3QRtPXt2KoHnzpqQ3jc/VdxE+2GMW1tg==}
+  /@algoux/standard-ranklist-renderer-component@0.4.9(@algoux/standard-ranklist@0.3.8)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-ZN36i9DyAY4ULV4zOwi1L26ozaMPCd59XWEjr4d2WdFTn2SAGY0x6V/WsUJmJGdGMOZXz8xHwI7SLDNAbxHO5Q==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.7
-      '@algoux/standard-ranklist-utils': 0.2.4(@algoux/standard-ranklist@0.3.7)
+      '@algoux/standard-ranklist': 0.3.8
+      '@algoux/standard-ranklist-utils': 0.2.5(@algoux/standard-ranklist@0.3.8)
       classnames: 2.5.1
       color: 4.2.3
       rc-dialog: 8.9.0(react-dom@17.0.2)(react@17.0.2)
@@ -232,12 +232,12 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@algoux/standard-ranklist-utils@0.2.4(@algoux/standard-ranklist@0.3.7):
-    resolution: {integrity: sha512-Al+YfH3AAQrc5kDFmeqYwTv4ld82USiB8bFbzac9CDgo0n1826NQ4tmFk/3Egv42muYryERbbx5vdTs/X30msA==}
+  /@algoux/standard-ranklist-utils@0.2.5(@algoux/standard-ranklist@0.3.8):
+    resolution: {integrity: sha512-khHh482skwC+mxsIB4LtF+QzLlUZRl4b7YfsmJtYWZ0FQYr1O2D4Vou7eUIA8AK81BV7IAh7RYLIeF4FnSlDtQ==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.7
+      '@algoux/standard-ranklist': 0.3.8
       '@types/semver': 7.7.0
       bcp-47-match: 2.0.2
       bignumber.js: 9.1.1
@@ -245,8 +245,8 @@ packages:
       textcolor: 1.0.2
     dev: false
 
-  /@algoux/standard-ranklist@0.3.7:
-    resolution: {integrity: sha512-iVP8DfZ4FVNfmhbRiQy80dHk/u9hBcooxAr6bkb1lanQvVoMNbL6tGNAe/Er9RYa7kSQkvfbgjG9ePh0HdTYGQ==}
+  /@algoux/standard-ranklist@0.3.8:
+    resolution: {integrity: sha512-QPU3L1lE/pDodqBA8A6ofX7RuL0vVHHjvp3kLQ8LKHSBOoQvBFjs4S5eXItdMoKaqYh5ofIVz3+BDCCLAnF8+Q==}
 
   /@ant-design/colors@6.0.0:
     resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}
