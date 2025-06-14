@@ -14,7 +14,7 @@ import type * as srk from '@algoux/standard-ranklist';
 import 'rc-dialog/assets/index.css';
 import { Alert, Dropdown, Menu, notification, Radio, Select, Switch } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
-import { useModel } from 'umi';
+import { Helmet, useModel } from 'umi';
 import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { CaretDownOutlined, DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
@@ -167,7 +167,7 @@ export default function StyledRanklistRenderer({
       organizations: [],
       officialOnly: false,
       marker: '',
-    })
+    });
   }, [id]);
 
   const organizations = useMemo(
@@ -450,6 +450,12 @@ export default function StyledRanklistRenderer({
 
   return (
     <ErrorBoundary FallbackComponent={ErrorFallback}>
+      <Helmet>
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=0.5,maximum-scale=1.0,user-scalable=yes"
+        />
+      </Helmet>
       {renderHeader()}
       <div className="mx-4">
         <ProgressBar

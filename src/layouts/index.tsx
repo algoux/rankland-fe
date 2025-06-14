@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Link, IRouteComponentProps, useModel, useLocation } from 'umi';
+import { Link, IRouteComponentProps, useModel, useLocation, Helmet } from 'umi';
 import { Layout, BackTop } from 'antd';
 import Bowser from 'bowser';
 import '@/styles/antd.scss';
@@ -52,6 +52,12 @@ export default function RootLayout({ children }: IRouteComponentProps) {
 
   return (
     <Layout className="layout">
+      <Helmet>
+        <meta
+          name="viewport"
+          content="width=device-width,initial-scale=1,user-scalable=no"
+        />
+      </Helmet>
       <Header>
         <div className="flex justify-between" style={{ flex: 1, minWidth: 0 }}>
           <Link to="/">
