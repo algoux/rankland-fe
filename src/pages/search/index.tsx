@@ -138,7 +138,7 @@ export default function SearchPage({ location }: any) {
       </Helmet>
       <div>
         <h3 className="mb-6">在榜单数据库中探索</h3>
-        <Input.Search defaultValue={kw || ''} placeholder="输入关键词" onSearch={onSearch} enterButton allowClear />
+        <Input.Search defaultValue={kw || ''} placeholder="输入关键词搜索" onSearch={onSearch} enterButton allowClear />
         {loading && <Spin className="mt-10" />}
         {error && (
           <div className="mt-10">
