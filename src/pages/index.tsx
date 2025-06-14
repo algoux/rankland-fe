@@ -7,6 +7,7 @@ import { api } from '@/services/api';
 import ContactUs from '@/components/ContactUs';
 import { formatUrl } from '@/configs/route.config';
 import BeianLink from '@/components/BeianLink';
+import pasteThenACLogo from '@/assets/paste-then-ac_logo.png';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
@@ -40,7 +41,11 @@ export default function HomePage(props: IHomePageProps) {
               </Link>
             </Col>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link to={formatUrl('Collection', { id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official' })}>
+              <Link
+                to={formatUrl('Collection', {
+                  id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
+                })}
+              >
                 <Card hoverable>
                   <h2>
                     <TrophyOutlined className="mr-3" />
@@ -49,6 +54,27 @@ export default function HomePage(props: IHomePageProps) {
                   <p className="mt-4 mb-0">直接查阅由 SDUTACM 和 algoUX 团队精心分类整理的历年赛事榜单合集</p>
                 </Card>
               </Link>
+            </Col>
+          </Row>
+        </div>
+        <div className="block">
+          <h1 className="block-title">合作推广</h1>
+          <Row gutter={16}>
+            <Col className="mb-4" xs={24} sm={12}>
+              <a href="https://paste.then.ac/?from=rankland" target="_blank">
+                <Card hoverable>
+                  <h2>
+                    <img
+                      src={pasteThenACLogo}
+                      alt="paste.then.ac logo"
+                      className="mr-3 inline-block"
+                      style={{ width: '24px', height: '24px' }}
+                    />
+                    paste.then.ac
+                  </h2>
+                  <p className="mt-4 mb-0">自由、开放、更适合算竞宝宝体质的的剪贴板</p>
+                </Card>
+              </a>
             </Col>
           </Row>
         </div>
@@ -65,17 +91,26 @@ export default function HomePage(props: IHomePageProps) {
               <a href="https://github.com/algoux/srk-collection" target="_blank">
                 Srk Collection
               </a>
-              ：精心维护的榜单合集，欢迎参与
+              ：长期维护的历年算竞榜单合集
             </li>
-            <li>
-              <Link to={formatUrl('Playground')}>Playground</Link>
-              ：在线调试和预览 srk 格式的榜单数据
-            </li>
+
             <li>
               <a href="https://github.com/algoux/standard-ranklist-renderer-component" target="_blank">
-                Renderer Component
+                renderer-component
               </a>
-              ：在你的前端项目中使用渲染组件展示标准榜单
+              ：在 Web 项目中使用渲染组件展示标准榜单
+            </li>
+            <li>
+              <a href="https://github.com/algoux/standard-ranklist-utils" target="_blank">
+                utils
+              </a>
+              ：标准榜单开发实用工具
+            </li>
+            <li>
+              <a href="https://github.com/algoux/standard-ranklist-convert-to" target="_blank">
+                convert-to
+              </a>
+              ：转换标准榜单到 Excel、Gym Ghost、VJ 等其他格式
             </li>
           </ul>
         </div>
@@ -91,7 +126,7 @@ export default function HomePage(props: IHomePageProps) {
         </div>
         <div className="block">
           <h1 className="block-title">关于我们</h1>
-          <p>algoUX: Learning algorithm with better UX</p>
+          <p>algoUX: Give your algorithm better UX</p>
           <p>
             Find us on{' '}
             <a href="https://github.com/algoux" target="_blank">
@@ -99,6 +134,9 @@ export default function HomePage(props: IHomePageProps) {
             </a>
           </p>
           <p>© 2022-present algoUX. All Rights Reserved.</p>
+          <p>
+            榜单访问统计：至少 {data?.statistics.totalViewCount ?? '-'} 次
+          </p>
           <p>
             其他链接：
             <a href="https://algoux.org" target="_blank">
@@ -111,7 +149,8 @@ export default function HomePage(props: IHomePageProps) {
           </p>
           {(process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn') && (
             <p>
-              备案号：<BeianLink />
+              备案号：
+              <BeianLink />
             </p>
           )}
         </div>

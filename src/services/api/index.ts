@@ -1,12 +1,6 @@
 import type * as srk from '@algoux/standard-ranklist';
 import { apiRequestAdapter, cdnApiRequestAdapter, ApiException, HttpException, RequestAdapter } from '@/utils/request';
-import {
-  IApiCollection,
-  IApiLiveRanklistInfo,
-  IApiRanklist,
-  IApiRanklistInfo,
-  IApiStatistics,
-} from './interface';
+import { IApiCollection, IApiLiveRanklistInfo, IApiRanklist, IApiRanklistInfo, IApiStatistics } from './interface';
 import urlcat from 'urlcat';
 import { LogicException, LogicExceptionKind } from './logic.exception';
 import { isBrowser } from 'umi';
@@ -93,6 +87,12 @@ export class ApiService {
     return this.requestAdapters.api.get<{
       ranks: IApiRanklistInfo[];
     }>(urlcat('/rank/search', { query: opts.kw }));
+  }
+
+  public async listAllRanklists() {
+    return this.requestAdapters.api.get<{
+      ranks: IApiRanklistInfo[];
+    }>('/rank/listall');
   }
 
   public async getCollection(opts: { uniqueKey: string }) {

@@ -33,6 +33,7 @@
     "copy-to-clipboard": "^3.3.3",
     "dayjs": "^1.11.5",
     "file-saver": "^2.0.5",
+    "fuse.js": "^6.6.2",
     "lodash-es": "^4.17.21",
     "long": "^5.2.3",
     "moment": "^2.29.4",

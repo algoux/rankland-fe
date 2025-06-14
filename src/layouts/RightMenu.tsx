@@ -46,7 +46,7 @@ export default function RightMenu() {
   return (
     <div>
       <Dropdown overlay={switchSiteMenu}>
-        <Button type="text" className="px-2">切换站点</Button>
+        <Button type="text" className="px-2">切换</Button>
       </Dropdown>
     </div>
   );
