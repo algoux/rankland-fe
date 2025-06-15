@@ -91,7 +91,17 @@ function convertCollectionToMenuItems(
       const children = (item.children || []).map(convert);
       return getItem(item.name, item.uniqueKey, icon, children);
     } else {
-      return getItem(<Link to={childUrlFormatter(item.uniqueKey)}>{item.name}</Link>, item.uniqueKey);
+      return getItem(
+        <Link
+          to={childUrlFormatter(item.uniqueKey)}
+          onClick={(e) => {
+            e.preventDefault();
+          }}
+        >
+          {item.name}
+        </Link>,
+        item.uniqueKey,
+      );
     }
   };
   return collection.root.children.map(convert);
@@ -121,6 +131,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const rankId = query.rankId;
   const history = useHistory();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
+  const [renderSwitchLock, setRenderSwitchLock] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
   const [navCollapsed, setNavCollapsed] = useLocalStorageState<string | undefined>(
     LocalStorageKey.CollectionNavCollapsed,
@@ -220,17 +231,27 @@ export default function CollectionPage(props: ICollectionPageProps) {
         </div>
       );
     }
+    const dataRankId = data.ranklist?.info?.uniqueKey;
+    if (dataRankId && rankId && dataRankId !== rankId) {
+      return (
+        <div className="pt-16 text-center">
+          <Spin />
+        </div>
+      );
+    }
     if (data.ranklist) {
       return (
         <div className="pb-8">
-          <StyledRanklist
-            data={data.ranklist.srk}
-            name={rankId!}
-            id={rankId!}
-            meta={data.ranklist.info}
-            showFooter
-            showFilter
-          />
+          {!renderSwitchLock && (
+            <StyledRanklist
+              data={data.ranklist.srk}
+              name={rankId!}
+              id={rankId!}
+              meta={data.ranklist.info}
+              showFooter
+              showFilter
+            />
+          )}
         </div>
       );
     }
@@ -277,7 +298,12 @@ export default function CollectionPage(props: ICollectionPageProps) {
             className="srk-collection-nav-menu"
             onSelect={({ key }) => {
               if (key !== rankId) {
-                ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });
+                // ranklistContainerRef.current?.scrollTo({ left: 0, top: 0 });
+                setRenderSwitchLock(true);
+                requestAnimationFrame(() => {
+                  setRenderSwitchLock(false);
+                  history.push(formatUrl('Collection', { id, rankId: key }));
+                });
               }
               if (usingMobileLayout) {
                 setCollapsed(true);
