@@ -51,7 +51,7 @@ export default function HomePage(props: IHomePageProps) {
                     <TrophyOutlined className="mr-3" />
                     榜单合集
                   </h2>
-                  <p className="mt-4 mb-0">直接查阅由 SDUTACM 和 algoUX 团队精心分类整理的历年赛事榜单合集</p>
+                  <p className="mt-4 mb-0">查阅由 SDUTACM 和 algoUX 团队精心整理的历年赛事榜单合集</p>
                 </Card>
               </Link>
             </Col>
@@ -89,7 +89,7 @@ export default function HomePage(props: IHomePageProps) {
             </li>
             <li>
               <a href="https://github.com/algoux/srk-collection" target="_blank">
-                Srk Collection
+                collection
               </a>
               ：长期维护的历年算竞榜单合集
             </li>

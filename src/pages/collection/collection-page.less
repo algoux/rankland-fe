@@ -1,5 +1,5 @@
 .srk-collection-container {
-  display: flex;
+  // display: flex;
   .srk-collection-nav {
     background: #f4f4f4;
     border-right-width: 1px;
@@ -7,6 +7,10 @@
     border-right-color: rgba(217, 217, 217);
     display: flex;
     flex-direction: column;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    z-index: 1;
 
     .srk-collection-menu-icon {
       @apply text-center;
@@ -17,7 +21,7 @@
 
     .srk-collection-nav-menu {
       overflow-y: auto;
-      .ant-menu-inline-collapsed>.ant-menu-submenu>.ant-menu-submenu-title {
+      .ant-menu-inline-collapsed > .ant-menu-submenu > .ant-menu-submenu-title {
         padding: 0;
         .srk-collection-menu-icon {
           @apply w-full;
@@ -25,9 +29,18 @@
       }
     }
   }
+
+  .srk-collection-hidden-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: sticky;
+    top: 0;
+  }
+
   .srk-collection-ranklist {
     flex: 1;
-    overflow-x: auto;
+    // overflow-x: auto;
     position: relative;
   }
 }

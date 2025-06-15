@@ -1,5 +1,4 @@
 import React, { createRef, useEffect, useState } from 'react';
-import type * as srk from '@algoux/standard-ranklist';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useHistory, useModel, useParams } from 'umi';
@@ -25,6 +24,7 @@ import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
 import { extractQueryParams, formatUrl } from '@/configs/route.config';
+import logo from '@/assets/logo.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -171,7 +171,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
       return (
-        <div className="mt-16 text-center">
+        <div className="pt-16 text-center">
           <Helmet>
             <title>{formatTitle('Not Found')}</title>
           </Helmet>
@@ -185,7 +185,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
       );
     }
     return (
-      <div className="mt-16 text-center">
+      <div className="pt-16 text-center">
         <Helmet>
           <title>{formatTitle()}</title>
         </Helmet>
@@ -198,7 +198,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   }
   if (!data) {
     return (
-      <div className="mt-16 text-center">
+      <div className="pt-16 text-center">
         <Helmet>
           <title>{formatTitle()}</title>
         </Helmet>
@@ -212,7 +212,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const renderRanklist = () => {
     if (data.ranklistHasError) {
       return (
-        <div className="mt-16 text-center">
+        <div className="pt-16 text-center">
           <p>An error occurred while loading data</p>
           <Button type="primary" size="small" onClick={() => location.reload()}>
             Refresh
@@ -222,7 +222,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
     if (data.ranklist) {
       return (
-        <div className="mt-8 mb-8">
+        <div className="pb-8">
           <StyledRanklist
             data={data.ranklist.srk}
             name={rankId!}
@@ -236,7 +236,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
     return (
       <div>
-        <h3 className="mt-16 text-center">请展开左侧边栏并选择一个榜单</h3>
+        <h3 className="pt-16 text-center">请展开左侧边栏并选择一个榜单</h3>
       </div>
     );
   };
@@ -250,8 +250,8 @@ export default function CollectionPage(props: ICollectionPageProps) {
       <Helmet>
         <title>{formatTitle('榜单合集')}</title>
       </Helmet>
-      <div className="srk-collection-container" style={{ height: `${remainingHeight}px` }}>
-        <div className="srk-collection-nav" style={{ width: navWidth }}>
+      <div className="srk-collection-container">
+        <div className="srk-collection-nav" style={{ width: navWidth, height: `${remainingHeight}px` }}>
           <div>
             <Button
               size="large"
@@ -293,7 +293,23 @@ export default function CollectionPage(props: ICollectionPageProps) {
             style={{ overflowY: 'auto', overflowX: 'clip' }}
           />
         </div>
-        <div className="srk-collection-ranklist" ref={ranklistContainerRef}>
+        <div
+          className="srk-collection-hidden-header"
+          style={{ width: navWidth, height: '64px', flexDirection: collapsed ? 'column' : 'row' }}
+        >
+          <img src={logo} style={{ width: collapsed ? '24px' : '32px', height: collapsed ? '24px' : '32px' }} />
+          <h3
+            className="mb-0"
+            style={{ fontSize: collapsed ? '14px' : undefined, marginLeft: collapsed ? '0' : '8px' }}
+          >
+            榜单合集
+          </h3>
+        </div>
+        <div
+          className="srk-collection-ranklist"
+          style={{ marginLeft: navWidth, display: usingMobileLayout && !collapsed ? 'none' : undefined }}
+          ref={ranklistContainerRef}
+        >
           {renderRanklist()}
         </div>
       </div>
