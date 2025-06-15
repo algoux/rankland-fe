@@ -52,12 +52,6 @@ export default function RootLayout({ children }: IRouteComponentProps) {
 
   return (
     <Layout className="layout">
-      <Helmet>
-        <meta
-          name="viewport"
-          content="width=device-width,initial-scale=1,user-scalable=no"
-        />
-      </Helmet>
       <Header>
         <div className="flex justify-between" style={{ flex: 1, minWidth: 0 }}>
           <Link to="/">
