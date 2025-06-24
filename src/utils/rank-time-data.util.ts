@@ -241,7 +241,7 @@ export function getAllRankTimeData(
               }
               if (cur.segmentIndex > segmentIndex) {
                 segmentIndex = cur.segmentIndex;
-                ranges[segmentIndex].start = cur.rank;
+                ranges[segmentIndex].start = ranges[segmentIndex].end = cur.rank;
               } else if (cur.segmentIndex === segmentIndex) {
                 ranges[segmentIndex].end = cur.rank;
               }
