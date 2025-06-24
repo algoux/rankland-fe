@@ -7,6 +7,7 @@ import classnames from 'classnames';
 import './UserInfoModal.less';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import RankCurve from './RankCurve';
+import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
 
 export interface IUserInfoModalProps {
   user: srk.User;
@@ -14,18 +15,25 @@ export interface IUserInfoModalProps {
   index: number;
   ranklist: srk.Ranklist;
   assetsScope: string;
+  filterMarker?: string;
 }
 
 export default function UserInfoModal(props: IUserInfoModalProps) {
-  const { user, row, ranklist, assetsScope } = props;
+  const { user, row, ranklist, assetsScope, filterMarker } = props;
   const { theme } = useModel('theme');
   const rankTimeData = useContext(RankTimeDataContext);
+  const userMarkers = resolveUserMarkers(user, ranklist.markers);
+  const matchedMainSeries = findUserMatchedMainICPCSeries(ranklist.series, userMarkers, filterMarker);
+  const matchedMainSeriesIndex = ranklist.series.findIndex((s) => s === matchedMainSeries);
+  console.log(`[UserInfoModal] user ${user.id} matched series: ${matchedMainSeriesIndex}`, matchedMainSeries);
+
   // @ts-ignore
-  const mainSegmentIndex = row.rankValues[0]?.segmentIndex;
-  let matchedSeries = ranklist.series?.[0].segments?.[mainSegmentIndex];
-  // if (!matchedSeries && (user.official === undefined || user.official === true)) {
-  //   matchedSeries = { style: 'iron', title: '优胜奖' };
+  const mainSegmentIndex = row.rankValues[matchedMainSeriesIndex]?.segmentIndex;
+  const matchedSeriesSegment = matchedMainSeries?.segments?.[mainSegmentIndex];
+  // if (!matchedSeriesSegment && (user.official === undefined || user.official === true)) {
+  //   matchedSeriesSegment = { style: 'iron', title: '优胜奖' };
   // }
+
   const hasMembers = !!user.teamMembers && user.teamMembers.length > 0;
   const id = `um-img-${user.id}`;
   const handleImgError = () => {
@@ -36,7 +44,6 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   const photo = user.x_photo as string | undefined;
   // @ts-ignore
   const slogan = user.x_slogan as string | undefined;
-  const userMarkers = resolveUserMarkers(user, ranklist.markers);
 
   return (
     <div className="user-modal">
@@ -64,10 +71,12 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
           ))}
         </div>
       )}
-      {matchedSeries && (
+      {matchedSeriesSegment && (
         <p className="mt-4 mb-0">
-          所在奖区：
-          <span className={`user-modal-segment-label bg-segment-${matchedSeries.style}`}>{matchedSeries.title}</span>
+          所在奖区（{matchedMainSeries.title}）：
+          <span className={`user-modal-segment-label bg-segment-${matchedSeriesSegment.style}`}>
+            {matchedSeriesSegment.title}
+          </span>
         </p>
       )}
       <div className="mt-4">

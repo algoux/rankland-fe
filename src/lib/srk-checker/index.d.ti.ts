@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.8');
+export const Version = t.lit('0.3.9');
 
 export const DatetimeISOString = t.name("string");
 
@@ -56,6 +56,10 @@ export const Style = t.iface([], {
 });
 
 export const Contributor = t.name("string");
+
+export const FilterableUserFields = t.union(t.lit('id'), t.lit('name'), t.lit('organization'));
+
+export const GroupableUserFields = t.union(t.lit('id'), t.lit('name'), t.lit('organization'));
 
 export const ExternalUser = t.iface([], {
   "name": "Text",
@@ -126,7 +130,7 @@ export const RankSeriesRulePresetNormal = t.iface([], {
 export const RankSeriesRulePresetUniqByUserField = t.iface([], {
   "preset": t.lit('UniqByUserField'),
   "options": t.iface([], {
-    "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker'), t.lit('markers')),
+    "field": "GroupableUserFields",
     "includeOfficialOnly": t.opt("boolean"),
   }),
 });
@@ -146,9 +150,10 @@ export const RankSeriesRulePresetICPC = t.iface([], {
     })),
     "filter": t.opt(t.iface([], {
       "byUserFields": t.opt(t.array(t.iface([], {
-        "field": t.union(t.lit('id'), t.lit('name'), t.lit('official'), t.lit('avatar'), t.lit('organization'), t.lit('teamMembers'), t.lit('marker'), t.lit('markers')),
+        "field": "FilterableUserFields",
         "rule": "string",
       }))),
+      "byMarker": t.opt("string"),
     })),
   }),
 });
@@ -244,6 +249,8 @@ const exportedTypeSuite: t.ITypeSuite = {
   ThemeColor,
   Style,
   Contributor,
+  FilterableUserFields,
+  GroupableUserFields,
   ExternalUser,
   User,
   ProblemStatistics,

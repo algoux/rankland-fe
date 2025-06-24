@@ -6,14 +6,14 @@ settings:
 
 dependencies:
   '@algoux/standard-ranklist-convert-to':
-    specifier: ^0.2.1
-    version: 0.2.1(@algoux/standard-ranklist@0.3.8)
+    specifier: ^0.2.2
+    version: 0.2.2(@algoux/standard-ranklist@0.3.9)
   '@algoux/standard-ranklist-renderer-component':
-    specifier: 0.4.9
-    version: 0.4.9(@algoux/standard-ranklist@0.3.8)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 0.4.10
+    version: 0.4.10(@algoux/standard-ranklist@0.3.9)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.2.5
-    version: 0.2.5(@algoux/standard-ranklist@0.3.8)
+    specifier: ^0.2.6
+    version: 0.2.6(@algoux/standard-ranklist@0.3.9)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -110,8 +110,8 @@ dependencies:
 
 devDependencies:
   '@algoux/standard-ranklist':
-    specifier: ^0.3.8
-    version: 0.3.8
+    specifier: ^0.3.9
+    version: 0.3.9
   '@types/file-saver':
     specifier: ^2.0.5
     version: 2.0.5
@@ -206,26 +206,26 @@ packages:
       react: 17.0.2
     dev: true
 
-  /@algoux/standard-ranklist-convert-to@0.2.1(@algoux/standard-ranklist@0.3.8):
-    resolution: {integrity: sha512-5Kvbrgq8fbsb+DLak5+ALdBenhGisBomAEHTcagBPf+675XTfGg23sVFkh73pWN+FV103qQh6kg0hUT+89OZZw==}
+  /@algoux/standard-ranklist-convert-to@0.2.2(@algoux/standard-ranklist@0.3.9):
+    resolution: {integrity: sha512-8moDDPxfwHFNfk+GRVlEMDY+IZnhD7Pz+hbUqlWlVKSpFrrTswRwl945iiIQDFIMweMyoK01+ZSF28z9El9HFg==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.8
-      '@algoux/standard-ranklist-utils': 0.2.5(@algoux/standard-ranklist@0.3.8)
+      '@algoux/standard-ranklist': 0.3.9
+      '@algoux/standard-ranklist-utils': 0.2.6(@algoux/standard-ranklist@0.3.9)
       xlsx: 0.18.5
     dev: false
 
-  /@algoux/standard-ranklist-renderer-component@0.4.9(@algoux/standard-ranklist@0.3.8)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-ZN36i9DyAY4ULV4zOwi1L26ozaMPCd59XWEjr4d2WdFTn2SAGY0x6V/WsUJmJGdGMOZXz8xHwI7SLDNAbxHO5Q==}
+  /@algoux/standard-ranklist-renderer-component@0.4.10(@algoux/standard-ranklist@0.3.9)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-uMj3mlKyQLPowrRbuodp33xTIkAI8SSEWv42moges3F95LDc4oj9WdSbsCZjOzQIC8748/u1LL1oRgcBzmwepQ==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.8
-      '@algoux/standard-ranklist-utils': 0.2.5(@algoux/standard-ranklist@0.3.8)
+      '@algoux/standard-ranklist': 0.3.9
+      '@algoux/standard-ranklist-utils': 0.2.6(@algoux/standard-ranklist@0.3.9)
       classnames: 2.5.1
       color: 4.2.3
       rc-dialog: 8.9.0(react-dom@17.0.2)(react@17.0.2)
@@ -235,12 +235,12 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@algoux/standard-ranklist-utils@0.2.5(@algoux/standard-ranklist@0.3.8):
-    resolution: {integrity: sha512-khHh482skwC+mxsIB4LtF+QzLlUZRl4b7YfsmJtYWZ0FQYr1O2D4Vou7eUIA8AK81BV7IAh7RYLIeF4FnSlDtQ==}
+  /@algoux/standard-ranklist-utils@0.2.6(@algoux/standard-ranklist@0.3.9):
+    resolution: {integrity: sha512-B0QyojNN1i4MGKRDmixCYTGrG31EM/Q4fh7tE+tdSWO7vnS8H9nnIAhUDYOG5AFSWr9Wb+PJZGICz+D5oyM/Bw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
-      '@algoux/standard-ranklist': 0.3.8
+      '@algoux/standard-ranklist': 0.3.9
       '@types/semver': 7.7.0
       bcp-47-match: 2.0.2
       bignumber.js: 9.1.1
@@ -248,8 +248,8 @@ packages:
       textcolor: 1.0.2
     dev: false
 
-  /@algoux/standard-ranklist@0.3.8:
-    resolution: {integrity: sha512-QPU3L1lE/pDodqBA8A6ofX7RuL0vVHHjvp3kLQ8LKHSBOoQvBFjs4S5eXItdMoKaqYh5ofIVz3+BDCCLAnF8+Q==}
+  /@algoux/standard-ranklist@0.3.9:
+    resolution: {integrity: sha512-DdxZqQtdSDfZ/AzoGzioJrMuwBD/poeonOG/tzs562ZOZqhnen7bPsgtZe2SsXFmNlfqdj0D27eFkbL5uWhmEA==}
 
   /@ant-design/colors@6.0.0:
     resolution: {integrity: sha512-qAZRvPzfdWHtfameEGP2Qvuf838NhergR35o+EuVyB5XvSA98xod5r4utvi4TJ3ywmevm290g9nsCG5MryrdWQ==}

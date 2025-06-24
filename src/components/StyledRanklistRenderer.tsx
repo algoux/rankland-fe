@@ -40,6 +40,7 @@ import { RankTimeDataContext } from './RankTimeDataContext';
 import type { IRankTimeData } from './RankTimeDataContext';
 import { getAllRankTimeData, getProperRankTimeChunkUnit } from '@/utils/rank-time-data.util';
 import type { IRankTimeDataSet } from '@/utils/rank-time-data.util';
+import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -68,9 +69,9 @@ export interface IStyledRanklistRendererProps {
 function getInitialRankTimeDataSet(): IRankTimeDataSet {
   return {
     unit: 'min',
-    userRankTimePoints: new Map(),
-    userRankTimeSolvedEventPoints: new Map(),
-    seriesSegments: [],
+    userRankTimePointsList: new Map(),
+    userRankTimeSolvedEventPointsList: new Map(),
+    seriesSegmentsList: [],
     totalUsers: 0,
   };
 }
@@ -111,7 +112,7 @@ export default function StyledRanklistRenderer({
   const [rankTimeDataInitialized, setRankTimeDataInitialized] = useState(false);
   const [rankTimeDataSet, setRankTimeDataSet] = useState<IRankTimeDataSet>(getInitialRankTimeDataSet());
   const [rankTimeData, setRankTimeData] = useState<IRankTimeData>(getInitialRankTimeData());
-  const [currentShownUserHash, setCurrentShownUserHash] = useState<string>('');
+  const [currentShownUserId, setCurrentShownUserId] = useState<string>('');
 
   const comparingData = omit(data, ['_now']);
   const [memorizedData, setMemorizedData] = useState<srk.Ranklist>(data);
@@ -155,11 +156,15 @@ export default function StyledRanklistRenderer({
     return newData;
   }, [memorizedData, solutions, timeTravelTime]);
 
-  const staticData = useMemo(() => convertToStaticRanklist(genData), [genData]);
+  const staticData = useMemo(() => {
+    const staticRanklist = convertToStaticRanklist(genData);
+    console.log('[StyledRanklistRenderer] static ranklist:', staticRanklist);
+    return staticRanklist;
+  }, [genData]);
 
   useEffect(() => {
     console.log('[StyledRanklistRenderer] id:', id);
-    setCurrentShownUserHash('');
+    setCurrentShownUserId('');
     setRankTimeDataSet(getInitialRankTimeDataSet());
     setRankTimeData(getInitialRankTimeData());
     setRankTimeDataInitialized(false);
@@ -180,8 +185,24 @@ export default function StyledRanklistRenderer({
   const markers = useMemo(() => {
     return staticData.markers || [];
   }, [staticData.rows]);
+  const filteredSeriesIndexes = useMemo(() => {
+    const seriesIndexes = new Array(staticData.series.length).fill(0).map((_, i) => i);
+    if (!filter.marker) {
+      return seriesIndexes;
+    }
+    return seriesIndexes.filter((sIndex) => {
+      const s = staticData.series[sIndex];
+      if (s.rule?.preset === 'ICPC') {
+        return !s.rule.options?.filter?.byMarker || s.rule.options?.filter?.byMarker === filter.marker;
+      }
+      return true;
+    });
+  }, [filter.marker, staticData.series, staticData.markers, staticData.rows]);
+  const filteredSeries = useMemo(() => {
+    return staticData.series.filter((_, i) => filteredSeriesIndexes.includes(i));
+  }, [filteredSeriesIndexes, staticData.series]);
   const filteredRows = useMemo(() => {
-    return staticData.rows.filter((row) => {
+    const rows = staticData.rows.filter((row) => {
       let ok = true;
       ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(row.user?.organization as string));
       ok && filter.officialOnly && (ok = row.user?.official === true);
@@ -190,9 +211,21 @@ export default function StyledRanklistRenderer({
         (ok = resolveUserMarkers(row.user, staticData.markers).some((m) => m.id === filter.marker));
       return ok;
     });
-  }, [filter, staticData.rows]);
+    if (filteredSeriesIndexes.length === staticData.series.length) {
+      return rows;
+    }
+    return rows.map((row) => {
+      const newRow = { ...row };
+      newRow.rankValues = [];
+      filteredSeriesIndexes.forEach((sIndex) => {
+        newRow.rankValues.push(row.rankValues[sIndex]);
+      });
+      return newRow;
+    });
+  }, [filter, staticData.rows, filteredSeriesIndexes, staticData.markers]);
   const usingData = {
     ...staticData,
+    series: filteredSeries,
     rows: filteredRows,
   };
 
@@ -214,7 +247,7 @@ export default function StyledRanklistRenderer({
     setTimeTravelTime(time);
   };
 
-  const calcUserRankTimeData = async (userHash: string) => {
+  const calcUserRankTimeData = async (userId: string) => {
     setRankTimeData(getInitialRankTimeData());
     let rankTimeDataSetValue = rankTimeDataSet;
     if (!rankTimeDataInitialized) {
@@ -226,31 +259,56 @@ export default function StyledRanklistRenderer({
       setRankTimeDataSet(rankTimeDataSetValue);
       setRankTimeDataInitialized(true);
     }
-    setRankTimeData({
-      key: `${userHash}_${Date.now()}`,
+    // 根据用户选择合适的 series
+    const user = staticData.rows.find((row) => row.user?.id === userId)?.user;
+    if (!user) {
+      console.warn(`[RankTimeData] user ${userId} not found in ranklist`);
+      return;
+    }
+    const icpcSeries = staticData.series.filter((s) => s.rule?.preset === 'ICPC');
+    const userMarkers = resolveUserMarkers(user, staticData.markers);
+    const matchedMainICPCSeries = findUserMatchedMainICPCSeries(icpcSeries, userMarkers, filter.marker);
+    if (!matchedMainICPCSeries) {
+      console.log(`[RankTimeData] user ${userId} has no matched ICPC series`);
+      return;
+    }
+    const matchedMainICPCSeriesIndex = icpcSeries.findIndex((s) => s === matchedMainICPCSeries); // 需要获取 icpcSeries 过滤结果的下标，而非全部 series
+    console.log(
+      `[RankTimeData] user ${userId} matched ICPC series: ${matchedMainICPCSeriesIndex}`,
+      matchedMainICPCSeries,
+    );
+
+    const rankTimeData = {
+      key: `${userId}_${Date.now()}`,
       initialized: true,
       unit: rankTimeDataSetValue.unit,
-      points: rankTimeDataSetValue.userRankTimePoints.get(userHash) || [],
-      solvedEventPoints: rankTimeDataSetValue.userRankTimeSolvedEventPoints.get(userHash) || [],
-      seriesSegments: rankTimeDataSetValue.seriesSegments,
+      points: (rankTimeDataSetValue.userRankTimePointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [],
+      solvedEventPoints:
+        (rankTimeDataSetValue.userRankTimeSolvedEventPointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [],
+      seriesSegments: rankTimeDataSetValue.seriesSegmentsList[matchedMainICPCSeriesIndex] || [],
       totalUsers: rankTimeDataSetValue.totalUsers,
-    });
-    console.log(`[RankTimeData] updated user ${userHash}`);
+    };
+    if (rankTimeData.points.length === 0) {
+      console.log(`[RankTimeData] user ${userId} has no rank time data`);
+      return;
+    }
+    setRankTimeData(rankTimeData);
+    console.log(`[RankTimeData] updated user ${userId}:`, rankTimeData);
   };
 
   const handleUserModalOpen = async (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
-    setCurrentShownUserHash(`${user.id}`);
+    setCurrentShownUserId(`${user.id}`);
   };
 
   useDeepCompareEffect(() => {
-    if (currentShownUserHash) {
-      calcUserRankTimeData(currentShownUserHash);
+    if (currentShownUserId) {
+      calcUserRankTimeData(currentShownUserId);
     } else {
       setRankTimeDataSet(getInitialRankTimeDataSet());
       setRankTimeData(getInitialRankTimeData());
       setRankTimeDataInitialized(false);
     }
-  }, [staticData, currentShownUserHash]);
+  }, [staticData, currentShownUserId]);
 
   const renderContributor = (contributor: srk.Contributor) => {
     const contributorObj = resolveContributor(contributor);
@@ -522,7 +580,16 @@ export default function StyledRanklistRenderer({
               return {
                 title: user.name,
                 width: clientWidth >= 980 ? 960 : clientWidth - 20,
-                content: <UserInfoModal user={user} row={row} index={index} ranklist={ranklist} assetsScope={id!} />,
+                content: (
+                  <UserInfoModal
+                    user={user}
+                    row={row}
+                    index={index}
+                    ranklist={ranklist}
+                    assetsScope={id!}
+                    filterMarker={filter.marker}
+                  />
+                ),
               };
             }}
           />

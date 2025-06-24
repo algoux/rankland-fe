@@ -69,7 +69,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
           </h3>
         ) : (
           <div className="mt-8 mb-8">
-            <StyledRanklist data={data} name="playground" />
+            <StyledRanklist data={data} name="playground" showFilter />
           </div>
         )}
       </div>
