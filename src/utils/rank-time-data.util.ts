@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/prefer-for-of */
 /* eslint-disable max-depth */
 /* eslint-disable complexity */
 import type * as srk from '@algoux/standard-ranklist';
@@ -36,6 +37,7 @@ export interface IRankTimeSolvedEventPoint {
   time: number;
   rank: number;
   problemAlias: string;
+  solvedTime: srk.TimeDuration; // 具体的 AC 时间
   fb?: boolean;
 }
 
@@ -197,14 +199,15 @@ export function getAllRankTimeData(
           const solvedEventPoints = userRankTimeSolvedEventPointsComm.get(userId)!;
           const problemAlias = ranklist.problems[problemIndex].alias!;
           let solvedTimePointValue = tp[0];
-          if (formatTimeDuration(time, unit[1]) < tp[0] && tpIndex > 0) {
-            // 如果解题时间小于当前时间点，则使用解题时间作为时间点
-            solvedTimePointValue = timePoints[tpIndex - 1][0];
-          }
+          // if (formatTimeDuration(time, unit[1]) < tp[0] && tpIndex > 0) {
+          //   // 如果解题时间小于当前时间点，则使用解题时间作为时间点
+          //   solvedTimePointValue = timePoints[tpIndex - 1][0];
+          // }
           const solvedEventPoint: IRankTimeSolvedEventPoint = {
             time: solvedTimePointValue,
             rank: -1,
             problemAlias,
+            solvedTime: time,
             fb: result === 'FB',
           };
           solvedEventPoints.push(solvedEventPoint);

@@ -143,7 +143,7 @@ export default function RankCurve(props: IRankCurveProps) {
             () => ({
               name: p.fb ? 'FB' : 'AC',
               color: p.fb ? fbColor : acColor,
-              value: `${p.problemAlias} (${`${secToTimeStr(formatTimeDuration([p.time, unit], 's'))}`})`,
+              value: `${p.problemAlias} (${`${secToTimeStr(formatTimeDuration(p.solvedTime, 's'))}`})`,
             }),
           ],
         })
