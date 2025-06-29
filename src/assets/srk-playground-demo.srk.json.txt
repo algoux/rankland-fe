@@ -1,12 +1,11 @@
 {
   "type": "general",
-  "version": "0.3.0",
+  "version": "0.3.10",
   "contest": {
     "title": "ACM-ICPC World Finals 2018 (Excerpt Demo)",
     "startAt": "2018-04-19T17:00:00+08:00",
     "duration": [5, "h"],
-    "frozenDuration": [1, "h"],
-    "link": "https://icpc.baylor.edu/scoreboard/"
+    "frozenDuration": [1, "h"]
   },
   "problems": [
     {
@@ -14,8 +13,8 @@
       "alias": "A",
       "link": "https://open.kattis.com/problems/catch",
       "statistics": {
-        "accepted": 111,
-        "submitted": 268
+        "accepted": 3,
+        "submitted": 4
       },
       "style": {
         "backgroundColor": "#58a2d1"
@@ -26,8 +25,8 @@
       "alias": "B",
       "link": "https://open.kattis.com/problems/comma",
       "statistics": {
-        "accepted": 152,
-        "submitted": 265
+        "accepted": 2,
+        "submitted": 7
       },
       "style": {
         "backgroundColor": "#fc6d3e"
@@ -55,7 +54,7 @@
         "preset": "ICPC",
         "options": {
           "count": {
-            "value": [4, 4, 4]
+            "value": [1, 1, 1]
           }
         }
       }
@@ -64,34 +63,12 @@
   "rows": [
     {
       "user": {
-        "id": "Moscow State University",
-        "name": "Moscow State University"
-      },
-      "score": {
-        "value": 9,
-        "time": [1427, "min"]
-      },
-      "statuses": [
-        {
-          "result": "AC",
-          "time": [79, "min"],
-          "tries": 1
-        },
-        {
-          "result": "AC",
-          "time": [87, "min"],
-          "tries": 1
-        }
-      ]
-    },
-    {
-      "user": {
         "id": "Seoul National University",
         "name": "Seoul National University"
       },
       "score": {
-        "value": 7,
-        "time": [719, "min"]
+        "value": 2,
+        "time": [141, "min"]
       },
       "statuses": [
         {
@@ -108,12 +85,34 @@
     },
     {
       "user": {
+        "id": "Moscow State University",
+        "name": "Moscow State University"
+      },
+      "score": {
+        "value": 2,
+        "time": [166, "min"]
+      },
+      "statuses": [
+        {
+          "result": "AC",
+          "time": [79, "min"],
+          "tries": 1
+        },
+        {
+          "result": "AC",
+          "time": [87, "min"],
+          "tries": 1
+        }
+      ]
+    },
+    {
+      "user": {
         "id": "Zhejiang University",
         "name": "Zhejiang University"
       },
       "score": {
-        "value": 4,
-        "time": [699, "min"]
+        "value": 1,
+        "time": [120, "min"]
       },
       "statuses": [
         {
@@ -130,6 +129,11 @@
   ],
   "sorter": {
     "algorithm": "ICPC",
-    "config": {}
+    "config": {
+      "noPenaltyResults": ["FB", "AC", "?", "CE", "NOUT", "UKE", null],
+      "penalty": [20, "min"],
+      "timePrecision": "min",
+      "timeRounding": "floor"
+    }
   }
 }

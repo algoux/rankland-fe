@@ -10,6 +10,8 @@ import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
 import { useRemainingHeight } from '@/hooks/use-remaining-height';
 import { throttle } from 'lodash-es';
+import srkPkg from '@algoux/standard-ranklist/package.json';
+import srkSchema from '@algoux/standard-ranklist/schema.json';
 
 export interface ISrkPlaygroundProps {}
 
@@ -91,6 +93,18 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
         }}
         editorDidMount={(editor, monaco) => {
           editor.focus();
+          monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+            validate: true,
+            allowComments: false,
+            schemas: [
+              {
+                uri: `https://unpkg.com/@algoux/standard-ranklist@${srkPkg.version}/schema.json`,
+                fileMatch: ['*'],
+                schema: srkSchema,
+              },
+            ],
+          });
+
           setReady(true);
           if (messageRead !== 'true') {
             Modal.info({
