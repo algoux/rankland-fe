@@ -578,7 +578,7 @@ export default function StyledRanklistRenderer({
             onUserModalOpen={handleUserModalOpen}
             renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
               return {
-                title: user.name,
+                title: resolveText(user.name),
                 width: clientWidth >= 980 ? 960 : clientWidth - 20,
                 content: (
                   <UserInfoModal
