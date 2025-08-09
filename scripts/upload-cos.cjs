@@ -30,7 +30,7 @@ async function main() {
     SecretKey: process.env.COS_SECRET_KEY,
     Domain: process.env.COS_DOMAIN,
   });
-  const files = (await listFiles(baseDir)).filter((f) => f.includes('umi.server'));
+  const files = (await listFiles(baseDir)).filter((f) => !f.includes('umi.server'));
   // move index.html to last
   const indexFileIndex = files.indexOf('index.html');
   if (indexFileIndex > -1) {
