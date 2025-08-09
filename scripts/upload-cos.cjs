@@ -30,7 +30,12 @@ async function main() {
     SecretKey: process.env.COS_SECRET_KEY,
     Domain: process.env.COS_DOMAIN,
   });
-  const files = await listFiles(baseDir);
+  const files = (await listFiles(baseDir)).filter((f) => f.includes('umi.server'));
+  // move index.html to last
+  const indexFileIndex = files.indexOf('index.html');
+  if (indexFileIndex > -1) {
+    files.push(files.splice(indexFileIndex, 1)[0]);
+  }
   for (const file of files) {
     const remotePath = `${REMOTE_PATH}${file}`;
     console.log(`Uploading ${file} -> ${remotePath}`);
