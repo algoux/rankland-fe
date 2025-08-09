@@ -6,7 +6,7 @@ const isProd = process.env.NODE_ENV === 'production';
 const siteAlias = process.env.SITE_ALIAS;
 
 const outputPath = isProd && siteAlias === 'cn' ? '分发' : 'dist';
-const publicProdPrefix = siteAlias === 'cn' ? 'https://cdn.algoux.cn/rl/' : siteAlias === 'cnn' ? 'https://cdn.algoux.cn/rl/' : '/';
+const publicProdPrefix = siteAlias === 'cn' ? 'https://cdn.algoux.cn/rankland/' : siteAlias === 'cnn' ? 'https://cdn.algoux.cn/rankland/' : '/';
 const publicPath = isProd ? `${publicProdPrefix}${outputPath}/` : `http://127.0.0.1:8000/${outputPath}/`;
 console.log(
   'Build options:',

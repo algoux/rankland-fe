@@ -32,6 +32,12 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/rankland-fe:latest
   build-and-push-for-cnn:
+    env:
+      COS_SECRET_ID: ${{ secrets.COS_SECRET_ID }}
+      COS_SECRET_KEY: ${{ secrets.COS_SECRET_KEY }}
+      COS_DOMAIN: ${{ secrets.COS_DOMAIN }}
+      COS_BUCKET: ${{ secrets.COS_BUCKET }}
+      COS_REGION: ${{ secrets.COS_REGION }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -44,6 +50,7 @@ jobs:
           version: 8.6.3
       - run: pnpm run ci
       - run: SITE_ALIAS=cnn pnpm run build
+      - run: pnpm run build:postprocess
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
