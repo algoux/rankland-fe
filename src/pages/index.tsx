@@ -8,6 +8,7 @@ import ContactUs from '@/components/ContactUs';
 import { formatUrl } from '@/configs/route.config';
 import BeianLink from '@/components/BeianLink';
 import pasteThenACLogo from '@/assets/paste-then-ac_logo.png';
+import abLogo from '@/assets/algo-bootstrap_logo.png';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
@@ -58,21 +59,37 @@ export default function HomePage(props: IHomePageProps) {
           </Row>
         </div>
         <div className="block">
-          <h1 className="block-title">合作推广</h1>
+          <h1 className="block-title">算竞周边工具</h1>
           <Row gutter={16}>
             <Col className="mb-4" xs={24} sm={12}>
-              <a href="https://paste.then.ac/?from=rankland" target="_blank">
+              <a href="https://paste.then.ac/?utm_source=rankland" target="_blank">
                 <Card hoverable>
                   <h2>
                     <img
                       src={pasteThenACLogo}
                       alt="paste.then.ac logo"
                       className="mr-3 inline-block"
-                      style={{ width: '24px', height: '24px' }}
+                      style={{ width: '24px', height: '24px', padding: '2px' }}
                     />
                     paste.then.ac
                   </h2>
-                  <p className="mt-4 mb-0">自由、开放、更适合算竞宝宝体质的的剪贴板</p>
+                  <p className="mt-4 mb-0">免注册、更适合算竞宝宝体质的的代码剪贴板</p>
+                </Card>
+              </a>
+            </Col>
+            <Col className="mb-4" xs={24} sm={12}>
+              <a href="https://ab.algoux.cn/?utm_source=rankland" target="_blank">
+                <Card hoverable>
+                  <h2>
+                    <img
+                      src={abLogo}
+                      alt="Algo Bootstrap logo"
+                      className="mr-3 inline-block"
+                      style={{ width: '24px', height: '24px' }}
+                    />
+                    Algo Bootstrap
+                  </h2>
+                  <p className="mt-4 mb-0">一键配置 C++、Python 和 VS Code 编程环境</p>
                 </Card>
               </a>
             </Col>
@@ -104,7 +121,7 @@ export default function HomePage(props: IHomePageProps) {
               <a href="https://github.com/algoux/standard-ranklist-utils" target="_blank">
                 utils
               </a>
-              ：标准榜单开发实用工具
+              ：标准榜单开发实用工具库
             </li>
             <li>
               <a href="https://github.com/algoux/standard-ranklist-convert-to" target="_blank">
@@ -117,7 +134,7 @@ export default function HomePage(props: IHomePageProps) {
         <div className="block">
           <h1 className="block-title">联系我们</h1>
           <p>
-            如要为赛事寻求免费的实时外榜托管或希望补全/纠正本站数据，欢迎
+            如要为赛事寻求专业的实时外榜托管服务或希望补全/纠正本站数据，欢迎{' '}
             <ContactUs>
               <a>与我们联系</a>
             </ContactUs>
@@ -134,9 +151,7 @@ export default function HomePage(props: IHomePageProps) {
             </a>
           </p>
           <p>© 2022-present algoUX. All Rights Reserved.</p>
-          <p>
-            榜单访问统计：至少 {data?.statistics.totalViewCount ?? '-'} 次
-          </p>
+          <p>榜单访问统计：至少 {data?.statistics.totalViewCount ?? '-'} 次</p>
           <p>
             其他链接：
             <a href="https://algoux.org" target="_blank">

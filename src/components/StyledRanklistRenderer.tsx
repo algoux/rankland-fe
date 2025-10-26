@@ -8,6 +8,7 @@ import {
   regenerateRanklistBySolutions,
   getSortedCalculatedRawSolutions,
   resolveUserMarkers,
+  calculateProblemStatistics,
 } from '@algoux/standard-ranklist-utils';
 import type { EnumTheme } from '@algoux/standard-ranklist-utils';
 import type * as srk from '@algoux/standard-ranklist';
@@ -223,8 +224,18 @@ export default function StyledRanklistRenderer({
       return newRow;
     });
   }, [filter, staticData.rows, filteredSeriesIndexes, staticData.markers]);
+  const problemStatistics = useMemo(() => {
+    return calculateProblemStatistics({
+      ...staticData,
+      rows: filteredRows,
+    });
+  }, [staticData, filteredRows]);
   const usingData = {
     ...staticData,
+    problems: staticData.problems?.map((p, index) => ({
+      ...p,
+      statistics: problemStatistics[index] || p.statistics || undefined,
+    })),
     series: filteredSeries,
     rows: filteredRows,
   };
@@ -611,13 +622,13 @@ export default function StyledRanklistRenderer({
             </a>
           </p>
           <p className="mt-1 mb-0">
-            欢迎提交 PR 至
+            欢迎补充榜单数据至{' '}
             <a href="https://github.com/algoux/srk-collection" target="_blank">
               榜单合集
             </a>
           </p>
           <p className="mt-1 mb-0">
-            需要免费托管赛事外榜？
+            需要专业的赛事外榜托管？
             <ContactUs>
               <a>联系我们</a>
             </ContactUs>
