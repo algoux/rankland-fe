@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.9');
+export const Version = t.lit('0.3.11');
 
 export const DatetimeISOString = t.name("string");
 
@@ -72,7 +72,9 @@ export const User = t.iface([], {
   "name": "Text",
   "official": t.opt("boolean"),
   "avatar": t.opt("Image"),
+  "photo": t.opt("Image"),
   "organization": t.opt("Text"),
+  "location": t.opt("string"),
   "teamMembers": t.opt(t.array("ExternalUser")),
   "marker": t.opt("string"),
   "markers": t.opt(t.array("string")),
