@@ -47,7 +47,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
 
   return (
     <div className="user-modal">
-      <p className="mb-0">{user.organization}</p>
+      <p className="mb-0">{resolveText(user.organization)}</p>
       {user.official === false && <p className="mt-4 mb-0">* 非正式参加者</p>}
       {hasMembers && (
         <div className="user-modal-info-team-members mt-2">

@@ -178,7 +178,7 @@ export default function StyledRanklistRenderer({
 
   const organizations = useMemo(
     () =>
-      uniq(staticData.rows.map((row) => row.user?.organization as string).filter(Boolean)).sort((a, b) =>
+      uniq(staticData.rows.map((row) => resolveText(row.user?.organization)).filter(Boolean)).sort((a, b) =>
         a.localeCompare(b),
       ),
     [staticData.rows],
@@ -205,7 +205,7 @@ export default function StyledRanklistRenderer({
   const filteredRows = useMemo(() => {
     const rows = staticData.rows.filter((row) => {
       let ok = true;
-      ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(row.user?.organization as string));
+      ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(resolveText(row.user?.organization)));
       ok && filter.officialOnly && (ok = row.user?.official === true);
       ok &&
         filter.marker &&
