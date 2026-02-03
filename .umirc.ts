@@ -45,7 +45,7 @@ export default defineConfig({
     'process.env.HOST_CN': 'rl.algoux.cn',
     'process.env.BEIAN': '鲁ICP备18021776号-5',
     'process.env.LIVE_POLLING_INTERVAL': '10000',
-    'process.env.X_PHOTO_BASE': 'https://share-bj-1252277595.cos.ap-beijing.myqcloud.com/srk-storage',
+    'process.env.SRK_STORAGE_BASE': 'https://cdn.algoux.cn/srk-storage',
     'GTAG': siteAlias === 'cn' ? 'G-D4PSNCRQJC' : 'G-D6CVTJBDZT',
   },
   ssr: {

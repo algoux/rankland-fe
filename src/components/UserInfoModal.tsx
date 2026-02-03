@@ -41,7 +41,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
     img?.style.setProperty('display', 'none');
   };
   // @ts-ignore
-  const photo = user.x_photo as string | undefined;
+  const photo = user.photo as string | undefined;
   // @ts-ignore
   const slogan = user.x_slogan as string | undefined;
 
@@ -84,7 +84,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
           <img
             id={id}
             key={id}
-            src={`${process.env.X_PHOTO_BASE}/${assetsScope}/${photo}`}
+            src={`${process.env.SRK_STORAGE_BASE}/${assetsScope}/${photo}`}
             alt="选手照片"
             style={{ width: '100%' }}
             onError={handleImgError}
