@@ -8,6 +8,7 @@ import './UserInfoModal.less';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import RankCurve from './RankCurve';
 import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
+import { formatSrkAssetUrl } from '@/utils/srk-asset.util';
 
 export interface IUserInfoModalProps {
   user: srk.User;
@@ -84,7 +85,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
           <img
             id={id}
             key={id}
-            src={`${process.env.SRK_STORAGE_BASE}/${assetsScope}/${photo}`}
+            src={formatSrkAssetUrl(photo, assetsScope)}
             alt="选手照片"
             style={{ width: '100%' }}
             onError={handleImgError}

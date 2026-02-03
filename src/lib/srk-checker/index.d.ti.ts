@@ -6,7 +6,7 @@ import * as t from "ts-interface-checker";
 
 export const Type = t.lit('general');
 
-export const Version = t.lit('0.3.11');
+export const Version = t.lit('0.3.12');
 
 export const DatetimeISOString = t.name("string");
 
@@ -28,9 +28,11 @@ export const LinkWithTitle = t.iface([], {
   "title": "Text",
 });
 
-export const Base64 = t.name("string");
+export const RelativePath = t.name("string");
 
-export const Image = t.union("Link", "Base64");
+export const DataURLBase64 = t.name("string");
+
+export const Image = t.union("Link", "RelativePath", "DataURLBase64");
 
 export const ImageWithLink = t.iface([], {
   "image": "Image",
@@ -241,7 +243,8 @@ const exportedTypeSuite: t.ITypeSuite = {
   Text,
   Link,
   LinkWithTitle,
-  Base64,
+  RelativePath,
+  DataURLBase64,
   Image,
   ImageWithLink,
   ColorHEX,
