@@ -8,12 +8,14 @@ export function formatSrkAssetUrl(url: string, assetIdScope?: string): string {
     if (protocol === 'http' || protocol === 'https' || protocol === 'data') {
       return url;
     }
-    throw new Error(`Unsupported protocol: ${protocol}`);
+    console.warn(`unsupported protocol "${protocol}" in srk asset url:`, url);
+    return '';
   }
 
   // use srk storage relative path
   if (!assetIdScope) {
-    throw new Error('assetIdScope is required for relative srk asset url');
+    console.warn('assetIdScope is required for srk asset url:', url);
+    return '';
   }
   return `${process.env.SRK_STORAGE_BASE}/${assetIdScope}${url.startsWith('/') ? '' : '/'}${url}`;
 }

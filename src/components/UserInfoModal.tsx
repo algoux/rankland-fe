@@ -8,7 +8,7 @@ import './UserInfoModal.less';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import RankCurve from './RankCurve';
 import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
-import { formatSrkAssetUrl } from '@/utils/srk-asset.util';
+import SrkAssetImage from './SrkAssetImage';
 
 export interface IUserInfoModalProps {
   user: srk.User;
@@ -36,11 +36,6 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   // }
 
   const hasMembers = !!user.teamMembers && user.teamMembers.length > 0;
-  const id = `um-img-${user.id}`;
-  const handleImgError = () => {
-    const img = document.getElementById(id);
-    img?.style.setProperty('display', 'none');
-  };
   // @ts-ignore
   const photo = user.photo as string | undefined;
   // @ts-ignore
@@ -49,7 +44,7 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
   return (
     <div className="user-modal">
       <p className="mb-0">{resolveText(user.organization)}</p>
-      {user.official === false && <p className="mt-4 mb-0">* 非正式参加者</p>}
+      {user.official === false && <p className="mt-4 mb-0">＊ 非正式参加者</p>}
       {hasMembers && (
         <div className="user-modal-info-team-members mt-2">
           {user.teamMembers!.map((m, mIndex) => (
@@ -82,13 +77,11 @@ export default function UserInfoModal(props: IUserInfoModalProps) {
       )}
       <div className="mt-4">
         {photo && (
-          <img
-            id={id}
-            key={id}
-            src={formatSrkAssetUrl(photo, assetsScope)}
+          <SrkAssetImage
+            image={photo}
+            assetScope={assetsScope}
             alt="选手照片"
             style={{ width: '100%' }}
-            onError={handleImgError}
           />
         )}
         {slogan && <p className="slogan mt-4 mb-2">{slogan}</p>}

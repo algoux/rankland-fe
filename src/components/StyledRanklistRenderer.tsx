@@ -42,6 +42,8 @@ import type { IRankTimeData } from './RankTimeDataContext';
 import { getAllRankTimeData, getProperRankTimeChunkUnit } from '@/utils/rank-time-data.util';
 import type { IRankTimeDataSet } from '@/utils/rank-time-data.util';
 import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
+import { formatSrkAssetUrl } from '@/utils/srk-asset.util';
+import SrkAssetImage from './SrkAssetImage';
 
 function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
@@ -205,7 +207,9 @@ export default function StyledRanklistRenderer({
   const filteredRows = useMemo(() => {
     const rows = staticData.rows.filter((row) => {
       let ok = true;
-      ok && filter.organizations.length > 0 && (ok = filter.organizations.includes(resolveText(row.user?.organization)));
+      ok &&
+        filter.organizations.length > 0 &&
+        (ok = filter.organizations.includes(resolveText(row.user?.organization)));
       ok && filter.officialOnly && (ok = row.user?.official === true);
       ok &&
         filter.marker &&
@@ -508,6 +512,21 @@ export default function StyledRanklistRenderer({
     );
     return (
       <>
+        {staticData.contest.banner && (
+          <div className="flex items-center justify-center">
+            <SrkAssetImage
+              image={
+                typeof staticData.contest.banner === 'object'
+                  ? staticData.contest.banner.link
+                  : staticData.contest.banner
+              }
+              assetScope={id}
+              alt="Contest Banner"
+              className="mb-2"
+              style={{ maxWidth: '1820px', maxHeight: '40vh' }}
+            />
+          </div>
+        )}
         <h1 className="text-center mb-1">{resolveText(staticData.contest.title)}</h1>
         {metaBlock}
         <p className="text-center mb-0">
@@ -586,6 +605,7 @@ export default function StyledRanklistRenderer({
           <Ranklist
             data={usingData as any}
             theme={theme as EnumTheme}
+            formatSrkAssetUrl={(url: string) => formatSrkAssetUrl(url, id)}
             onUserModalOpen={handleUserModalOpen}
             renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
               return {

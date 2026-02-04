@@ -12,7 +12,7 @@ export default function StyledRanklist(props: IStyledRanklistRendererProps) {
   try {
     ranklistChecker.check(props.data);
     srkCheckError = null;
-  } catch (e) {
+  } catch (e: any) {
     srkCheckError = e.message;
   }
 

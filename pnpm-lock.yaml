@@ -9,8 +9,8 @@ dependencies:
     specifier: ^0.2.2
     version: 0.2.2(@algoux/standard-ranklist@0.3.12)
   '@algoux/standard-ranklist-renderer-component':
-    specifier: 0.4.13
-    version: 0.4.13(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
+    specifier: 0.4.14
+    version: 0.4.14(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
     specifier: ^0.2.11
     version: 0.2.11(@algoux/standard-ranklist@0.3.12)
@@ -219,8 +219,8 @@ packages:
       xlsx: 0.18.5
     dev: false
 
-  /@algoux/standard-ranklist-renderer-component@0.4.13(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-yrznBM9kcUn+T2qI6tmNTz4tSBh1Oa6Px9Pl9Z0PWfTpCaYXPX5EwnPVKK3iVsv4aqN2hmFq1cUMBRBrJ5aG0g==}
+  /@algoux/standard-ranklist-renderer-component@0.4.14(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-u48XIK0iboClkmCWTWYN2zgper+RftTGaAvp1PU61Sli99FMe0MihgnRqqw/jLhJVOYaCJJZMj/sODhQ57cbAA==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
       rc-dialog: ^8.4.6
