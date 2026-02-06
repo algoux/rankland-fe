@@ -605,6 +605,7 @@ export default function StyledRanklistRenderer({
           <Ranklist
             data={usingData as any}
             theme={theme as EnumTheme}
+            stripedRows
             formatSrkAssetUrl={(url: string) => formatSrkAssetUrl(url, id)}
             onUserModalOpen={handleUserModalOpen}
             renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
