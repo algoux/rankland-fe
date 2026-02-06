@@ -41,6 +41,12 @@ body {
       @media screen and (prefers-color-scheme: dark) {
         --srk-table-head-bg: rgba(25, 25, 25, 1);
       }
+
+      table {
+        thead > tr > th {
+          box-sizing: content-box;
+        }
+      }
     }
   }
   // override srk renderer component style
@@ -75,7 +81,8 @@ body {
 .nav-menu {
   &.ant-menu-horizontal {
     border-bottom: none !important;
-    .ant-menu-item, .ant-menu-submenu {
+    .ant-menu-item,
+    .ant-menu-submenu {
       @media screen and (max-width: 768px) {
         padding-left: 16px !important;
         padding-right: 16px !important;
