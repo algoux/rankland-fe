@@ -523,7 +523,7 @@ export default function StyledRanklistRenderer({
               assetScope={id}
               alt="Contest Banner"
               className="mb-2"
-              style={{ maxWidth: '1820px', maxHeight: '40vh' }}
+              style={{ maxWidth: 'min(100%, 1820px)', maxHeight: '40vh' }}
             />
           </div>
         )}
