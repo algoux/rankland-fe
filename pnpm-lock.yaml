@@ -12,8 +12,8 @@ dependencies:
     specifier: 0.4.15
     version: 0.4.15(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.2.11
-    version: 0.2.11(@algoux/standard-ranklist@0.3.12)
+    specifier: ^0.2.12
+    version: 0.2.12(@algoux/standard-ranklist@0.3.12)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -215,7 +215,7 @@ packages:
       '@algoux/standard-ranklist': '*'
     dependencies:
       '@algoux/standard-ranklist': 0.3.12
-      '@algoux/standard-ranklist-utils': 0.2.11(@algoux/standard-ranklist@0.3.12)
+      '@algoux/standard-ranklist-utils': 0.2.12(@algoux/standard-ranklist@0.3.12)
       xlsx: 0.18.5
     dev: false
 
@@ -228,7 +228,7 @@ packages:
       react-dom: '>=16.9.0'
     dependencies:
       '@algoux/standard-ranklist': 0.3.12
-      '@algoux/standard-ranklist-utils': 0.2.11(@algoux/standard-ranklist@0.3.12)
+      '@algoux/standard-ranklist-utils': 0.2.12(@algoux/standard-ranklist@0.3.12)
       classnames: 2.5.1
       color: 4.2.3
       rc-dialog: 8.9.0(react-dom@17.0.2)(react@17.0.2)
@@ -238,8 +238,8 @@ packages:
       semver: 7.5.4
     dev: false
 
-  /@algoux/standard-ranklist-utils@0.2.11(@algoux/standard-ranklist@0.3.12):
-    resolution: {integrity: sha512-xAOaGcaImfYzN+gfIxxZj9km2VOrPTQPgE8cqooCCFvCYWfsgy/rrSJXPK8bTceEc0h94Ky5qbDqz9Dic5JBVg==}
+  /@algoux/standard-ranklist-utils@0.2.12(@algoux/standard-ranklist@0.3.12):
+    resolution: {integrity: sha512-pyNMwBc6+YwVTCKqVynLaNlN/SWPkZWUANU/E16eo3o3olWrNez3Y/fclryfXRd5Bxqtt2fuWmPaTTWddyppWw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
