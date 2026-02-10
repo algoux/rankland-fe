@@ -19,6 +19,7 @@ export default function Playground() {
     <div>
       <Helmet>
         <title>{formatTitle('Playground')}</title>
+        <meta property="og:title" content={formatTitle('Playground')} />
       </Helmet>
       <div>{isBrowser() ? <SrkPlayground /> : <Loading />}</div>
     </div>

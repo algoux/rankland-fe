@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { createRef, useEffect, useState } from 'react';
 import '@algoux/standard-ranklist-renderer-component/dist/style.css';
 import 'rc-dialog/assets/index.css';
@@ -23,7 +24,7 @@ import cateUniversityLevelCpcLogoDark from '@/assets/university-level_cpc_logo_w
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
-import { extractQueryParams, formatUrl } from '@/configs/route.config';
+import { extractQueryParams, formatUrl, getFullUrl } from '@/configs/route.config';
 import logo from '@/assets/logo.png';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -266,10 +267,17 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const collapsedNavWidth = 80;
   const navWidth = collapsed ? collapsedNavWidth : expandedNavWidth;
 
+  const curContestName = data.ranklist?.info?.name;
+  const title = formatTitle(curContestName ? `${curContestName} - 榜单合集` : '榜单合集');
+  const curFullUrl = getFullUrl(formatUrl('Collection', { id, rankId: rankId || undefined }));
+
   return (
     <div>
       <Helmet>
-        <title>{formatTitle('榜单合集')}</title>
+        <title>{title}</title>
+        <meta property="og:title" content={title} />
+        <meta property="og:url" content={curFullUrl} />
+        <link rel="canonical" href={curFullUrl} />
       </Helmet>
       <div className="srk-collection-container">
         <div className="srk-collection-nav" style={{ width: navWidth, height: `${remainingHeight}px` }}>

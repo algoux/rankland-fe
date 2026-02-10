@@ -134,7 +134,8 @@ export default function SearchPage({ location }: any) {
   return (
     <div className="normal-content">
       <Helmet>
-        <title>{formatTitle('Explore')}</title>
+        <title>{formatTitle('探索')}</title>
+        <meta property="og:title" content={formatTitle('探索')} />
       </Helmet>
       <div>
         <h3 className="mb-6">在榜单数据库中探索</h3>

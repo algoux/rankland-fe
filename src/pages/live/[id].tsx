@@ -199,6 +199,7 @@ export default function LiveRanklistPage() {
     <div>
       <Helmet>
         <title>{formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)}</title>
+        <meta property="og:title" content={formatTitle(`Live: ${resolveText(ranklist.contest.title)}`)} />
       </Helmet>
       <div className="mt-8 mb-8" style={{ marginLeft: enabledScrollSolution ? '250px' : undefined }}>
         <StyledRanklist

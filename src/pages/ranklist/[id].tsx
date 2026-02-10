@@ -8,11 +8,13 @@ import { Button, Spin } from 'antd';
 import { LogicException, LogicExceptionKind } from '@/services/api/logic.exception';
 import { formatTitle } from '@/utils/title-format.util';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
+import { formatUrl, getFullUrl } from '@/configs/route.config';
 
 export default function RanklistPage(props: IRanklistPageProps) {
   const { data, error } = props;
   const { id } = useParams<{ id: string }>();
   const [{ width: clientWidth }] = useClientWidthHeight();
+  const curFullUrl = getFullUrl(formatUrl('Ranklist', { id }));
 
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
@@ -56,6 +58,9 @@ export default function RanklistPage(props: IRanklistPageProps) {
     <div>
       <Helmet>
         <title>{formatTitle(data!.info.name)}</title>
+        <meta property="og:title" content={formatTitle(data!.info.name)} />
+        <meta property="og:url" content={curFullUrl} />
+        <link rel="canonical" href={curFullUrl} />
       </Helmet>
       <div className="mt-8 mb-8">
         <StyledRanklist

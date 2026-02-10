@@ -123,6 +123,11 @@ export const knownUrlKeywordToAliasReplacementMap = {
   },
 };
 
+const siteOrigin =
+  process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn'
+    ? 'https://rl.algoux.cn'
+    : 'https://rl.algoux.org';
+
 export function getRoutes() {
   return _routes.map((r) => ({
     // @ts-ignore
@@ -146,6 +151,10 @@ export function formatUrl(name: string, params: Record<string, any> = {}) {
     translatedParams[translatedKey] = params[key];
   });
   return urlcat(path, translatedParams);
+}
+
+export function getFullUrl(url: string) {
+  return siteOrigin + (url.startsWith('/') ? url : `/${url}`);
 }
 
 export function extractQueryParams(name: string, originalQuery?: Record<string, any> | URLSearchParams) {

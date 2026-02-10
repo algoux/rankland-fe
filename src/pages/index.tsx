@@ -1,23 +1,63 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, Helmet, IGetInitialProps } from 'umi';
-import { Alert, Card, Col, Modal, Row } from 'antd';
+import { Card, Col, Row } from 'antd';
 import { UnorderedListOutlined, TrophyOutlined } from '@ant-design/icons';
 import { formatTitle } from '@/utils/title-format.util';
 import { api } from '@/services/api';
 import ContactUs from '@/components/ContactUs';
-import { formatUrl } from '@/configs/route.config';
+import { formatUrl, getFullUrl } from '@/configs/route.config';
 import BeianLink from '@/components/BeianLink';
 import pasteThenACLogo from '@/assets/paste-then-ac_logo.png';
 import abLogo from '@/assets/algo-bootstrap_logo.png';
 
 export default function HomePage(props: IHomePageProps) {
   const { data } = props;
-  const [isQQGroupModalVisible, setIsQQGroupModalVisible] = useState(false);
+
+  const homepageUrl = getFullUrl(formatUrl('Home'));
+  const explorePath = formatUrl('Search');
+  const exploreUrl = getFullUrl(explorePath);
+  const collectionPath = formatUrl('Collection', {
+    id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
+  });
+  const collectionUrl = getFullUrl(collectionPath);
 
   return (
-    <div className="normal-content">
+    <main className="normal-content">
       <Helmet>
         <title>{formatTitle()}</title>
+        <meta property="og:title" content={formatTitle()} />
+        <meta property="og:url" content={homepageUrl} />
+        <link rel="canonical" href={homepageUrl} />
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'RankLand',
+            url: homepageUrl,
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: `${exploreUrl}?kw={search_term_string}`,
+              'query-input': 'required name=search_term_string',
+            },
+          })}
+        </script>
+        <script type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@graph': [
+              {
+                '@type': 'SiteNavigationElement',
+                name: '探索',
+                url: exploreUrl,
+              },
+              {
+                '@type': 'SiteNavigationElement',
+                name: '榜单合集',
+                url: collectionUrl,
+              },
+            ],
+          })}
+        </script>
       </Helmet>
       <div className="home-intro">
         <h1 style={{ fontSize: '32px' }}>欢迎来到 RankLand</h1>
@@ -29,7 +69,7 @@ export default function HomePage(props: IHomePageProps) {
           <h1 className="block-title">为你推荐</h1>
           <Row gutter={16}>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link to={formatUrl('Search')}>
+              <Link to={explorePath}>
                 <Card hoverable>
                   <h2>
                     <UnorderedListOutlined className="mr-3" />
@@ -42,11 +82,7 @@ export default function HomePage(props: IHomePageProps) {
               </Link>
             </Col>
             <Col className="mb-4" xs={24} sm={12}>
-              <Link
-                to={formatUrl('Collection', {
-                  id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
-                })}
-              >
+              <Link to={collectionPath}>
                 <Card hoverable>
                   <h2>
                     <TrophyOutlined className="mr-3" />
@@ -170,7 +206,7 @@ export default function HomePage(props: IHomePageProps) {
           )}
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
