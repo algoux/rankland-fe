@@ -135,7 +135,7 @@ export default function HomePage(props: IHomePageProps) {
           <h1 className="block-title">资源和生态</h1>
           <ul>
             <li>
-              <a href="https://github.com/algoux/standard-ranklist" target="_blank">
+              <a href="https://srk.algoux.org/?utm_source=rankland" target="_blank">
                 Standard Ranklist
               </a>
               ：标准榜单格式（srk）旨在标准化榜单数据，欢迎了解和共建生态
