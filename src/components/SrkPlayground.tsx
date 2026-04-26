@@ -57,8 +57,8 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
     return (
       <div className="srk-playground-preview">
         <div className="absolute right-4 top-4">
-          <a href="https://github.com/algoux/standard-ranklist/blob/master/index.d.ts" target="_blank">
-            <QuestionCircleOutlined /> srk specification
+          <a href="https://srk.algoux.org/zh/" target="_blank">
+            <QuestionCircleOutlined /> srk 文档
           </a>
         </div>
         {!syntaxValid ? (
@@ -117,7 +117,7 @@ export default function SrkPlayground(props: ISrkPlaygroundProps) {
                     如果你是 OJ 开发者、Ranklist 贡献者或对此感兴趣，演练场可以帮助你直观地了解 srk 的字段及其作用。
                   </p>
                   <p>
-                    需要参考 srk 规范？请点击右上角的 <QuestionCircleOutlined /> 图标。
+                    需要参考 srk 文档？请点击右上角的 <QuestionCircleOutlined /> 图标。
                   </p>
                 </div>
               ),
