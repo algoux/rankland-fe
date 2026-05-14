@@ -1,6 +1,4 @@
 import React from 'react';
-import '@algoux/standard-ranklist-renderer-component/dist/style.css';
-import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useParams } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import type * as srk from '@algoux/standard-ranklist';
 import { EnumTheme, resolveStyle, resolveText, resolveUserMarkers } from '@algoux/standard-ranklist-utils';
-import { MarkerLabel } from '@algoux/standard-ranklist-renderer-component';
+import { MarkerLabel } from '@algoux/standard-ranklist-renderer-component-react';
 import { useModel } from 'umi';
 import classnames from 'classnames';
 import './UserInfoModal.less';

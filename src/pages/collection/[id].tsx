@@ -1,7 +1,5 @@
 /* eslint-disable complexity */
 import React, { createRef, useEffect, useState } from 'react';
-import '@algoux/standard-ranklist-renderer-component/dist/style.css';
-import 'rc-dialog/assets/index.css';
 import { Helmet, IGetInitialProps, Link, useHistory, useModel, useParams } from 'umi';
 import StyledRanklist from '@/components/StyledRanklist';
 import { api } from '@/services/api';

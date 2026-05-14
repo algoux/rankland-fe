@@ -8,12 +8,18 @@ dependencies:
   '@algoux/standard-ranklist-convert-to':
     specifier: ^0.2.2
     version: 0.2.2(@algoux/standard-ranklist@0.3.12)
-  '@algoux/standard-ranklist-renderer-component':
-    specifier: 0.4.15
-    version: 0.4.15(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2)
+  '@algoux/standard-ranklist-renderer-component-core':
+    specifier: ^0.5.1
+    version: 0.5.1(@algoux/standard-ranklist@0.3.12)
+  '@algoux/standard-ranklist-renderer-component-react':
+    specifier: ^0.5.1
+    version: 0.5.1(@algoux/standard-ranklist@0.3.12)(react-dom@17.0.2)(react@17.0.2)
+  '@algoux/standard-ranklist-renderer-component-styles':
+    specifier: ^0.5.1
+    version: 0.5.1
   '@algoux/standard-ranklist-utils':
-    specifier: ^0.2.12
-    version: 0.2.12(@algoux/standard-ranklist@0.3.12)
+    specifier: ^0.2.13
+    version: 0.2.13(@algoux/standard-ranklist@0.3.12)
   '@ant-design/icons':
     specifier: ^4.7.0
     version: 4.7.0(react-dom@17.0.2)(react@17.0.2)
@@ -65,9 +71,6 @@ dependencies:
   punycode:
     specifier: ^2.1.1
     version: 2.1.1
-  rc-dialog:
-    specifier: ^8.9.0
-    version: 8.9.0(react-dom@17.0.2)(react@17.0.2)
   react:
     specifier: ^17
     version: 17.0.2
@@ -215,31 +218,43 @@ packages:
       '@algoux/standard-ranklist': '*'
     dependencies:
       '@algoux/standard-ranklist': 0.3.12
-      '@algoux/standard-ranklist-utils': 0.2.12(@algoux/standard-ranklist@0.3.12)
+      '@algoux/standard-ranklist-utils': 0.2.13(@algoux/standard-ranklist@0.3.12)
       xlsx: 0.18.5
     dev: false
 
-  /@algoux/standard-ranklist-renderer-component@0.4.15(@algoux/standard-ranklist@0.3.12)(rc-dialog@8.9.0)(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-Xsygwt306zBwnkhb1gZjNi66k6Qflx60w7ShQcSR5kg+o41ZkI2r93aRmeWB+K/Q0enDv+k65XzlnqJtIJF5PA==}
+  /@algoux/standard-ranklist-renderer-component-core@0.5.1(@algoux/standard-ranklist@0.3.12):
+    resolution: {integrity: sha512-VUT2BpJpLwjj99Slz4puONFo4GCyL57MMVy448YyVfUg+j9h2sBQgRCoVVm+YtWD+M4F5jP5RfUrY2WezZjuEA==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
-      rc-dialog: ^8.4.6
+    dependencies:
+      '@algoux/standard-ranklist': 0.3.12
+      '@algoux/standard-ranklist-utils': 0.2.13(@algoux/standard-ranklist@0.3.12)
+      color: 4.2.3
+      semver: 7.5.4
+    dev: false
+
+  /@algoux/standard-ranklist-renderer-component-react@0.5.1(@algoux/standard-ranklist@0.3.12)(react-dom@17.0.2)(react@17.0.2):
+    resolution: {integrity: sha512-QcfpK3tOwsygYr1pd5qut6EG9I6Y7vPkTfNd86ZIclVjRLbbuKCz8k5DBiJcAGXH5JFYdrc49PMua83eWY0frA==}
+    peerDependencies:
+      '@algoux/standard-ranklist': '*'
       react: '>=16.9.0'
       react-dom: '>=16.9.0'
     dependencies:
       '@algoux/standard-ranklist': 0.3.12
-      '@algoux/standard-ranklist-utils': 0.2.12(@algoux/standard-ranklist@0.3.12)
+      '@algoux/standard-ranklist-renderer-component-core': 0.5.1(@algoux/standard-ranklist@0.3.12)
+      '@algoux/standard-ranklist-renderer-component-styles': 0.5.1
+      '@algoux/standard-ranklist-utils': 0.2.13(@algoux/standard-ranklist@0.3.12)
       classnames: 2.5.1
-      color: 4.2.3
-      rc-dialog: 8.9.0(react-dom@17.0.2)(react@17.0.2)
-      rc-slider: 9.7.5(react-dom@17.0.2)(react@17.0.2)
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
-      semver: 7.5.4
     dev: false
 
-  /@algoux/standard-ranklist-utils@0.2.12(@algoux/standard-ranklist@0.3.12):
-    resolution: {integrity: sha512-pyNMwBc6+YwVTCKqVynLaNlN/SWPkZWUANU/E16eo3o3olWrNez3Y/fclryfXRd5Bxqtt2fuWmPaTTWddyppWw==}
+  /@algoux/standard-ranklist-renderer-component-styles@0.5.1:
+    resolution: {integrity: sha512-4ZoLwycoJdcmjxDnNtSvRbCZKWXECyFi9txDBcpqvGPVAWfEwfcUHIhv1ZYYs3yb4x7p8RbpmHWAI3JbdqjwDw==}
+    dev: false
+
+  /@algoux/standard-ranklist-utils@0.2.13(@algoux/standard-ranklist@0.3.12):
+    resolution: {integrity: sha512-kYwO0+XyQg0LnU2X3Zuk9w2g+WK8C5JUlenj1pc5oQ9nPJM8B7uHjo05EuoxTuPcj9rwbHTIzci3YP4XGnLGLw==}
     peerDependencies:
       '@algoux/standard-ranklist': '*'
     dependencies:
@@ -5432,22 +5447,6 @@ packages:
       react: 17.0.2
       react-dom: 17.0.2(react@17.0.2)
       shallowequal: 1.1.0
-
-  /rc-slider@9.7.5(react-dom@17.0.2)(react@17.0.2):
-    resolution: {integrity: sha512-LV/MWcXFjco1epPbdw1JlLXlTgmWpB9/Y/P2yinf8Pg3wElHxA9uajN21lJiWtZjf5SCUekfSP6QMJfDo4t1hg==}
-    engines: {node: '>=8.x'}
-    peerDependencies:
-      react: '>=16.9.0'
-      react-dom: '>=16.9.0'
-    dependencies:
-      '@babel/runtime': 7.18.9
-      classnames: 2.5.1
-      rc-tooltip: 5.2.2(react-dom@17.0.2)(react@17.0.2)
-      rc-util: 5.23.0(react-dom@17.0.2)(react@17.0.2)
-      react: 17.0.2
-      react-dom: 17.0.2(react@17.0.2)
-      shallowequal: 1.1.0
-    dev: false
 
   /rc-steps@4.1.4(react-dom@17.0.2)(react@17.0.2):
     resolution: {integrity: sha512-qoCqKZWSpkh/b03ASGx1WhpKnuZcRWmvuW+ZUu4mvMdfvFzVxblTwUM+9aBd0mlEUFmt6GW8FXhMpHkK3Uzp3w==}

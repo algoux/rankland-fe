@@ -1,6 +1,18 @@
+/* eslint-disable complexity */
 import React, { useEffect, useMemo, useState } from 'react';
-import { Ranklist, ProgressBar, convertToStaticRanklist } from '@algoux/standard-ranklist-renderer-component';
-import '@algoux/standard-ranklist-renderer-component/dist/style.css';
+import {
+  DefaultSolutionModal,
+  Modal,
+  ProgressBar,
+  Ranklist,
+  convertToStaticRanklist,
+} from '@algoux/standard-ranklist-renderer-component-react';
+import type {
+  SolutionClickPayload,
+  StaticRanklist,
+  UserClickPayload,
+} from '@algoux/standard-ranklist-renderer-component-react';
+import '@algoux/standard-ranklist-renderer-component-styles/style.css';
 import {
   resolveText,
   resolveContributor,
@@ -12,7 +24,6 @@ import {
 } from '@algoux/standard-ranklist-utils';
 import type { EnumTheme } from '@algoux/standard-ranklist-utils';
 import type * as srk from '@algoux/standard-ranklist';
-import 'rc-dialog/assets/index.css';
 import { Alert, Dropdown, Menu, notification, Radio, Select, Switch } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Helmet, useModel } from 'umi';
@@ -116,6 +127,9 @@ export default function StyledRanklistRenderer({
   const [rankTimeDataSet, setRankTimeDataSet] = useState<IRankTimeDataSet>(getInitialRankTimeDataSet());
   const [rankTimeData, setRankTimeData] = useState<IRankTimeData>(getInitialRankTimeData());
   const [currentShownUserId, setCurrentShownUserId] = useState<string>('');
+  const [userModalOpen, setUserModalOpen] = useState(false);
+  const [activeUserPayload, setActiveUserPayload] = useState<UserClickPayload | null>(null);
+  const [activeSolutionPayload, setActiveSolutionPayload] = useState<SolutionClickPayload | null>(null);
 
   const comparingData = omit(data, ['_now']);
   const [memorizedData, setMemorizedData] = useState<srk.Ranklist>(data);
@@ -167,7 +181,11 @@ export default function StyledRanklistRenderer({
 
   useEffect(() => {
     console.log('[StyledRanklistRenderer] id:', id);
+    setUserModalOpen(false);
+    setActiveUserPayload(null);
+    setActiveSolutionPayload(null);
     setCurrentShownUserId('');
+    setTimeTravelTime(null);
     setRankTimeDataSet(getInitialRankTimeDataSet());
     setRankTimeData(getInitialRankTimeData());
     setRankTimeDataInitialized(false);
@@ -234,7 +252,7 @@ export default function StyledRanklistRenderer({
       rows: filteredRows,
     });
   }, [staticData, filteredRows]);
-  const usingData = {
+  const usingData: StaticRanklist = {
     ...staticData,
     problems: staticData.problems?.map((p, index) => ({
       ...p,
@@ -314,6 +332,37 @@ export default function StyledRanklistRenderer({
   const handleUserModalOpen = async (user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
     setCurrentShownUserId(`${user.id}`);
   };
+
+  const handleUserClick = async (payload: UserClickPayload) => {
+    setActiveUserPayload(payload);
+    setUserModalOpen(true);
+    setActiveSolutionPayload(null);
+    await handleUserModalOpen(payload.user, payload.row, payload.rowIndex, payload.ranklist);
+  };
+
+  const handleSolutionClick = (payload: SolutionClickPayload) => {
+    setActiveSolutionPayload(payload);
+    setUserModalOpen(false);
+    setCurrentShownUserId('');
+  };
+
+  const handleUserModalClose = () => {
+    setUserModalOpen(false);
+  };
+
+  const handleSolutionModalClose = () => {
+    setActiveSolutionPayload(null);
+  };
+
+  const activeUser = activeUserPayload
+    ? usingData.rows.find((row) => row.user?.id === activeUserPayload.user.id)?.user || activeUserPayload.user
+    : null;
+  const activeUserRowIndex =
+    activeUserPayload && activeUser
+      ? usingData.rows.findIndex((row) => row.user?.id === activeUser.id)
+      : -1;
+  const activeUserRow =
+    activeUserRowIndex >= 0 ? usingData.rows[activeUserRowIndex] : activeUserPayload?.row;
 
   useDeepCompareEffect(() => {
     if (currentShownUserId) {
@@ -603,27 +652,38 @@ export default function StyledRanklistRenderer({
         )}
         <RankTimeDataContext.Provider value={rankTimeData}>
           <Ranklist
-            data={usingData as any}
+            data={usingData}
             theme={theme as EnumTheme}
             stripedRows
             formatSrkAssetUrl={(url: string) => formatSrkAssetUrl(url, id)}
-            onUserModalOpen={handleUserModalOpen}
-            renderUserModal={(user: srk.User, row: srk.RanklistRow, index: number, ranklist: srk.Ranklist) => {
-              return {
-                title: resolveText(user.name),
-                width: clientWidth >= 980 ? 960 : clientWidth - 20,
-                content: (
-                  <UserInfoModal
-                    user={user}
-                    row={row}
-                    index={index}
-                    ranklist={ranklist}
-                    assetsScope={id!}
-                    filterMarker={filter.marker}
-                  />
-                ),
-              };
-            }}
+            onUserClick={handleUserClick}
+            onSolutionClick={handleSolutionClick}
+          />
+          <Modal
+            open={userModalOpen && !!activeUser && !!activeUserRow}
+            title={activeUser ? resolveText(activeUser.name) : undefined}
+            width={clientWidth >= 980 ? 960 : clientWidth - 20}
+            rootClassName="srk-general-modal-root"
+            onClose={handleUserModalClose}
+          >
+            {activeUser && activeUserRow && (
+              <UserInfoModal
+                user={activeUser}
+                row={activeUserRow}
+                index={activeUserRowIndex >= 0 ? activeUserRowIndex : activeUserPayload?.rowIndex || 0}
+                ranklist={usingData}
+                assetsScope={id!}
+                filterMarker={filter.marker}
+              />
+            )}
+          </Modal>
+          <DefaultSolutionModal
+            open={!!activeSolutionPayload}
+            user={activeSolutionPayload?.user}
+            problem={activeSolutionPayload?.problem}
+            problemIndex={activeSolutionPayload?.problemIndex ?? 0}
+            solutions={activeSolutionPayload?.solutions || []}
+            onClose={handleSolutionModalClose}
           />
         </RankTimeDataContext.Provider>
       </div>
