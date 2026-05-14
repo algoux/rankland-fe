@@ -19,7 +19,7 @@ export default function NavMenu() {
         {
           key: decodeURIComponent(
             formatUrl('Collection', {
-              id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
+              id: 'official',
             }),
           ),
           label: '榜单合集',

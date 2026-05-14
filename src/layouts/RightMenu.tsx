@@ -9,7 +9,7 @@ export default function RightMenu() {
   const switchSiteMenu = (
     <Menu
       items={
-        process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn'
+        process.env.SITE_ALIAS === 'cnn'
           ? [
               {
                 key: 'global',

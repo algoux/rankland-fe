@@ -527,7 +527,7 @@ export default function StyledRanklistRenderer({
                                     isLive ? 'Live' : 'Ranklist',
                                     {
                                       id,
-                                      focus: process.env.SITE_ALIAS === 'cn' ? '是' : 'yes',
+                                      focus: 'yes',
                                     },
                                   )}" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 100%; height: 600px"></iframe>`;
                                   if (copy(content, { format: 'text/plain' })) {
@@ -714,7 +714,7 @@ export default function StyledRanklistRenderer({
               <a>联系我们</a>
             </ContactUs>
           </p>
-          {(process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn') && (
+          {process.env.SITE_ALIAS === 'cnn' && (
             <p className="mt-1 mb-0">
               备案号：
               <BeianLink />

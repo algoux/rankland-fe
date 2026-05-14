@@ -13,10 +13,9 @@ const { v4: uuidv4 } = require('uuid');
 const { createClient } = require('redis');
 const util = require('util');
 
-const siteAlias = process.env.SITE_ALIAS;
 const isProd = process.env.NODE_ENV === 'production';
 const port = parseInt(process.env.PORT, 10) || 7001;
-const distDir = isProd && siteAlias === 'cn' ? '分发' : 'dist';
+const distDir = 'dist';
 const root = path.join(__dirname, `../${distDir}`);
 let render;
 let indexHtmlTemplate;

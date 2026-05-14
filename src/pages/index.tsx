@@ -17,7 +17,7 @@ export default function HomePage(props: IHomePageProps) {
   const explorePath = formatUrl('Search');
   const exploreUrl = getFullUrl(explorePath);
   const collectionPath = formatUrl('Collection', {
-    id: process.env.SITE_ALIAS === 'cn' ? '由官方整理和维护的' : 'official',
+    id: 'official',
   });
   const collectionUrl = getFullUrl(collectionPath);
 
@@ -198,7 +198,7 @@ export default function HomePage(props: IHomePageProps) {
               服务状态
             </a>
           </p>
-          {(process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn') && (
+          {process.env.SITE_ALIAS === 'cnn' && (
             <p>
               备案号：
               <BeianLink />

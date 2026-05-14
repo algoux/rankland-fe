@@ -126,7 +126,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
   const [remainingHeight] = useRemainingHeight();
   const [{ width: clientWidth }] = useClientWidthHeight();
   const { id } = useParams<{ id: string }>();
-  const query = extractQueryParams('Collection', originalQuery);
+  const query = extractQueryParams(originalQuery);
   const rankId = query.rankId;
   const history = useHistory();
   const [openKeys, setOpenKeys] = useState<string[]>([]);
@@ -398,7 +398,7 @@ const asyncData = async ({ id, rankId }: { id: string; rankId?: string }) => {
 CollectionPage.getInitialProps = (async (ctx) => {
   try {
     const searchParams = new URLSearchParams(ctx.history.location.search);
-    const query = extractQueryParams('Collection', searchParams);
+    const query = extractQueryParams(searchParams);
     const res = await asyncData({ id: ctx.match.params.id, rankId: query.rankId ?? undefined });
     return {
       data: res,

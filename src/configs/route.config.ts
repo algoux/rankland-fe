@@ -6,11 +6,6 @@ const _routes = [
   {
     name: 'Home',
     path: '/',
-    alias: {
-      cn: {
-        path: '/',
-      },
-    },
     component: '@/pages/index',
     exact: true,
   },
@@ -19,14 +14,6 @@ const _routes = [
     path: '/search',
     query: {
       kw: String,
-    },
-    alias: {
-      cn: {
-        path: '/探索',
-        queryMapping: {
-          kw: '关键词',
-        },
-      },
     },
     component: '@/pages/search/index',
     exact: true,
@@ -37,14 +24,6 @@ const _routes = [
     query: {
       focus: String,
     },
-    alias: {
-      cn: {
-        path: '/榜单/:id',
-        queryMapping: {
-          focus: '聚焦',
-        },
-      },
-    },
     component: '@/pages/ranklist/[id]',
     exact: true,
   },
@@ -54,25 +33,12 @@ const _routes = [
     query: {
       rankId: String,
     },
-    alias: {
-      cn: {
-        path: '/榜单合集/:id',
-        queryMapping: {
-          rankId: '当前选中榜单的标识符',
-        },
-      },
-    },
     component: '@/pages/collection/[id]',
     exact: true,
   },
   {
     name: 'Playground',
     path: '/playground',
-    alias: {
-      cn: {
-        path: '/演练场',
-      },
-    },
     component: '@/pages/playground/index',
     exact: true,
   },
@@ -82,56 +48,19 @@ const _routes = [
     query: {
       focus: String,
     },
-    alias: {
-      cn: {
-        path: '/直播/:id',
-        queryMapping: {
-          focus: '聚焦',
-        },
-      },
-    },
     component: '@/pages/live/[id]',
     exact: true,
   },
 ];
 
-export const knownUrlKeywordToGeneralReplacementMap = {
-  当前选中榜单的标识符: 'rankId',
-  由官方整理和维护的: 'official',
-  榜单合集: 'collection',
-  探索: 'search',
-  榜单: 'ranklist',
-  演练场: 'playground',
-  直播: 'live',
-  关键词: 'kw',
-  聚焦: 'focus',
-  是: 'yes',
-};
-
-export const knownUrlKeywordToAliasReplacementMap = {
-  cn: {
-    search: '探索',
-    ranklist: '榜单',
-    collection: '榜单合集',
-    playground: '演练场',
-    live: '直播',
-    rankId: '当前选中榜单的标识符',
-    kw: '关键词',
-    official: '由官方整理和维护的',
-    focus: '聚焦',
-    yes: '是',
-  },
-};
-
 const siteOrigin =
-  process.env.SITE_ALIAS === 'cn' || process.env.SITE_ALIAS === 'cnn'
+  process.env.SITE_ALIAS === 'cnn'
     ? 'https://rl.algoux.cn'
     : 'https://rl.algoux.org';
 
 export function getRoutes() {
   return _routes.map((r) => ({
-    // @ts-ignore
-    path: r.alias?.[siteAlias]?.path || r.path,
+    path: r.path,
     component: r.component,
     exact: r.exact,
   }));
@@ -142,37 +71,17 @@ export function formatUrl(name: string, params: Record<string, any> = {}) {
   if (!route) {
     throw new Error(`Route ${name} not found`);
   }
-  // @ts-ignore
-  let path = route.alias?.[siteAlias]?.path || route.path;
-  const translatedParams: Record<string, any> = {};
-  Object.keys(params).forEach((key) => {
-    // @ts-ignore
-    const translatedKey = route.alias?.[siteAlias]?.queryMapping?.[key] || key;
-    translatedParams[translatedKey] = params[key];
-  });
-  return urlcat(path, translatedParams);
+  return urlcat(route.path, params);
 }
 
 export function getFullUrl(url: string) {
   return siteOrigin + (url.startsWith('/') ? url : `/${url}`);
 }
 
-export function extractQueryParams(name: string, originalQuery?: Record<string, any> | URLSearchParams) {
+export function extractQueryParams(originalQuery: Record<string, any> | URLSearchParams) {
   let query: Record<string, any> = originalQuery || {};
   if (originalQuery instanceof URLSearchParams) {
     query = Object.fromEntries(originalQuery);
   }
-  const route = _routes.find((r) => r.name === name);
-  if (!route) {
-    throw new Error(`Route ${name} not found`);
-  }
-  const extractedQuery: Record<string, any> = {};
-  // @ts-ignore
-  const queryMapping = route.alias?.[siteAlias]?.queryMapping || {};
-  Object.keys(query).forEach((key) => {
-    // reverse mapping
-    const originalKey = Object.keys(queryMapping).find((k) => queryMapping[k] === key) || key;
-    extractedQuery[originalKey] = query[key];
-  });
-  return extractedQuery;
+  return query;
 }

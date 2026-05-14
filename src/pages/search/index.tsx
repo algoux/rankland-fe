@@ -10,7 +10,7 @@ import { formatTitle } from '@/utils/title-format.util';
 import { extractQueryParams, formatUrl } from '@/configs/route.config';
 
 export default function SearchPage({ location }: any) {
-  const { kw } = extractQueryParams('Search', location.query);
+  const { kw } = extractQueryParams(location.query);
   const history = useHistory();
   const [isInit, setIsInit] = React.useState(false);
 
