@@ -50,9 +50,12 @@ import UserInfoModal from '@/components/UserInfoModal';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { RankTimeDataContext } from './RankTimeDataContext';
 import type { IRankTimeData } from './RankTimeDataContext';
-import { getAllRankTimeData, getProperRankTimeChunkUnit } from '@/utils/rank-time-data.util';
+import {
+  getAllRankTimeData,
+  getProperRankTimeChunkUnit,
+  selectUserMainRankTimeData,
+} from '@/utils/rank-time-data.util';
 import type { IRankTimeDataSet } from '@/utils/rank-time-data.util';
-import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
 import { formatSrkAssetUrl } from '@/utils/srk-asset.util';
 import SrkAssetImage from './SrkAssetImage';
 
@@ -292,39 +295,24 @@ export default function StyledRanklistRenderer({
       setRankTimeDataSet(rankTimeDataSetValue);
       setRankTimeDataInitialized(true);
     }
-    // 根据用户选择合适的 series
-    const user = staticData.rows.find((row) => row.user?.id === userId)?.user;
-    if (!user) {
-      console.warn(`[RankTimeData] user ${userId} not found in ranklist`);
-      return;
-    }
-    const icpcSeries = staticData.series.filter((s) => s.rule?.preset === 'ICPC');
-    const userMarkers = resolveUserMarkers(user, staticData.markers);
-    const matchedMainICPCSeries = findUserMatchedMainICPCSeries(icpcSeries, userMarkers, filter.marker);
-    if (!matchedMainICPCSeries) {
-      console.log(`[RankTimeData] user ${userId} has no matched ICPC series`);
-      return;
-    }
-    const matchedMainICPCSeriesIndex = icpcSeries.findIndex((s) => s === matchedMainICPCSeries); // 需要获取 icpcSeries 过滤结果的下标，而非全部 series
-    console.log(
-      `[RankTimeData] user ${userId} matched ICPC series: ${matchedMainICPCSeriesIndex}`,
-      matchedMainICPCSeries,
-    );
-
-    const rankTimeData = {
-      key: `${userId}_${Date.now()}`,
-      initialized: true,
-      unit: rankTimeDataSetValue.unit,
-      points: (rankTimeDataSetValue.userRankTimePointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [],
-      solvedEventPoints:
-        (rankTimeDataSetValue.userRankTimeSolvedEventPointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [],
-      seriesSegments: rankTimeDataSetValue.seriesSegmentsList[matchedMainICPCSeriesIndex] || [],
-      totalUsers: rankTimeDataSetValue.totalUsers,
-    };
-    if (rankTimeData.points.length === 0) {
+    const selectedRankTimeData = selectUserMainRankTimeData({
+      rankTimeDataSet: rankTimeDataSetValue,
+      staticRows: staticData.rows,
+      staticSeries: staticData.series,
+      staticMarkers: staticData.markers,
+      userId,
+      fixedMarker: filter.marker,
+    });
+    if (!selectedRankTimeData) {
       console.log(`[RankTimeData] user ${userId} has no rank time data`);
       return;
     }
+
+    const rankTimeData: IRankTimeData = {
+      key: `${userId}_${Date.now()}`,
+      initialized: true,
+      ...selectedRankTimeData,
+    };
     setRankTimeData(rankTimeData);
     console.log(`[RankTimeData] updated user ${userId}:`, rankTimeData);
   };

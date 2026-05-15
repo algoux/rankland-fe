@@ -72,7 +72,7 @@ export default function SearchPage({ location }: any) {
       return null;
     }
     return (
-      <div className="mt-10">
+      <div className="mt-10" data-id="search-result-section" data-result-count={String(count)}>
         <div className="opacity-70">搜索到 {count} 个结果</div>
         {count > 0 && (
           <div className="mt-2">
@@ -81,9 +81,15 @@ export default function SearchPage({ location }: any) {
               dataSource={rows}
               size="small"
               renderItem={(item) => (
-                <List.Item>
+                <List.Item data-id="search-ranklist-item" data-ranklist-key={item.uniqueKey}>
                   <p className="mb-0">
-                    <Link to={formatUrl('Ranklist', { id: item.uniqueKey })}>{item.name}</Link>
+                    <Link
+                      to={formatUrl('Ranklist', { id: item.uniqueKey })}
+                      data-id="search-ranklist-link"
+                      data-ranklist-key={item.uniqueKey}
+                    >
+                      {item.name}
+                    </Link>
                     <span className="ml-2 opacity-70">
                       <EyeOutlined /> {item.viewCnt}
                     </span>
@@ -103,7 +109,7 @@ export default function SearchPage({ location }: any) {
       return null;
     }
     return (
-      <div className="mt-10">
+      <div className="mt-10" data-id="search-recent-section">
         <div className="opacity-70">最近更新</div>
         {allData && allData.ranks.length > 0 ? (
           <div className="mt-2">
@@ -112,9 +118,15 @@ export default function SearchPage({ location }: any) {
               dataSource={allData.ranks.slice(0, 10)}
               size="small"
               renderItem={(item) => (
-                <List.Item>
+                <List.Item data-id="search-ranklist-item" data-ranklist-key={item.uniqueKey}>
                   <p className="mb-0">
-                    <Link to={formatUrl('Ranklist', { id: item.uniqueKey })}>{item.name}</Link>
+                    <Link
+                      to={formatUrl('Ranklist', { id: item.uniqueKey })}
+                      data-id="search-ranklist-link"
+                      data-ranklist-key={item.uniqueKey}
+                    >
+                      {item.name}
+                    </Link>
                     <span className="ml-2 opacity-70">
                       <EyeOutlined /> {item.viewCnt}
                     </span>

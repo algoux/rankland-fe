@@ -9,9 +9,11 @@ import {
   convertToStaticRanklist,
   resolveThemeColor,
   EnumTheme,
+  resolveUserMarkers,
 } from '@algoux/standard-ranklist-utils';
 import type { CalculatedSolutionTetrad, StaticRanklist } from '@algoux/standard-ranklist-utils';
 import { cloneDeep } from 'lodash-es';
+import { findUserMatchedMainICPCSeries } from '@/utils/ranklist.util';
 
 export function getProperRankTimeChunkUnit(contest: srk.Contest): srk.TimeDuration {
   const duration = contest.duration;
@@ -60,6 +62,56 @@ export interface IRankTimeDataSet {
   /** 每个 icpc series 的段数据，包含每个时间点的段内排名范围 */
   seriesSegmentsList: IRankTimeSeriesSegment[][];
   totalUsers: number;
+}
+
+export interface ISelectedUserMainRankTimeData {
+  unit: srk.TimeUnit;
+  points: IRankTimePoint[];
+  solvedEventPoints: IRankTimeSolvedEventPoint[];
+  seriesSegments: IRankTimeSeriesSegment[];
+  totalUsers: number;
+}
+
+export function selectUserMainRankTimeData(params: {
+  rankTimeDataSet: IRankTimeDataSet;
+  staticRows: StaticRanklist['rows'];
+  staticSeries: StaticRanklist['series'];
+  staticMarkers?: srk.Marker[];
+  userId: string;
+  fixedMarker?: string;
+}): ISelectedUserMainRankTimeData | null {
+  const { rankTimeDataSet, staticRows, staticSeries, staticMarkers, userId, fixedMarker } = params;
+  const user = staticRows.find((row) => row.user?.id === userId)?.user;
+  if (!user) {
+    return null;
+  }
+
+  const icpcSeries = staticSeries.filter((s) => s.rule?.preset === 'ICPC');
+  const userMarkers = resolveUserMarkers(user, staticMarkers);
+  const matchedMainICPCSeries = findUserMatchedMainICPCSeries(icpcSeries, userMarkers, fixedMarker);
+  if (!matchedMainICPCSeries) {
+    return null;
+  }
+
+  // rankTimeDataSet is indexed by the ICPC-only series list generated in getAllRankTimeData.
+  const matchedMainICPCSeriesIndex = icpcSeries.findIndex((s) => s === matchedMainICPCSeries);
+  if (matchedMainICPCSeriesIndex < 0) {
+    return null;
+  }
+
+  const points = (rankTimeDataSet.userRankTimePointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [];
+  if (points.length === 0) {
+    return null;
+  }
+
+  return {
+    unit: rankTimeDataSet.unit,
+    points,
+    solvedEventPoints:
+      (rankTimeDataSet.userRankTimeSolvedEventPointsList.get(userId) || [])[matchedMainICPCSeriesIndex] || [],
+    seriesSegments: rankTimeDataSet.seriesSegmentsList[matchedMainICPCSeriesIndex] || [],
+    totalUsers: rankTimeDataSet.totalUsers,
+  };
 }
 
 function resolveSegmentStyle(style: srk.RankSeriesSegment['style']): srk.Color {

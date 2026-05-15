@@ -17,12 +17,12 @@ export default function RanklistPage(props: IRanklistPageProps) {
   if (error) {
     if (error instanceof LogicException && error.kind === LogicExceptionKind.NotFound) {
       return (
-        <div className="mt-16 text-center">
+        <div className="mt-16 text-center" data-id="ranklist-not-found">
           <Helmet>
             <title>{formatTitle('Not Found')}</title>
           </Helmet>
           <h3 className="mb-4">Ranklist Not Found</h3>
-          <Link to="/">
+          <Link to="/" data-id="ranklist-not-found-home-link">
             <Button type="primary" size="small">
               Back to Home
             </Button>
@@ -60,7 +60,12 @@ export default function RanklistPage(props: IRanklistPageProps) {
         <meta property="og:url" content={curFullUrl} />
         <link rel="canonical" href={curFullUrl} />
       </Helmet>
-      <div className="mt-8 mb-8">
+      <div
+        className="mt-8 mb-8"
+        data-id="ranklist-content"
+        data-ranklist-id={id}
+        data-row-count={String(data.srk.rows.length)}
+      >
         <StyledRanklist
           data={data!.srk}
           name={id}

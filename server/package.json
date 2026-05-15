@@ -1,6 +1,9 @@
 {
   "name": "rankland-fe-server",
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "author": "bLue",
   "scripts": {
     "start": "NODE_ENV=production pm2-runtime pm2.config.js",
