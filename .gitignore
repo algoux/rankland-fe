@@ -11,3 +11,10 @@ node_modules
 /分发
 .pnpm-debug.log
 npm-debug.log*
+
+# tests
+/playwright-report
+/test-results
+/coverage
+/.vitest-cache
+

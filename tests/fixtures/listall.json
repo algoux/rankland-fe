@@ -1,0 +1,34 @@
+{
+  "ranks": [
+    {
+      "id": "rid-1",
+      "uniqueKey": "test-key",
+      "name": "Test Contest 2024",
+      "fileID": "file-test-1",
+      "viewCnt": 42,
+      "content": "",
+      "createdAt": "2024-04-01T10:00:00Z",
+      "updatedAt": "2024-04-01T12:00:00Z"
+    },
+    {
+      "id": "rid-2",
+      "uniqueKey": "another-key",
+      "name": "Another Contest",
+      "fileID": "file-test-2",
+      "viewCnt": 7,
+      "content": "",
+      "createdAt": "2024-03-15T10:00:00Z",
+      "updatedAt": "2024-03-15T12:00:00Z"
+    },
+    {
+      "id": "rid-3",
+      "uniqueKey": "noise-key",
+      "name": "Completely Unrelated Match",
+      "fileID": "file-test-3",
+      "viewCnt": 3,
+      "content": "",
+      "createdAt": "2024-02-15T10:00:00Z",
+      "updatedAt": "2024-02-15T12:00:00Z"
+    }
+  ]
+}

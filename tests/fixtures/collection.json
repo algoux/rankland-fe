@@ -1,0 +1,29 @@
+{
+  "root": {
+    "children": [
+      {
+        "type": 2,
+        "uniqueKey": "dir-icpc",
+        "name": "ICPC",
+        "children": [
+          {
+            "type": 1,
+            "uniqueKey": "test-key",
+            "name": "Test Contest 2024"
+          },
+          {
+            "type": 1,
+            "uniqueKey": "another-key",
+            "name": "Another Contest"
+          }
+        ]
+      },
+      {
+        "type": 2,
+        "uniqueKey": "dir-ccpc",
+        "name": "CCPC",
+        "children": []
+      }
+    ]
+  }
+}

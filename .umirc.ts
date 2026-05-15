@@ -64,6 +64,18 @@ export default defineConfig({
   //   compress: false,
   // },
   chainWebpack(memo, { type }) {
+    if (!isProd) {
+      memo.watchOptions({
+        ignored: [
+          '**/node_modules/**',
+          '**/.git/**',
+          '**/dist/**',
+          '**/coverage/**',
+          '**/playwright-report/**',
+          '**/test-results/**',
+        ],
+      });
+    }
     if (type === BundlerConfigType.csr) {
       memo.plugin('MonacoWebpackPlugin').use(MonacoWebpackPlugin, [
         {

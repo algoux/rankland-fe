@@ -1,4 +1,4 @@
-FROM algoux/nodebase:16
+FROM algoux/nodebase:20
 
 WORKDIR /app/
 

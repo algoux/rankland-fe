@@ -88,10 +88,19 @@ function convertCollectionToMenuItems(
         );
       }
       const children = (item.children || []).map(convert);
-      return getItem(item.name, item.uniqueKey, icon, children);
+      return getItem(
+        <span data-id={`collection-menu-item-${item.uniqueKey}`} data-collection-key={item.uniqueKey}>
+          {item.name}
+        </span>,
+        item.uniqueKey,
+        icon,
+        children,
+      );
     } else {
       return getItem(
         <Link
+          data-id={`collection-menu-item-${item.uniqueKey}`}
+          data-collection-key={item.uniqueKey}
           to={childUrlFormatter(item.uniqueKey)}
           onClick={(e) => {
             e.preventDefault();
@@ -240,7 +249,12 @@ export default function CollectionPage(props: ICollectionPageProps) {
     }
     if (data.ranklist) {
       return (
-        <div className="pb-8">
+        <div
+          className="pb-8"
+          data-id="collection-ranklist-content"
+          data-ranklist-id={rankId}
+          data-row-count={String(data.ranklist.srk.rows.length)}
+        >
           {!renderSwitchLock && (
             <StyledRanklist
               data={data.ranklist.srk}
@@ -255,7 +269,7 @@ export default function CollectionPage(props: ICollectionPageProps) {
       );
     }
     return (
-      <div>
+      <div data-id="collection-empty-state">
         <h3 className="pt-16 text-center">请展开左侧边栏并选择一个榜单</h3>
       </div>
     );

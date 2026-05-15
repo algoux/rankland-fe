@@ -1,0 +1,22 @@
+{
+  "id": "live-rid-1",
+  "uniqueKey": "live-test-key",
+  "title": "Live Contest 2024",
+  "startAt": "2024-04-01T10:00:00+08:00",
+  "duration": [5, "h"],
+  "frozenDuration": [1, "h"],
+  "unfrozenAt": "2024-04-01T15:00:00+08:00",
+  "problems": [
+    { "title": "Problem A", "alias": "A" },
+    { "title": "Problem B", "alias": "B" }
+  ],
+  "members": [
+    { "id": "team-alpha", "name": "Team Alpha" },
+    { "id": "team-beta", "name": "Team Beta" }
+  ],
+  "markers": [],
+  "series": [],
+  "sorter": { "algorithm": "ICPC", "config": {} },
+  "contributors": [],
+  "type": "general"
+}

@@ -1,0 +1,65 @@
+{
+  "type": "general",
+  "version": "0.3.12",
+  "contest": {
+    "title": "Test Contest 2024",
+    "startAt": "2024-04-01T10:00:00+08:00",
+    "duration": [5, "h"],
+    "frozenDuration": [1, "h"]
+  },
+  "problems": [
+    {
+      "title": "Problem A",
+      "alias": "A",
+      "statistics": { "accepted": 10, "submitted": 30 },
+      "style": { "backgroundColor": "#58a2d1" }
+    },
+    {
+      "title": "Problem B",
+      "alias": "B",
+      "statistics": { "accepted": 5, "submitted": 20 },
+      "style": { "backgroundColor": "#fc6d3e" }
+    }
+  ],
+  "series": [
+    {
+      "title": "Rank",
+      "segments": [
+        { "title": "Gold", "style": "gold" },
+        { "title": "Silver", "style": "silver" }
+      ],
+      "rule": {
+        "preset": "ICPC",
+        "options": { "count": { "value": [1, 1] } }
+      }
+    }
+  ],
+  "rows": [
+    {
+      "user": {
+        "id": "team-alpha",
+        "name": "Team Alpha"
+      },
+      "score": { "value": 2, "time": [100, "min"] },
+      "statuses": [
+        { "result": "AC", "time": [40, "min"], "tries": 1 },
+        { "result": "AC", "time": [60, "min"], "tries": 2 }
+      ]
+    },
+    {
+      "user": {
+        "id": "team-beta",
+        "name": "Team Beta"
+      },
+      "score": { "value": 1, "time": [55, "min"] },
+      "statuses": [
+        { "result": "AC", "time": [55, "min"], "tries": 1 },
+        { "result": "RJ", "tries": 3 }
+      ]
+    }
+  ],
+  "sorter": {
+    "algorithm": "ICPC",
+    "config": {}
+  }
+}
