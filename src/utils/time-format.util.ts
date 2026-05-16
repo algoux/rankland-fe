@@ -1,4 +1,17 @@
 import type * as srk from '@algoux/standard-ranklist';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
+
+const EXPLICIT_NUMERIC_TIMEZONE_REGEXP = /([+-])([01]\d|2[0-3]):?([0-5]\d)$/;
+
+export interface IFormattedSrkContestTimeRange {
+  startText: string;
+  endText: string;
+  timezoneSource: 'srk-offset' | 'browser';
+  sourceOffset?: string;
+}
 
 export function formatSrkTimeDuration(
   time: srk.TimeDuration,
@@ -36,6 +49,43 @@ export function formatSrkTimeDuration(
       return fmt(ms / 1000 / 60 / 60 / 24);
   }
   return -1;
+}
+
+function normalizeUtcOffset(offsetMinutes: number): string {
+  const sign = offsetMinutes >= 0 ? '+' : '-';
+  const absOffsetMinutes = Math.abs(offsetMinutes);
+  const hours = Math.floor(absOffsetMinutes / 60);
+  const minutes = absOffsetMinutes % 60;
+  return `${sign}${preZeroFill(hours, 2)}:${preZeroFill(minutes, 2)}`;
+}
+
+function parseExplicitNumericUtcOffset(dateTime: string): number | null {
+  const match = dateTime.match(EXPLICIT_NUMERIC_TIMEZONE_REGEXP);
+  if (!match) {
+    return null;
+  }
+  const [, sign, hourText, minuteText] = match;
+  const offsetMinutes = Number(hourText) * 60 + Number(minuteText);
+  return sign === '-' ? -offsetMinutes : offsetMinutes;
+}
+
+export function formatSrkContestTimeRange(
+  startAt: srk.Contest['startAt'],
+  duration: srk.Contest['duration'],
+): IFormattedSrkContestTimeRange {
+  const startAtMs = new Date(startAt).getTime();
+  const durationMs = formatSrkTimeDuration(duration, 'ms');
+  const endAtMs = startAtMs + durationMs;
+  const offsetMinutes = parseExplicitNumericUtcOffset(startAt);
+  const startDate = offsetMinutes === null ? dayjs(startAtMs) : dayjs(startAtMs).utcOffset(offsetMinutes);
+  const endDate = offsetMinutes === null ? dayjs(endAtMs) : dayjs(endAtMs).utcOffset(offsetMinutes);
+
+  return {
+    startText: startDate.format('YYYY-MM-DD HH:mm:ss'),
+    endText: endDate.format('YYYY-MM-DD HH:mm:ss Z'),
+    timezoneSource: offsetMinutes === null ? 'browser' : 'srk-offset',
+    sourceOffset: offsetMinutes === null ? undefined : normalizeUtcOffset(offsetMinutes),
+  };
 }
 
 export function preZeroFill(num: number, size: number): string {

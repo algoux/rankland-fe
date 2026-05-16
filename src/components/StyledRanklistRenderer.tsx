@@ -27,7 +27,6 @@ import type * as srk from '@algoux/standard-ranklist';
 import { Alert, Dropdown, Menu, notification, Radio, Select, Switch } from 'antd';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import { Helmet, useModel } from 'umi';
-import dayjs from 'dayjs';
 import FileSaver from 'file-saver';
 import { CaretDownOutlined, DownloadOutlined, EyeOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { uniq, omit } from 'lodash-es';
@@ -38,7 +37,7 @@ import {
   GeneralExcelConverter,
 } from '@algoux/standard-ranklist-convert-to';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { formatSrkTimeDuration } from '@/utils/time-format.util';
+import { formatSrkContestTimeRange } from '@/utils/time-format.util';
 import ContactUs from './ContactUs';
 import BeianLink from './BeianLink';
 import { useCurrentUrl } from '@/hooks/use-current-url';
@@ -434,8 +433,7 @@ export default function StyledRanklistRenderer({
   };
 
   const renderHeader = () => {
-    const startAt = new Date(staticData.contest.startAt).getTime();
-    const endAt = startAt + formatSrkTimeDuration(staticData.contest.duration, 'ms');
+    const contestTimeRange = formatSrkContestTimeRange(staticData.contest.startAt, staticData.contest.duration);
     const metaBlock = (
       <div className="text-center mt-1">
         {meta && (
@@ -567,7 +565,7 @@ export default function StyledRanklistRenderer({
         <h1 className="text-center mb-1">{resolveText(staticData.contest.title)}</h1>
         {metaBlock}
         <p className="text-center mb-0">
-          {dayjs(startAt).format('YYYY-MM-DD HH:mm:ss')} ~ {dayjs(endAt).format('YYYY-MM-DD HH:mm:ss Z')}
+          {contestTimeRange.startText} ~ {contestTimeRange.endText}
         </p>
       </>
     );

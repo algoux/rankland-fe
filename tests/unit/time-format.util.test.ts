@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type * as srk from '@algoux/standard-ranklist';
-import { formatSrkTimeDuration, preZeroFill, secToTimeStr } from '@/utils/time-format.util';
+import dayjs from 'dayjs';
+import {
+  formatSrkContestTimeRange,
+  formatSrkTimeDuration,
+  preZeroFill,
+  secToTimeStr,
+} from '@/utils/time-format.util';
 
 describe('formatSrkTimeDuration', () => {
   it('passes through ms when targetUnit=ms', () => {
@@ -81,5 +87,28 @@ describe('secToTimeStr', () => {
 
   it('returns -- for negative seconds', () => {
     expect(secToTimeStr(-1)).toBe('--');
+  });
+});
+
+describe('formatSrkContestTimeRange', () => {
+  it('uses the explicit numeric offset declared by the srk startAt value', () => {
+    const range = formatSrkContestTimeRange('2026-05-10T11:00:00+08:00', [5, 'h']);
+
+    expect(range.timezoneSource).toBe('srk-offset');
+    expect(range.sourceOffset).toBe('+08:00');
+    expect(range.startText).toBe('2026-05-10 11:00:00');
+    expect(range.endText).toBe('2026-05-10 16:00:00 +08:00');
+  });
+
+  it('treats Z suffix as unspecified and keeps browser-local formatting semantics', () => {
+    const startAt = '2026-05-10T03:00:00Z';
+    const startAtMs = new Date(startAt).getTime();
+    const endAtMs = startAtMs + 5 * 60 * 60 * 1000;
+    const range = formatSrkContestTimeRange(startAt, [5, 'h']);
+
+    expect(range.timezoneSource).toBe('browser');
+    expect(range.sourceOffset).toBeUndefined();
+    expect(range.startText).toBe(dayjs(startAtMs).format('YYYY-MM-DD HH:mm:ss'));
+    expect(range.endText).toBe(dayjs(endAtMs).format('YYYY-MM-DD HH:mm:ss Z'));
   });
 });
