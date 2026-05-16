@@ -19,6 +19,8 @@ import cateProvincialCpcLogoLight from '@/assets/provincial_cpc_logo_black.png';
 import cateProvincialCpcLogoDark from '@/assets/provincial_cpc_logo_white.png';
 import cateUniversityLevelCpcLogoLight from '@/assets/university-level_cpc_logo_black.png';
 import cateUniversityLevelCpcLogoDark from '@/assets/university-level_cpc_logo_white.png';
+import cateUcupLogoLight from '@/assets/ucup_logo_black.png';
+import cateUcupLogoDark from '@/assets/ucup_logo_white.png';
 import { useClientWidthHeight } from '@/hooks/use-client-wh';
 import { useLocalStorageState } from 'ahooks';
 import { LocalStorageKey } from '@/configs/local-storage-key.config';
@@ -84,6 +86,12 @@ function convertCollectionToMenuItems(
               src={theme === 'dark' ? cateUniversityLevelCpcLogoDark : cateUniversityLevelCpcLogoLight}
               alt="University Level CPC"
             />
+          </span>
+        );
+      } else if (item.uniqueKey === 'dir-ucup') {
+        icon = (
+          <span className="srk-collection-menu-icon">
+            <img src={theme === 'dark' ? cateUcupLogoDark : cateUcupLogoLight} alt="Universal Cup" />
           </span>
         );
       }
